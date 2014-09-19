@@ -35,6 +35,15 @@ public class DBConnect {
     private static Statement stmt = null;
     private static ResultSet resultSet = null;
 
+    /**
+     * method to add coin to coin DB
+     * @param uuid
+     * @param name
+     * @param grade
+     * @param faceValue
+     * @param currency
+     * @param note 
+     */
     public static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note) {
         //System.out.println ("Adding coin to DB...");
         createDBConnection();
@@ -50,6 +59,26 @@ public class DBConnect {
             e.printStackTrace();
         }
     }
+    /**
+     * method to remove coin from coin DB
+     * @param id the id of the coin to be removed
+     * @return int representing if coin removed or not. 0 = removed, 1 = coin not found, 2 = not removed due to error.
+     */
+    public static int removeCoin (int id)
+    {
+        createDBConnection();
+        int remove = deleteCoin(id);
+        selectCoins();
+
+        try {
+            closeDBConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return remove;
+    }
+    
+    
 
     /*
      * Method that start connection to the Collector Database
@@ -163,18 +192,21 @@ public class DBConnect {
         }
     }
 
-    private static void deleteCoin(int id) {
+    private static int deleteCoin(int id) {
+        int count = -1;
         try {
             stmt = conn.createStatement();
             System.out.println("prepare delete statement starting...");
             //PreparedStatement statement = conn.prepareStatement("DELETE * from COINS WHERE id = "+ id);
-            PreparedStatement statement = conn.prepareStatement("DELETE * from COINS");
+            PreparedStatement statement = conn.prepareStatement("DELETE * from COINS WHERE id = "+ id);
             System.out.println("prepare statement done...");
-            int count = statement.executeUpdate();
+            count = statement.executeUpdate();
             System.out.println("Number of deleted rows: " + count);
             stmt.close();
         } catch (SQLException e) {
             System.err.println (e.getMessage());
         }
+        
+        return count;
     }
 }
