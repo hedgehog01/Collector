@@ -1,6 +1,8 @@
 package collector;
 
+import java.time.LocalDate;
 import java.util.UUID;
+
 
 /**
  * Abstract class that represents a collectable item.
@@ -12,9 +14,15 @@ public abstract class CollectableItem
 {
     //Instance variables
     private final String DEFAULT_NAME = "Default_name";
+    private final String DEFAULT_PRICE = "-1";
+    private final String DEFAULT_VALUE = "-1";
     protected String _itemName; //item name
     protected UUID _itemId;     //item unique uuid 
     protected StringBuilder _longNote; //item long note
+    protected LocalDate _buyDate; //item purchase date
+    protected String _buyPrice; //item purchase price
+    protected String _itemValue; //current item value
+    
     
     //========================================================================================//
     //Constructors
@@ -26,7 +34,11 @@ public abstract class CollectableItem
     protected CollectableItem ()
     {
         _itemId = UUID.randomUUID();
+        _buyDate = LocalDate.now();
         setItemName(DEFAULT_NAME);
+        setItemValue(DEFAULT_VALUE);
+        setItemBuyPrice(DEFAULT_PRICE);
+        
     }
     /**
      * Constructor that excepts String for object name and also sets object UUID.
@@ -86,7 +98,7 @@ public abstract class CollectableItem
     }
     
     /**
-     * method to add 
+     * method to add more info to item note.
      * @param note the info to add to coin note.
      */
     protected void appendItemNote (String note)
@@ -99,6 +111,61 @@ public abstract class CollectableItem
             _longNote.append(note);
         }
     }
+    
+    /**
+     * method to set the item buy date
+     * @param date the item buy date
+     */
+    protected void setItemBuyDate(LocalDate date)
+    {
+        _buyDate = date;        
+    }
+    
+    /**
+     * method to return the item buy date.
+     * @return LocalDate the item buy date.
+     */
+    protected LocalDate getItemBuyDate()
+    {
+        return _buyDate;
+    }
+    
+     /**
+     * method to set the item buy price
+     * @param price the item buy price
+     */
+    protected void setItemBuyPrice (String price)
+    {
+        _buyPrice = price;        
+    }
+    
+    /**
+     * method to return the item buy price.
+     * @return String the item buy price.
+     */
+    protected String getBuyPrice()
+    {
+        return _buyPrice;
+    } 
+
+     /**
+     * method to set the item value.
+     * @param value the item value
+     */
+    protected void setItemValue (String value)
+    {
+        _itemValue = value;        
+    }
+    
+    /**
+     * method to return the item item value.
+     * @return String the item item value.
+     */
+    protected String getItemValue()
+    {
+        return _itemValue;
+    }     
+    
     /**
      * Method to print item details
      * @return String with item name, UUID & note
