@@ -12,8 +12,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -45,20 +43,17 @@ public class DBConnect {
      * @param note 
      */
     public static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note) {
-        //System.out.println ("Adding coin to DB...");
-        createDBConnection();
+        
+        
         insertCoin(uuid, name, grade, faceValue, currency, note);
         //createDBConnection();
         System.out.println("Select * from coins...");
 
         selectCoins();
 
-        try {
-            closeDBConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
+    
     /**
      * method to remove coin from coin DB
      * @param id the id of the coin to be removed
@@ -119,7 +114,9 @@ public class DBConnect {
     /*
      * method to insert a coin into the coin db
      */
-    private static void insertCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note) {
+    private static void insertCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note) 
+    {
+        createDBConnection();
         System.out.println("Attemp to add new coin...");
         try {
             stmt = conn.createStatement();
@@ -190,6 +187,7 @@ public class DBConnect {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        closeDBConnection();
     }
 
     private static int deleteCoin(int id) {
