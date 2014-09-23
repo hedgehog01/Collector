@@ -64,12 +64,7 @@ public class DBCoinConnect {
         createDBConnection();
         int remove = deleteCoin(id);
         selectCoins();
-
-        try {
-            closeDBConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        closeDBConnection();
         return remove;
     }
     
