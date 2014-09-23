@@ -6,7 +6,7 @@
 
 package collector;
 
-import DBConnect.DBConnect;
+import DBConnect.DBCoinConnect;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -38,7 +38,7 @@ public class Collector extends Application {
             StringBuilder note = new StringBuilder("note test");
             Coin coin = new Coin ("Silver Eagle Dollar",CoinGrade.MS70,"100.0",CoinCurrency.EURO,note);
             
-            DBConnect.addCoin(coin.getItemId().toString(), coin.getItemName(), coin.getGrade().name(), coin.getFaceValue(),coin.getCoinCurrency().name(),coin.getItemNote());
+            DBCoinConnect.addCoin(coin.getItemId().toString(), coin.getItemName(), coin.getGrade().name(), coin.getFaceValue(),coin.getCoinCurrency().name(),coin.getItemNote());
 
         });
         GridPane grid = new GridPane();

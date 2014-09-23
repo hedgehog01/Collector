@@ -13,8 +13,13 @@ public class Coin extends CollectableItem {
     private String _faceValue;
     private CoinGrade _grade;
     private CoinCurrency _currency;
+    private int _coinYear;
+    private String _coinMintMark;
+
+
     
-    private final String unknown = "UNKNOWN";
+    private final String UNKNOWN = "UNKNOWN";
+    private final int DEFAULT_COIN_YEAR = -1;
 
     //========================================================================================//
     //Constructors
@@ -26,8 +31,10 @@ public class Coin extends CollectableItem {
     public Coin() {
         super();
         _grade = CoinGrade.UNKNOWN;
-        _faceValue = unknown;
+        _faceValue = UNKNOWN;
         _currency = CoinCurrency.UNKNOWN;
+        _coinYear = DEFAULT_COIN_YEAR;
+        _coinMintMark = UNKNOWN;
     }
 
     /**
@@ -38,8 +45,10 @@ public class Coin extends CollectableItem {
     public Coin(String name) {
         super(name);
         _grade = CoinGrade.UNKNOWN;
-        _faceValue = unknown;
+        _faceValue = UNKNOWN;
         _currency = CoinCurrency.UNKNOWN;
+        _coinYear = DEFAULT_COIN_YEAR;
+        _coinMintMark = UNKNOWN;
     }
 
     /**
@@ -100,7 +109,7 @@ public class Coin extends CollectableItem {
         if (value.length() < 20) {
             _faceValue = value;
         } else {
-            _faceValue = unknown;
+            _faceValue = UNKNOWN;
         }
     }
     
@@ -127,18 +136,61 @@ public class Coin extends CollectableItem {
         return _currency;
     }
 
+
+
+    public void setCurrency(CoinCurrency currency) {
+        _currency = currency;
+
+    }
+    
+    /**
+     * method to set coin year
+     * @param coinYear the year coin was minted (values permitted are 1600 - 2100 including) default value is -1
+     */
+    public void setCoinYear(int coinYear) 
+    {
+        if (coinYear >=1600 && coinYear <=2100)
+            this._coinYear = coinYear;
+        else
+            this._coinYear = DEFAULT_COIN_YEAR;
+    }
+        
+    /**
+     * method to return coin year
+     * @return year coin was minted (between 1600 - 2100) default value is -1
+     */
+    public int getCoinYear ()
+    {
+        return this._coinYear;
+    }
+    
+    /**
+     * method to set the coin mint mark
+     * @param mark the coin mint mark
+     */
+    public void setCoinMintMark (String mark)
+    {
+        _coinMintMark = mark;
+    }
+    
+    /**
+     * method to return the coin mint mark
+     * @return the coin mint mark
+     */
+    public String getCoinMintMark ()
+    {
+        return _coinMintMark;
+    }
+    
+    
     /**
      * Method that prints coin details
      *
      * @return String with coin details
      */
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return super.toString() + " grade: " + getGrade();
-    }
-
-    public void setCurrency(CoinCurrency currency) {
-        _currency = currency;
-
     }
 }

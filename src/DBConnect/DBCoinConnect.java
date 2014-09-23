@@ -17,21 +17,21 @@ import java.sql.Statement;
  *
  * @author nathanr
  */
-public class DBConnect {
+public class DBCoinConnect {
     //Class variables
 
-    //private static final String dbEmbeddedURL = "jdbc:derby:Collection";
-    private static final String dbClientURL = "jdbc:derby://localhost:1527/CollectionDB";//create=true;user=Hedgehog01;password=Jade170213";
-    private static final String createDb = ";create=true";
-    private static final String shutdownDb = ";shutdown=true";
-    private static final String tableName = "COINS";
+
+    protected static final String DB_Client_URL = "jdbc:derby://localhost:1527/CollectionDB";//create=true;DB_USER_NAME=Hedgehog01;password=Jade170213";
+    protected static final String CREATE_DB = ";create=true";
+    protected static final String SHUTDOWN_DB = ";shutdown=true";
     //private static final String driverEmbedded = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static final String driverClient = "org.apache.derby.jdbc.ClientDriver";
-    private static final String user = "Hedgehog01";
-    private static final String pass = "Jade170213";
-    private static Connection conn = null;
-    private static Statement stmt = null;
-    private static ResultSet resultSet = null;
+    protected static final String DRIVER_CLIENT = "org.apache.derby.jdbc.ClientDriver";
+    protected static final String DB_USER_NAME = "Hedgehog01";
+    protected static final String DB_PASS = "Jade170213";
+    private static final String TABLE_NAME = "COINS";
+    protected static Connection conn = null;
+    protected static Statement stmt = null;
+    protected static ResultSet resultSet = null;
 
     /**
      * method to add coin to coin DB
@@ -80,10 +80,10 @@ public class DBConnect {
      */
     private static void createDBConnection() {
         try {
-            Class.forName(driverClient).newInstance();
+            Class.forName(DRIVER_CLIENT).newInstance();
             System.out.println("connecting to DB...");
 
-            conn = DriverManager.getConnection(dbClientURL + createDb, user, pass);
+            conn = DriverManager.getConnection(DB_Client_URL + CREATE_DB, DB_USER_NAME, DB_PASS);
 
             System.out.println("Schema conntected: " + conn.getSchema());
 
@@ -93,7 +93,7 @@ public class DBConnect {
             System.err.println(e.getMessage());
             System.out.println("\n Make sure your CLASSPATH variable "
                     + "contains %DERBY_HOME%\\lib\\derby.jar (${DERBY_HOME}/lib/derby.jar). \n");
-        } catch (Exception e) {
+        } catch (InstantiationException | IllegalAccessException | SQLException e) {
             System.out.println(e);
         }
     }
@@ -122,7 +122,7 @@ public class DBConnect {
             stmt = conn.createStatement();
             //stmt.execute("insert into " + tableName + " values (" + "'"uuid'" + ",'" + name + "','" + faceValue +"')");
             //stmt.execute("INSERT INTO COINS (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('"+uuid+"','"+name+"','"+grade+"','"+faceValue+"','"+currency+"','"+note.toString()+"')");
-            stmt.execute("INSERT INTO COINS (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "')");
+            stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "')");
             closeDBConnection();
         } catch (SQLException e) {
             System.err.println (e.getMessage());
@@ -141,7 +141,7 @@ public class DBConnect {
             }
             if (conn != null) {
                 System.out.println("Shutting down connection staatemnet...");
-                DriverManager.getConnection(dbClientURL + ";user=" + user + ";password=" + pass + shutdownDb);
+                DriverManager.getConnection(DB_Client_URL + ";user=" + DB_USER_NAME + ";password=" + DB_PASS + SHUTDOWN_DB);
                 System.out.println("Closing connection statemnet...");
                 conn.close();
             }
@@ -156,7 +156,7 @@ public class DBConnect {
             createDBConnection();
             stmt = conn.createStatement();
             System.out.println("prepare statement starting");
-            PreparedStatement statement = conn.prepareStatement("SELECT * from COINS");
+            PreparedStatement statement = conn.prepareStatement("SELECT * from " + TABLE_NAME);
             System.out.println("prepare statement done");
             try //(ResultSet results = stmt.executeQuery("select * from " + tableName)) 
                     (ResultSet results = statement.executeQuery()) {
@@ -195,8 +195,7 @@ public class DBConnect {
         try {
             stmt = conn.createStatement();
             System.out.println("prepare delete statement starting...");
-            //PreparedStatement statement = conn.prepareStatement("DELETE * from COINS WHERE id = "+ id);
-            PreparedStatement statement = conn.prepareStatement("DELETE * from COINS WHERE id = "+ id);
+            PreparedStatement statement = conn.prepareStatement("DELETE * from " + TABLE_NAME +" WHERE id = "+ id);
             System.out.println("prepare statement done...");
             count = statement.executeUpdate();
             System.out.println("Number of deleted rows: " + count);
