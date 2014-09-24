@@ -47,7 +47,7 @@ public class Collector extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-    Scene scene = new Scene(grid, 300, 275);
+    Scene scene = new Scene(grid, 640, 480);
     primaryStage.setScene(scene);
         
         Button removeCoinButton = new Button();
