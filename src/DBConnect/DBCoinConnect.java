@@ -52,21 +52,44 @@ public class DBCoinConnect{
 
 
     }
-    
-    /**
+     /**
      * method to remove coin from coin DB
      * @param id the id of the coin to be removed
      * @return int representing if coin removed or not. 0 = removed, 1 = coin not found, 2 = not removed due to error.
      */
-    public static int removeCoin (int id)
+    public static int removeCoinById (int id)
     {
 
-        int remove = deleteCoin(id);
+        int remove = deleteCoinById(id);
         return remove;
     }
     
-    
-
+    public static int removeLastCoin()
+    {
+         int id = -1;
+        createDBConnection();
+        try{
+        Statement st = conn.createStatement();
+ 
+        st = conn.createStatement();
+        ResultSet rs = st.executeQuery("  SELECT MAX(ID)from " + TABLE_NAME);
+       
+        while (rs.next()) {
+            id = rs.getInt(1);
+            System.out.println(id);
+ 
+        }
+        }
+        catch  (SQLException sql){
+            System.err.println(sql);
+        }
+        closeDBConnection();
+        return id;
+    }
+        
+        
+            
+        
     /*
      * Method that start connection to the Collector Database
      */
@@ -191,7 +214,7 @@ public class DBCoinConnect{
         closeDBConnection();
     }
 
-    private static int deleteCoin(int id) {
+    private static int deleteCoinById(int id) {
         int count = -1;
         try {
             createDBConnection();

@@ -54,10 +54,19 @@ public class Collector extends Application {
         removeCoinButton.setText("Remove Coin");
         removeCoinButton.setOnAction((ActionEvent event)-> {
             System.out.println ("Remove Coin Button pressed...");
-            int result = DBCoinConnect.removeCoin(65);
+            int result = DBCoinConnect.removeCoinById(65);
             System.out.println ("Remove Coin result: " + result);
             
         });
+
+        Button removeLastCoinButton = new Button();
+        removeLastCoinButton.setText("Remove last Coin");
+        removeLastCoinButton.setOnAction((ActionEvent event)-> {
+            System.out.println ("Remove last Coin Button pressed...");
+            int result = DBCoinConnect.removeLastCoin();
+            System.out.println ("Remove last Coin result: " + result);
+            
+        });        
         
         StackPane root = new StackPane();
         Text scenetitle = new Text("Welcome");
@@ -79,6 +88,7 @@ public class Collector extends Application {
 
         grid.add(addCoinButton, 0, 3);
         grid.add(removeCoinButton, 1, 3);
+        grid.add(removeLastCoinButton,2,3);
         
         primaryStage.setTitle("Collector");
         primaryStage.show();
