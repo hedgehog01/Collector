@@ -39,12 +39,7 @@ public class DBCoinConnect{
 
     /**
      * method to add coin to coin DB
-     * @param uuid coin UUID
-     * @param name coin name
-     * @param grade coin grade
-     * @param faceValue coin face value
-     * @param currency coin currency
-     * @param note coin note
+     * @param coin the coin to be added
      */
     public static void addCoin(Coin coin) {
         
@@ -53,7 +48,7 @@ public class DBCoinConnect{
         addCoin (coin.getItemId().toString(),coin.getItemName(),coin.getCoinGrade().name(),coin.getCoinFaceValue(),coin.getCoinCurrency().name(),coin.getItemNote(),coin.getItemBuyDate(),coin.getBuyPrice(),coin.getItemValue(),coin.getCoinMintMark(),coin.getCoinYear());
         //createDBConnection();
         System.out.println("Select * from coins...");
-        selectCoins();
+        selectAllCoins();
 
 
     }
@@ -65,10 +60,8 @@ public class DBCoinConnect{
      */
     public static int removeCoin (int id)
     {
-        createDBConnection();
+
         int remove = deleteCoin(id);
-        selectCoins();
-        closeDBConnection();
         return remove;
     }
     
@@ -152,7 +145,7 @@ public class DBCoinConnect{
 
     }
 
-    private static void selectCoins() {
+    private static void selectAllCoins() {
         try {
             createDBConnection();
             stmt = conn.createStatement();
@@ -201,15 +194,17 @@ public class DBCoinConnect{
     private static int deleteCoin(int id) {
         int count = -1;
         try {
-            stmt = conn.createStatement();
+            createDBConnection();
             System.out.println("prepare delete statement starting...");
-            PreparedStatement statement = conn.prepareStatement("DELETE * from " + TABLE_NAME +" WHERE id = "+ id);
+            Statement stmt = conn.createStatement();
+            //PreparedStatement statement = conn.prepareStatement("DELETE * from " + TABLE_NAME +" WHERE id = "+ id);
+            String sql = ("DELETE from " + TABLE_NAME +" WHERE id = "+ id);
             System.out.println("prepare statement done...");
-            count = statement.executeUpdate();
+            count = stmt.executeUpdate(sql);
             System.out.println("Number of deleted rows: " + count);
-            stmt.close();
+            closeDBConnection();
         } catch (SQLException e) {
-            System.err.println (e.getMessage());
+            System.out.println (e.getMessage());
         }
         
         return count;

@@ -54,6 +54,8 @@ public class Collector extends Application {
         removeCoinButton.setText("Remove Coin");
         removeCoinButton.setOnAction((ActionEvent event)-> {
             System.out.println ("Remove Coin Button pressed...");
+            int result = DBCoinConnect.removeCoin(65);
+            System.out.println ("Remove Coin result: " + result);
             
         });
         
