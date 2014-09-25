@@ -5,19 +5,23 @@
  */
 package DBConnect;
 
+
+import collector.*;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 /**
  *
  * @author nathanr
  */
-public class DBCoinConnect {
+public class DBCoinConnect{
     //Class variables
 
 
@@ -35,20 +39,20 @@ public class DBCoinConnect {
 
     /**
      * method to add coin to coin DB
-     * @param uuid
-     * @param name
-     * @param grade
-     * @param faceValue
-     * @param currency
-     * @param note 
+     * @param uuid coin UUID
+     * @param name coin name
+     * @param grade coin grade
+     * @param faceValue coin face value
+     * @param currency coin currency
+     * @param note coin note
      */
-    public static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note) {
+    public static void addCoin(Coin coin) {
         
         
-        insertCoin(uuid, name, grade, faceValue, currency, note);
+        //insertCoin(uuid, name, grade, faceValue, currency, note);
+        addCoin (coin.getItemId().toString(),coin.getItemName(),coin.getCoinGrade().name(),coin.getCoinFaceValue(),coin.getCoinCurrency().name(),coin.getItemNote(),coin.getItemBuyDate(),coin.getBuyPrice(),coin.getItemValue(),coin.getCoinMintMark(),coin.getCoinYear());
         //createDBConnection();
         System.out.println("Select * from coins...");
-
         selectCoins();
 
 
@@ -109,7 +113,7 @@ public class DBCoinConnect {
     /*
      * method to insert a coin into the coin db
      */
-    private static void insertCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note) 
+    private static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, LocalDate date, String coinBuyPrice, String coinValue, String coinMintMark,int coinYear) 
     {
         createDBConnection();
         System.out.println("Attemp to add new coin...");
@@ -117,7 +121,9 @@ public class DBCoinConnect {
             stmt = conn.createStatement();
             //stmt.execute("insert into " + tableName + " values (" + "'"uuid'" + ",'" + name + "','" + faceValue +"')");
             //stmt.execute("INSERT INTO COINS (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('"+uuid+"','"+name+"','"+grade+"','"+faceValue+"','"+currency+"','"+note.toString()+"')");
-            stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "')");
+            //stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "')");
+            stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUY_DATE,COIN_BUY_PRICE,COIN_VALUE,COIN_MINT_MARK,COIN_YEAR) VALUES" 
+                    + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "','" + date + "','" + coinBuyPrice + "','" + coinValue + "','" + coinMintMark + "'," + coinYear + ")");
             closeDBConnection();
         } catch (SQLException e) {
             System.err.println (e.getMessage());
@@ -171,7 +177,14 @@ public class DBCoinConnect {
                     String grade = results.getString(4);
                     String facevalue = results.getString(5);
                     String currency = results.getString(6);
-                    System.out.println(id + "\t" + uuid + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency);
+                    String note = results.getString(7);
+                    Date coinBuyDate = results.getDate(8);
+                    String coinBuyPrice = results.getString(9);
+                    String coinValue = results.getString(10);
+                    String coinMintMark = results.getString(11);
+                    int coinYear = results.getInt(12);
+                    
+                    System.out.println(id + "\t" + uuid + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note  +"\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear );
                 }
             }
 

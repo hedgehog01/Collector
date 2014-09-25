@@ -59,7 +59,7 @@ public class Coin extends CollectableItem {
      */
     public Coin(String name, CoinGrade grade) {
         super(name);
-        setGrade(grade);
+        setCoinGrade(grade);
     }
 
     /**
@@ -69,12 +69,34 @@ public class Coin extends CollectableItem {
      * @param grade the Coin grade.
      * @param facevalue the coin face value.
      * @param currency the coin currency.
+     * @param note the coin note.
      */
     public Coin(String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note) {
         this (name,grade);
         setFaceValue(facevalue);
         setCurrency(currency);
         setItemNote(note);
+    }
+    
+    /**
+     * 
+     * @param name the coin name.
+     * @param grade the Coin grade.
+     * @param facevalue the coin face value.
+     * @param currency the coin currency.
+     * @param note the coin note.
+     * @param coinYear the coin year
+     * @param coinMintMark the coin mint mark
+     * @param buyPrice the coin buy price
+     * @param coinValue the coin estimated value
+     */
+    public Coin (String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
+    {
+        this (name, grade, facevalue, currency, note);
+        setCoinYear(coinYear);
+        setCoinMintMark(coinMintMark);
+        setItemBuyPrice(buyPrice);
+        setFaceValue(coinValue);
     }
 
     //========================================================================================//
@@ -86,7 +108,7 @@ public class Coin extends CollectableItem {
      *
      * @param grade the coin grade
      */
-    public void setGrade(CoinGrade grade) {
+    public void setCoinGrade(CoinGrade grade) {
         _grade = grade;
     }
 
@@ -96,7 +118,7 @@ public class Coin extends CollectableItem {
      *
      * @return CoinGrade the coin grade
      */
-    public CoinGrade getGrade() {
+    public CoinGrade getCoinGrade() {
         return _grade;
     }
 
@@ -123,7 +145,7 @@ public class Coin extends CollectableItem {
      *
      * @return double the coin face value.
      */
-    public String getFaceValue() {
+    public String getCoinFaceValue() {
         return _faceValue;
     }
     
@@ -191,6 +213,6 @@ public class Coin extends CollectableItem {
     @Override
     public String toString() 
     {
-        return super.toString() + " grade: " + getGrade();
+        return super.toString() + " grade: " + getCoinGrade();
     }
 }

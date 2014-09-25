@@ -38,7 +38,7 @@ public class Collector extends Application {
             StringBuilder note = new StringBuilder("note test");
             Coin coin = new Coin ("Silver Eagle Dollar",CoinGrade.MS70,"100.0",CoinCurrency.EURO,note);
             
-            DBCoinConnect.addCoin(coin.getItemId().toString(), coin.getItemName(), coin.getGrade().name(), coin.getFaceValue(),coin.getCoinCurrency().name(),coin.getItemNote());
+            DBCoinConnect.addCoin(coin);
 
         });
         GridPane grid = new GridPane();

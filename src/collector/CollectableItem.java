@@ -14,8 +14,8 @@ public abstract class CollectableItem
 {
     //Instance variables
     private final String DEFAULT_NAME = "Default_name";
-    private final String DEFAULT_PRICE = "-1";
-    private final String DEFAULT_VALUE = "-1";
+    private final String DEFAULT_PRICE = "-1.0";
+    private final String DEFAULT_VALUE = "-1.0";
     protected String _itemName; //item name
     protected UUID _itemId;     //item unique uuid 
     protected StringBuilder _longNote; //item long note
@@ -65,7 +65,7 @@ public abstract class CollectableItem
      * Method that returns item Name.
      * @return String representing item name.
      */
-    protected String getItemName ()
+    public String getItemName ()
     {
         return _itemName;
     }
@@ -74,7 +74,7 @@ public abstract class CollectableItem
      * Method that returns item ID.
      * @return UUID representing item unique Id.
      */
-    protected UUID getItemId ()
+    public UUID getItemId ()
     {
         return _itemId;
     } 
@@ -83,7 +83,7 @@ public abstract class CollectableItem
      * Method to return item note
      * @return String item note
      */
-    protected StringBuilder getItemNote()
+    public StringBuilder getItemNote()
     {
         return _longNote;
     }
@@ -125,7 +125,7 @@ public abstract class CollectableItem
      * method to return the item buy date.
      * @return LocalDate the item buy date.
      */
-    protected LocalDate getItemBuyDate()
+    public LocalDate getItemBuyDate()
     {
         return _buyDate;
     }
@@ -136,14 +136,15 @@ public abstract class CollectableItem
      */
     protected void setItemBuyPrice (String price)
     {
-        _buyPrice = price;        
+        if (isNumeric(price))
+            _buyPrice = price;   
     }
     
     /**
      * method to return the item buy price.
      * @return String the item buy price.
      */
-    protected String getBuyPrice()
+    public String getBuyPrice()
     {
         return _buyPrice;
     } 
@@ -154,14 +155,15 @@ public abstract class CollectableItem
      */
     protected void setItemValue (String value)
     {
-        _itemValue = value;        
+        if (isNumeric(value))
+            _itemValue = value;
     }
     
     /**
      * method to return the item item value.
      * @return String the item item value.
      */
-    protected String getItemValue()
+    public String getItemValue()
     {
         return _itemValue;
     }     
@@ -175,4 +177,17 @@ public abstract class CollectableItem
         return "Id: " + _itemId + "\nName: " + _itemName + "\nNote: " + _longNote;
     }
 
+    
+    private static boolean isNumeric(String str)  
+    {  
+    try  
+    {  
+        double d = Double.parseDouble(str);  
+    }  
+    catch(NumberFormatException nfe)  
+    {  
+        return false;  
+    }  
+    return true;  
+    }
 }
