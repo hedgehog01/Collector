@@ -72,7 +72,7 @@ public class DBCoinConnect{
         Statement st = conn.createStatement();
  
         st = conn.createStatement();
-        ResultSet rs = st.executeQuery("  SELECT MAX(ID)from " + TABLE_NAME);
+        ResultSet rs = st.executeQuery("SELECT MAX(ID) from " + TABLE_NAME);
        
         while (rs.next()) {
             id = rs.getInt(1);
@@ -84,7 +84,8 @@ public class DBCoinConnect{
             System.err.println(sql);
         }
         closeDBConnection();
-        return id;
+        
+        return removeCoinById(id);
     }
         
         
