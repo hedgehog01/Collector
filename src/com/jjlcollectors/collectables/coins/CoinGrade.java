@@ -1,4 +1,4 @@
-package collector;
+package com.jjlcollectors.collectables.coins;
 
 
 /**

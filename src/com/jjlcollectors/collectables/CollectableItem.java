@@ -1,4 +1,4 @@
-package collector;
+package com.jjlcollectors.collectables;
 
 import java.time.LocalDate;
 import java.util.UUID;

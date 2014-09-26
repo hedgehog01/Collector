@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 
-package collector;
+package com.jjlcollectors.collectables.windows;
 
-import DBConnect.DBCoinConnect;
+import com.jjlcollectors.collectables.coins.CoinCurrency;
+import com.jjlcollectors.collectables.coins.Coin;
+import com.jjlcollectors.collectables.coins.CoinGrade;
+import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;

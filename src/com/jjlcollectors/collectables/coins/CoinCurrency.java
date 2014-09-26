@@ -4,7 +4,7 @@
  * @version 15.09.2014
  */
 
-package collector;
+package com.jjlcollectors.collectables.coins;
 
 /**
  *

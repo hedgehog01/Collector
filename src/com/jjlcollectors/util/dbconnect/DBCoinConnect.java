@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DBConnect;
+package com.jjlcollectors.util.dbconnect;
 
 
-import collector.*;
+import com.jjlcollectors.collectables.coins.Coin;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;

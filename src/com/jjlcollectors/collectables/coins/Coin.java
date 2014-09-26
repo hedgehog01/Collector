@@ -1,4 +1,6 @@
-package collector;
+package com.jjlcollectors.collectables.coins;
+
+import com.jjlcollectors.collectables.CollectableItem;
 
 /**
  * Class that represents a Coin.
