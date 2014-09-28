@@ -93,6 +93,7 @@ public class Collector extends Application {
         grid.add(removeCoinButton, 1, 3);
         grid.add(removeLastCoinButton,2,3);
         
+        
         primaryStage.setTitle("Collector");
         primaryStage.show();
     }

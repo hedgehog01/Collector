@@ -16,12 +16,14 @@ public abstract class CollectableItem
     private final String DEFAULT_NAME = "Default_name";
     private final String DEFAULT_PRICE = "-1.0";
     private final String DEFAULT_VALUE = "-1.0";
+    private final int DEFAULT_USER_ID = -1;
     protected String _itemName; //item name
     protected UUID _itemId;     //item unique uuid 
     protected StringBuilder _longNote; //item long note
     protected LocalDate _buyDate; //item purchase date
     protected String _buyPrice; //item purchase price
     protected String _itemValue; //current item value
+    protected int _userId; //user who owns the item
     
     
     //========================================================================================//
@@ -169,6 +171,23 @@ public abstract class CollectableItem
     }     
     
     /**
+     * method to return item owner by user ID
+     * @return int user id
+     */
+    public int getUserId()
+    {
+        return _userId;
+    }
+    
+    protected void setUserId (int userId)
+    {
+        if (isUserIdValid(userId))
+            _userId = userId;
+        else
+            _userId = DEFAULT_USER_ID;
+    }
+    
+    /**
      * Method to print item details
      * @return String with item name, UUID & note
      */
@@ -177,17 +196,29 @@ public abstract class CollectableItem
         return "Id: " + _itemId + "\nName: " + _itemName + "\nNote: " + _longNote;
     }
 
-    
+    /*
+    private method that checks if number in the string variable is numeric.
+    */
     private static boolean isNumeric(String str)  
     {  
-    try  
-    {  
-        double d = Double.parseDouble(str);  
-    }  
-    catch(NumberFormatException nfe)  
-    {  
-        return false;  
-    }  
-    return true;  
+        try  
+        {  
+            double d = Double.parseDouble(str);  
+        }  
+        catch(NumberFormatException nfe)  
+        {  
+            return false;  
+        }  
+        return true;  
+    }
+    
+    private boolean isUserIdValid (int userId)
+    {
+        //make sure user id is not zero or less
+        if (userId <= 0)
+            return false;
+        else
+            //To Do
+            return true;
     }
 }

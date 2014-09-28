@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.persistence.EntityManager" name="CollectionDBPUEntityManager">
+      <Properties>
+        <Property name="persistenceUnit" type="java.lang.String" value="CollectionDBPU"/>
+      </Properties>
+    </Component>
+    <Component class="javax.persistence.Query" name="coinInfoQuery">
+      <Properties>
+        <Property name="query" type="java.lang.String" value="SELECT c FROM CoinInfo c"/>
+        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
+          <ComponentRef name="CollectionDBPUEntityManager"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="java.util.List" name="coinInfoList">
+      <Properties>
+        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
+          <ComponentRef name="coinInfoQuery"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;com.jjlcollectors.collectables.windows.CoinInfo&gt;"/>
+      </AuxValues>
+    </Component>
+  </NonVisualComponents>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="91" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelCoinBuyPrice" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCoinValue" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCoinMintMark" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCoinMintYear" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCoinNote" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jTextCoinYear" max="32767" attributes="0"/>
+                          <Component id="jTextFieldCoinBuyPrice" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jTextFieldCoinValue" alignment="0" pref="130" max="32767" attributes="0"/>
+                          <Component id="jTextMintMark" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jTextFieldCoinNote" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelCoinName" pref="142" max="32767" attributes="0"/>
+                          <Component id="jLabelCoinGrade" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabelCoinFaceValue" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="jLabelCoinCurrency" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="92" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jTextFieldCoinName" max="32767" attributes="0"/>
+                          <Component id="jTextFieldCoinGrade" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jTextFieldCoinFaceValue" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jComboBoxCoinCurrency" min="-2" pref="130" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="jLabelCoinGrade" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jTextFieldCoinName" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCoinName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jTextFieldCoinGrade" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jTextFieldCoinFaceValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCoinFaceValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jComboBoxCoinCurrency" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCoinCurrency" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace pref="83" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="jTextFieldCoinBuyPrice" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jTextFieldCoinValue" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jTextMintMark" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jTextCoinYear" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jTextFieldCoinNote" min="-2" pref="63" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="jLabelCoinBuyPrice" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="26" pref="26" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="jLabelCoinValue" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="26" pref="26" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="jLabelCoinMintMark" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="26" pref="26" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="jLabelCoinMintYear" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="110" pref="110" max="-2" attributes="0"/>
+                      <Component id="jLabelCoinNote" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JTextField" name="jTextFieldCoinName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Name"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCoinNameActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldCoinGrade">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Grade"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCoinGradeActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldCoinFaceValue">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Face value"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldCoinBuyPrice">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Buy Price"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldCoinValue">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Estimated Value"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextMintMark">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mint Mark"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextCoinYear">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Year"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldCoinNote">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="More info"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCoinNoteActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Name"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinGrade">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Grade"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinFaceValue">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Face Value"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinCurrency">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin name"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinBuyPrice">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Buy Price"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinValue">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Value"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinMintMark">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Mint Mark"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinMintYear">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coin Mint Year"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCoinNote">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="More info"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="jComboBoxCoinCurrency">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Item 1"/>
+            <StringItem index="1" value="Item 2"/>
+            <StringItem index="2" value="Item 3"/>
+            <StringItem index="3" value="Item 4"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <BindingProperties>
+        <BindingProperty name="elements" source="coinInfoList" sourcePath="${}" target="jComboBoxCoinCurrency" targetPath="elements" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
+    </Component>
+  </SubComponents>
+</Form>

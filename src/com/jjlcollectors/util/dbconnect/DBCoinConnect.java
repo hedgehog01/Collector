@@ -7,7 +7,6 @@ package com.jjlcollectors.util.dbconnect;
 
 
 import com.jjlcollectors.collectables.coins.Coin;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,21 +20,13 @@ import java.time.LocalDate;
  *
  * @author nathanr
  */
-public class DBCoinConnect{
+public class DBCoinConnect extends DBConnect{
     //Class variables
 
 
-    protected static final String DB_Client_URL = "jdbc:derby://localhost:1527/CollectionDB";//create=true;DB_USER_NAME=Hedgehog01;password=Jade170213";
-    protected static final String CREATE_DB = ";create=true";
-    protected static final String SHUTDOWN_DB = ";shutdown=true";
-    //private static final String driverEmbedded = "org.apache.derby.jdbc.EmbeddedDriver";
-    protected static final String DRIVER_CLIENT = "org.apache.derby.jdbc.ClientDriver";
-    protected static final String DB_USER_NAME = "Hedgehog01";
-    protected static final String DB_PASS = "Jade170213";
+
     private static final String TABLE_NAME = "COINS";
-    protected static Connection conn = null;
-    protected static Statement stmt = null;
-    protected static ResultSet resultSet = null;
+
 
     /**
      * method to add coin to coin DB
@@ -67,11 +58,10 @@ public class DBCoinConnect{
     public static int removeLastCoin()
     {
          int id = -1;
-        createDBConnection();
+        DBConnect.createDBConnection();
         try{
         Statement st = conn.createStatement();
  
-        st = conn.createStatement();
         ResultSet rs = st.executeQuery("SELECT MAX(ID) from " + TABLE_NAME);
        
         while (rs.next()) {
@@ -83,7 +73,7 @@ public class DBCoinConnect{
         catch  (SQLException sql){
             System.err.println(sql);
         }
-        closeDBConnection();
+        DBConnect.closeDBConnection();
         
         return removeCoinById(id);
     }
@@ -91,48 +81,13 @@ public class DBCoinConnect{
         
             
         
-    /*
-     * Method that start connection to the Collector Database
-     */
-    private static void createDBConnection() {
-        try {
-            Class.forName(DRIVER_CLIENT).newInstance();
-            System.out.println("connecting to DB...");
-
-            conn = DriverManager.getConnection(DB_Client_URL + CREATE_DB, DB_USER_NAME, DB_PASS);
-
-            System.out.println("Schema conntected: " + conn.getSchema());
-
-        } catch (ClassNotFoundException e) {
-
-            System.err.print("ClassNotFoundException: ");
-            System.err.println(e.getMessage());
-            System.out.println("\n Make sure your CLASSPATH variable "
-                    + "contains %DERBY_HOME%\\lib\\derby.jar (${DERBY_HOME}/lib/derby.jar). \n");
-        } catch (InstantiationException | IllegalAccessException | SQLException e) {
-            System.out.println(e);
-        }
-    }
-
-    /*
-     * method to close database connection
-     */
-    private static void closeDBConnection() {
-        try {
-            System.out.println("Closing DB connection...");
-            conn.close();
-        } catch (SQLException e) {
-            System.err.println (e.getMessage());
-        }
-
-    }
 
     /*
      * method to insert a coin into the coin db
      */
     private static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, LocalDate date, String coinBuyPrice, String coinValue, String coinMintMark,int coinYear) 
     {
-        createDBConnection();
+        DBConnect.createDBConnection();
         System.out.println("Attemp to add new coin...");
         try {
             stmt = conn.createStatement();
@@ -141,7 +96,7 @@ public class DBCoinConnect{
             //stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "')");
             stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUY_DATE,COIN_BUY_PRICE,COIN_VALUE,COIN_MINT_MARK,COIN_YEAR) VALUES" 
                     + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "','" + date + "','" + coinBuyPrice + "','" + coinValue + "','" + coinMintMark + "'," + coinYear + ")");
-            closeDBConnection();
+            DBConnect.closeDBConnection();
         } catch (SQLException e) {
             System.err.println (e.getMessage());
         }
@@ -171,7 +126,7 @@ public class DBCoinConnect{
 
     private static void selectAllCoins() {
         try {
-            createDBConnection();
+            DBConnect.createDBConnection();
             stmt = conn.createStatement();
             System.out.println("prepare statement starting");
             PreparedStatement statement = conn.prepareStatement("SELECT * from " + TABLE_NAME);
@@ -212,13 +167,13 @@ public class DBCoinConnect{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        closeDBConnection();
+        DBConnect.closeDBConnection();
     }
 
     private static int deleteCoinById(int id) {
         int count = -1;
         try {
-            createDBConnection();
+            DBConnect.createDBConnection();
             System.out.println("prepare delete statement starting...");
             Statement stmt = conn.createStatement();
             //PreparedStatement statement = conn.prepareStatement("DELETE * from " + TABLE_NAME +" WHERE id = "+ id);
@@ -226,7 +181,7 @@ public class DBCoinConnect{
             System.out.println("prepare statement done...");
             count = stmt.executeUpdate(sql);
             System.out.println("Number of deleted rows: " + count);
-            closeDBConnection();
+            DBConnect.closeDBConnection();
         } catch (SQLException e) {
             System.out.println (e.getMessage());
         }
