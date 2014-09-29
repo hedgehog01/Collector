@@ -18,7 +18,7 @@
  */
 package com.jjlcollectors.util.dbconnect;
 
-import static com.jjlcollectors.util.dbconnect.DBCoinConnect.removeCoinById;
+
 import static com.jjlcollectors.util.dbconnect.DBConnect.conn;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +45,8 @@ public class DBUsers extends DBConnect
                 userExists = rs.isBeforeFirst();
             }
         }
-        catch  (SQLException sql){
+        catch  (SQLException sql)
+        {
             System.err.println(sql);
         }
         
