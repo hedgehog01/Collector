@@ -77,14 +77,120 @@ public class User
     
     /**
      * method to return user first name
-     * @return 
+     * @return user first name
      */
     public String getFirstName()
     {
         return _firstName;
     }
     
+    /**
+     * method to set user first name.
+     * 
+     * @param firstName the user first name.
+     */
+    protected void setFirstName(String firstName)
+    {
+        if (firstName != null && !(firstName.equals("")))
+            _firstName = firstName;
+        else
+            _firstName = UNKNOWN;
+    }
     
+    /**
+     * method to return user last name.
+     * @return user last name. If empty or null - set to default.
+     */
+    public String getLastName()
+    {
+        return _lastName;
+    }
+    
+    /**
+     * method to set user last name.
+     * @param lastName user last name. If empty or null - set to default.
+     */
+    protected void setLastName (String lastName)
+    {
+        if (lastName != null && !(lastName.equals("")))
+            _lastName = lastName;
+        else
+            _lastName = UNKNOWN;
+    }
+    
+    /**
+     * method to return user address.
+     * @return user address.
+     */
+    public String getUserAddress()
+    {
+        return _userAddress;
+    }
+    
+    /**
+     * method to set user address.
+     * @param userAddress the user address. If empty or null - set to default.
+     */
+    protected void setUserAddress (String userAddress)
+    {
+        if (userAddress != null && !(userAddress.equals("")))
+            _userAddress = userAddress;
+        else
+            _userAddress = UNKNOWN;
+    }
+    
+    /**
+     * method to get user postal code.
+     * @return user postal code. If empty or null - set to default.
+     */
+    public String getPostalCode()
+    {
+        return _postalCode;
+    }
+    
+    /**
+     * method to set user postal code.
+     * @param postalCode the user postal code. 
+     */
+    public void setPostalCode (String postalCode)
+    {
+        if (postalCode != null && !(postalCode.equals("")))
+            _postalCode = postalCode;
+        else
+            _postalCode = UNKNOWN;
+    }
+    
+    /**
+     * method to get phone number.
+     * @return the user phone number.
+     */
+    public String getPhoneNumber()
+    {
+        return _phoneNumber;
+    }
+    
+    /**
+     * method to set phone number.
+     * 
+     * @param phoneNumber the user phone number. If empty or null - set to default.
+     */
+    public void setPhoneNumber (String phoneNumber)
+    {
+        if (phoneNumber != null && !(phoneNumber.equals("")))
+            _phoneNumber = phoneNumber;
+        else
+            _phoneNumber = UNKNOWN;
+    }
+    
+    public String getUserEmail()
+    {
+        return _userEmail;
+    }
+    
+    public String getUserNote()
+    {
+        return _userNote;
+    }
     
     @Override
     public String toString ()
