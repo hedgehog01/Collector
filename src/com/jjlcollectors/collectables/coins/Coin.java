@@ -29,9 +29,12 @@ public class Coin extends CollectableItem {
     /**
      * Default constructor - sets Unique Coin ID. Name ,facevalue and grade are
      * set to default values.
+     * 
+     * @param userID the id of the user who the item belongs to.
+     * @param name the coin name.
      */
-    public Coin() {
-        super();
+    public Coin(int userID, String name) {
+        super(userID, name);
         _grade = CoinGrade.UNKNOWN;
         _faceValue = UNKNOWN;
         _currency = CoinCurrency.UNKNOWN;
@@ -42,39 +45,26 @@ public class Coin extends CollectableItem {
     /**
      * Constructor that sets coin name. Grade set to default.
      *
-     * @param name the coin name
-     */
-    public Coin(String name) {
-        super(name);
-        _grade = CoinGrade.UNKNOWN;
-        _faceValue = UNKNOWN;
-        _currency = CoinCurrency.UNKNOWN;
-        _coinYear = DEFAULT_COIN_YEAR;
-        _coinMintMark = UNKNOWN;
-    }
-
-    /**
-     * Constructor that sets coin name. Grade set to default.
-     *
-     * @param name the coin name
+     * @param userID the id of the user who the item belongs to.
+     * @param name the coin name.
      * @param grade the Coin grade
      */
-    public Coin(String name, CoinGrade grade) {
-        super(name);
+    public Coin(int userID,String name, CoinGrade grade) {
+        super(userID,name);
         setCoinGrade(grade);
     }
 
     /**
      * Constructor that sets coin name. Grade set to default.
-     *
+     *@param userID the id of the user who the item belongs to.
      * @param name the coin name.
      * @param grade the Coin grade.
      * @param facevalue the coin face value.
      * @param currency the coin currency.
      * @param note the coin note.
      */
-    public Coin(String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note) {
-        this (name,grade);
+    public Coin(int userID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note) {
+        this (userID,name,grade);
         setFaceValue(facevalue);
         setCurrency(currency);
         setItemNote(note);
@@ -82,6 +72,7 @@ public class Coin extends CollectableItem {
     
     /**
      * 
+     * @param userID the id of the user who the item belongs to.
      * @param name the coin name.
      * @param grade the Coin grade.
      * @param facevalue the coin face value.
@@ -92,15 +83,25 @@ public class Coin extends CollectableItem {
      * @param buyPrice the coin buy price
      * @param coinValue the coin estimated value
      */
-    public Coin (String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
+    public Coin (int userID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
     {
-        this (name, grade, facevalue, currency, note);
+        this (userID, name, grade, facevalue, currency, note);
         setCoinYear(coinYear);
         setCoinMintMark(coinMintMark);
         setItemBuyPrice(buyPrice);
         setFaceValue(coinValue);
     }
 
+    /**
+     * Copy constructor
+     * @param other the other coin to copy from. coin UUID is generated randomly. userID is the same.
+     */
+    public Coin (Coin other)
+    {
+        this (other.getUserId(),other.getItemName(), other.getCoinGrade(), other.getFaceValue(), other.getCoinCurrency(), other.getItemNote(),other.getCoinYear(),other.getCoinMintMark(),other.getBuyPrice(),other.getItemValue());
+    }
+    
+    
     //========================================================================================//
     //Methods
     //========================================================================================//
@@ -135,6 +136,15 @@ public class Coin extends CollectableItem {
         } else {
             _faceValue = UNKNOWN;
         }
+    }
+    
+    /**
+     * method to get the coin face value.
+     * @return coin face value.
+     */
+    public String getFaceValue()
+    {
+        return _faceValue;
     }
     
     public void setCoinCurrency (CoinCurrency currency)

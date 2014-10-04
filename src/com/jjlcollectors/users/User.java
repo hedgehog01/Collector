@@ -17,12 +17,13 @@
  * MA 02110-1301  USA
  */
 package com.jjlcollectors.users;
-
+import java.util.Random;
+import java.util.UUID;
 /**
  * class that represents a user
  * @author Hedgehog01
  */
-public class User
+public final class User
 {
     //instance variables
     private String _firstName;
@@ -33,18 +34,27 @@ public class User
     private String _mobileNumber;
     private String _userEmail;
     private String _userNote;
+    private UUID _userUUID;
+    private String _userPassword;
+    
     
     private final String UNKNOWN = "UNKNOWN";
+    private final int PASS_RANDOM_LEN = 10;
     
     //===========================================================//
     //=========================Constructors======================//
     //===========================================================//
     /**
      * default constructor.
-     * all user attributes are set to default
+     * @param userEmail the user Email (user for login so must be valid).
+     * @param userPassword the user password.
+     * all other user attributes are set to default
      */
-    public User ()
+    public User (String userEmail, String userPassword)
     {
+        setUserUUID();
+        setUserEmail(userEmail);
+        setUserPassword (userPassword);
         _firstName = UNKNOWN;
         _lastName = UNKNOWN;
         _userAddress = UNKNOWN;
@@ -56,7 +66,7 @@ public class User
     }
     
     /**
-     * Constructor with all mutable user attributes
+     * Constructor with user attributes. Random UUID created for the user.
      * @param firstName user first name
      * @param lastName user last name
      * @param userAddress user address
@@ -68,6 +78,44 @@ public class User
      */
     public User (String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote)
     {
+        setUserUUID ();
+        setFirstName(firstName);
+        setLastName(lastName);
+        setUserAddress(userAddress);
+        setPostalCode(postalCode);
+        setPhoneNumber(phoneNumber);
+        setMobileNumber(mobileNumber);
+        setUserEmail(userEmail);
+        setUserNote(userNote);
+        
+    }
+    
+    /**
+     * User constructor including UUID.
+     * @param userUUID user UUID.
+     * @param firstName user first name
+     * @param lastName user last name
+     * @param userAddress user address
+     * @param postalCode user postal code
+     * @param phoneNumber user phone number
+     * @param mobileNumber user mobile number
+     * @param userEmail user email
+     * @param userNote user note
+     */
+    public User (UUID userUUID, String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote)
+    {
+        this (firstName,lastName,userAddress,postalCode,phoneNumber,mobileNumber,userEmail,userNote);
+        setUserUUID(userUUID);
+    }
+    
+    /**
+     * copy constructor. Copies all User attributes except UUID that is generated randomly.
+     * @param other the other User to copy from.
+     */
+    public User (User other)
+    {
+        this (other.getFirstName(),other.getLastName(),other.getUserAddress(),other.getPostalCode(),other.getPhoneNumber(),other.getMobileNumber(),other.getUserEmail(),other.getUserNote());
+        setUserUUID();
         
     }
     
@@ -75,6 +123,38 @@ public class User
     //=========================Methods===========================//
     //===========================================================//
     
+    /**
+     * method to get user UUID.
+     * @return the user UUID.
+     */
+    public UUID getUserUUID()
+    {
+        return _userUUID;
+    }
+    
+    /*
+    * private method to create user UUID from a String.
+    */
+    private void setUserUUID (String userUUID)
+    {
+        _userUUID = UUID.fromString(userUUID);
+    }
+    
+    /*
+    * private method to assign a new UUID to the user from a UUID.
+    */
+    private void setUserUUID (UUID userUUID)
+    {
+        _userUUID = userUUID;
+    }
+    
+    /*
+    * private method to create random UUID for the user.
+    */
+    private void setUserUUID ()
+    {
+        _userUUID = UUID.randomUUID();
+    }
     /**
      * method to return user first name
      * @return user first name
@@ -89,7 +169,7 @@ public class User
      * 
      * @param firstName the user first name.
      */
-    protected void setFirstName(String firstName)
+    private void setFirstName(String firstName)
     {
         if (firstName != null && !(firstName.equals("")))
             _firstName = firstName;
@@ -110,7 +190,7 @@ public class User
      * method to set user last name.
      * @param lastName user last name. If empty or null - set to default.
      */
-    protected void setLastName (String lastName)
+    private void setLastName (String lastName)
     {
         if (lastName != null && !(lastName.equals("")))
             _lastName = lastName;
@@ -131,7 +211,7 @@ public class User
      * method to set user address.
      * @param userAddress the user address. If empty or null - set to default.
      */
-    protected void setUserAddress (String userAddress)
+    private void setUserAddress (String userAddress)
     {
         if (userAddress != null && !(userAddress.equals("")))
             _userAddress = userAddress;
@@ -152,7 +232,7 @@ public class User
      * method to set user postal code.
      * @param postalCode the user postal code. 
      */
-    public void setPostalCode (String postalCode)
+    private void setPostalCode (String postalCode)
     {
         if (postalCode != null && !(postalCode.equals("")))
             _postalCode = postalCode;
@@ -174,7 +254,7 @@ public class User
      * 
      * @param phoneNumber the user phone number. If empty or null - set to default.
      */
-    public void setPhoneNumber (String phoneNumber)
+    private void setPhoneNumber (String phoneNumber)
     {
         if (phoneNumber != null && !(phoneNumber.equals("")))
             _phoneNumber = phoneNumber;
@@ -182,26 +262,107 @@ public class User
             _phoneNumber = UNKNOWN;
     }
     
+    /**
+     * method to get user mobile number.
+     * @return the user mobile number.
+     */
+    public String getMobileNumber()
+    {
+        return _mobileNumber;
+    }
+    
+    /**
+     * method to set user mobile number.
+     * @param mobileNumber the user mobile number.
+     */
+    private void setMobileNumber(String mobileNumber)
+    {
+         if (mobileNumber != null && !(mobileNumber.equals("")))
+            _mobileNumber = mobileNumber;
+        else
+            _mobileNumber = UNKNOWN;       
+    }
+    /**
+     * method to get the use email.
+     * @return user email.
+     */
     public String getUserEmail()
     {
         return _userEmail;
     }
     
+    /**
+     * method o set user email
+     * @param userEmail the user email to set
+     */
+    private void setUserEmail (String userEmail)
+    {
+        if (userEmail != null && !(userEmail.equals("")))
+            _userEmail = userEmail;
+        else
+            _userEmail = UNKNOWN;
+    }
+    
+    /**
+     * method to get user note.
+     * @return the user note.
+     */
     public String getUserNote()
     {
         return _userNote;
     }
     
+    /**
+     * method to set user note.
+     * @param userNote the user note.
+     */
+    private void setUserNote(String userNote)
+    {
+         if (userNote != null && !(userNote.equals("")))
+            _userNote = userNote;
+        else
+            _userNote = UNKNOWN;       
+    }
+    
+    /*
+    * method to set the user password.
+    * if the password is invalid a Random password is generated.
+    */
+    private void setUserPassword (String userPassword)
+    {
+         if (userPassword != null && !(userPassword.equals("")) && (userPassword.length() > 6))
+            _userPassword = userPassword;
+        else
+            _userPassword = createRandomPassword(PASS_RANDOM_LEN);               
+    }
+        
+    /*
+    * method that creates random password for when user enters invalid password.
+    * the password length is set by input int.
+    */
+    private String createRandomPassword(int len)
+    {
+
+        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random rnd = new Random();
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ ) 
+           sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+        return sb.toString();
+
+    }
     @Override
     public String toString ()
     {
         return "User info: " + 
+                "\nUUID: " + getUserUUID() +
                 "\nFirst name: " + getFirstName() + 
                 "\nLast name: " + getLastName() +
                 "\nAddress: " + getUserAddress() +
                 "\nPostal code: " + getPostalCode() +
                 "\nPhone Number: " + getPhoneNumber() +
-                "\nMobile Number: " + getUserEmail() +
+                "\nMobile Number: " + getMobileNumber() +
+                "\nEmail: " + getUserEmail() +
                 "\nUser note: " + getUserNote();
     }
 }

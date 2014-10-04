@@ -23,7 +23,7 @@ public abstract class CollectableItem
     protected LocalDate _buyDate; //item purchase date
     protected String _buyPrice; //item purchase price
     protected String _itemValue; //current item value
-    protected int _userId; //user who owns the item
+    protected int _userId; //id of user who owns the item
     
     
     //========================================================================================//
@@ -31,10 +31,11 @@ public abstract class CollectableItem
     //========================================================================================//
     /**
      * Default constructor - Sets item id to random UUID and default name.
-     * 
+     * @param userID the id of the user who the item belongs to.
      */
-    protected CollectableItem ()
+    protected CollectableItem (int userID)
     {
+        setUserId(userID);
         _itemId = UUID.randomUUID();
         _buyDate = LocalDate.now();
         setItemName(DEFAULT_NAME);
@@ -45,9 +46,9 @@ public abstract class CollectableItem
     /**
      * Constructor that excepts String for object name and also sets object UUID.
      */
-    protected CollectableItem (String name)
+    protected CollectableItem (int userID,String name)
     {
-        this();
+        this(userID);
         setItemName(name);
     }
 
@@ -215,10 +216,6 @@ public abstract class CollectableItem
     private boolean isUserIdValid (int userId)
     {
         //make sure user id is not zero or less
-        if (userId <= 0)
-            return false;
-        else
-            //To Do
-            return true;
+        return userId > 0; //To Do
     }
 }

@@ -39,9 +39,9 @@ public class Collector extends Application {
         addCoinButton.setText("Add Coin");
         addCoinButton.setOnAction((ActionEvent event) -> {
             StringBuilder note = new StringBuilder("note test");
-            Coin coin = new Coin ("Silver Eagle Dollar",CoinGrade.MS70,"100.0",CoinCurrency.EURO,note);
+            //Coin coin = new Coin ("Silver Eagle Dollar",CoinGrade.MS70,"100.0",CoinCurrency.EURO,note);
             
-            DBCoinConnect.addCoin(coin);
+            //DBCoinConnect.addCoin(coin);
 
         });
         GridPane grid = new GridPane();
