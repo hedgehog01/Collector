@@ -7,14 +7,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.jjlcollectors.controllers.login.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.login.LoginController">
     <stylesheets>
         <URL value="@login.css" />
     </stylesheets>
    <children>
       <Pane layoutX="-2.0" layoutY="-11.0" prefHeight="414.0" prefWidth="606.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="174.0" layoutY="153.0" prefHeight="17.0" prefWidth="50.0" text="Email" />
+            <Label fx:id="userEmailLabel" layoutX="174.0" layoutY="153.0" prefHeight="17.0" prefWidth="50.0" text="Email" />
             <Label layoutX="174.0" layoutY="193.0" text="Password" />
             <PasswordField fx:id="userPasswordField" layoutX="277.0" layoutY="189.0" promptText="Password" />
             <TextField fx:id="userEmailTextField" alignment="TOP_LEFT" layoutX="277.0" layoutY="149.0" prefHeight="25.0" prefWidth="149.0" promptText="Enter you Email" />

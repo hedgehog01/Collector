@@ -18,11 +18,15 @@
  */
 package com.jjlcollectors.controllers.login;
 
+import com.jjlcollectors.collectables.windows.LoginWindow;
+import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -36,8 +40,11 @@ public class LoginController implements Initializable
     @FXML
     private TextField userEmailTextField;
     
-    @FXML
+    @FXML 
     private PasswordField userPasswordField;
+    
+    @FXML
+    private Label userEmailLabel;
     
     
     
@@ -51,10 +58,14 @@ public class LoginController implements Initializable
         // TODO
     }    
     
-    
+    @FXML
     public void checkLoginStatus (ActionEvent event)
     {
         System.out.println ("Login button pressed");
+        System.out.println (userEmailTextField.getText());
+        System.out.println (userPasswordField.getText());
+        
+        System.out.println ("Checking credentials: " + DBUsersConnect.checkUserCredentials(userEmailTextField.getText(), userPasswordField.getText()));
     }
     
 }

@@ -28,7 +28,7 @@ import java.sql.Statement;
  *
  * @author Hedgehog01
  */
-public class DBUsers extends DBConnect
+public class DBUsersConnect extends DBConnect
 {
     private static final String TABLE_NAME = "USERDB";
     
@@ -54,4 +54,16 @@ public class DBUsers extends DBConnect
         return userExists;
     }
     
+    /**
+     * method to check if user credentials are valid.
+     * @param userName the user name
+     * @param userPassword the password
+     * @return true if credentials are valid.
+     */
+    public static boolean checkUserCredentials (String userName, String userPassword)
+    {
+        System.out.println(userName);
+        System.out.println(userPassword);
+        return (userName.equals("Nathan") && (userPassword.equals("password")));
+    }
 }
