@@ -36,6 +36,7 @@ public class LoginWindow extends Application
     {
         Parent root = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/login/Login.fxml"));
         Scene loginScene = new Scene (root,600,400);
+        loginScene.getStylesheets().add("/com/jjlcollectors/fxml/login/login.css");
         primaryStage.setScene(loginScene);
         primaryStage.show();
     }
