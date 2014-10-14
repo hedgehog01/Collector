@@ -45,6 +45,8 @@ public abstract class CollectableItem
     }
     /**
      * Constructor that excepts String for object name and also sets object UUID.
+     * @param userID the user ID.
+     * @param name the user name.
      */
     protected CollectableItem (int userID,String name)
     {
@@ -190,7 +192,7 @@ public abstract class CollectableItem
     
     /**
      * Method to print item details
-     * @return String with item name, UUID & note
+     * @return a string representation of the object.
      */
     public String toString()
     {

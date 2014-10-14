@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,21 +9,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.login.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.LoginController">
     <stylesheets>
         <URL value="@login.css" />
     </stylesheets>
    <children>
       <Pane layoutX="-2.0" layoutY="-11.0" prefHeight="414.0" prefWidth="606.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="userEmailLabel" layoutX="174.0" layoutY="153.0" prefHeight="17.0" prefWidth="50.0" text="Email" />
+            <Label fx:id="userEmailLabel" layoutX="174.0" layoutY="153.0" prefHeight="17.0" prefWidth="51.0" text="Email" />
             <Label fx:id="userPasswordLabel" layoutX="174.0" layoutY="193.0" text="Password" />
             <PasswordField fx:id="userPasswordField" layoutX="277.0" layoutY="189.0" promptText="Password" />
-            <TextField fx:id="userEmailTextField" alignment="TOP_LEFT" layoutX="277.0" layoutY="149.0" prefHeight="25.0" prefWidth="149.0" promptText="Enter you Email" />
+            <TextField fx:id="userEmailTextField" alignment="TOP_LEFT" layoutX="277.0" layoutY="149.0" prefHeight="25.0" prefWidth="149.0" promptText="Email" />
             <Button fx:id="loginButton" layoutX="302.0" layoutY="261.0" mnemonicParsing="false" onAction="#checkLoginStatus" prefHeight="25.0" prefWidth="124.0" text="Login" />
-            <Button fx:id="registerButton" layoutX="534.0" layoutY="14.0" mnemonicParsing="false" text="Register" />
-            <Button fx:id="forgotPasswordButton" layoutX="302.0" layoutY="303.0" mnemonicParsing="false" text="Forgot my password" />
+            <Button fx:id="registerButton" layoutX="302.0" layoutY="341.0" mnemonicParsing="false" onAction="#goToRegisterUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
+            <Button fx:id="forgotPasswordButton" layoutX="302.0" layoutY="303.0" mnemonicParsing="false" onAction="#goToRetrievePassword" prefHeight="25.0" prefWidth="124.0" text="Forgot my password" />
             <Label fx:id="loginStatusLabel" layoutX="304.0" layoutY="237.0" />
+            <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
+              <menus>
+                <Menu text="_File">
+                  <items>
+                    <MenuItem onAction="#doExit" text="E_xit">
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Label fx:id="incorrectPasswordLabel" layoutX="277.0" layoutY="229.0" prefHeight="17.0" prefWidth="149.0" />
          </children>
       </Pane>
    </children>
