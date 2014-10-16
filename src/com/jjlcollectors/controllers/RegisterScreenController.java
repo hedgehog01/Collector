@@ -52,6 +52,9 @@ public class RegisterScreenController implements Initializable, ControlledScreen
     private final String EMAIL_MANDATORY = "Email must be filled";
     private final String PASSWORD_FIELDS_DIFF = "Passwords don't match";
     private final String PASSWORD_INVALID = "Password must be at least\n8 characters long";
+    private final String USER_NOT_ADDED = "Could not create a new user.\nContact Program creator.";
+    private final String USER_ADDED = "New user created successfully";
+            
 
     private ScreensController myController;
 
@@ -143,8 +146,22 @@ public class RegisterScreenController implements Initializable, ControlledScreen
 
         if (isUserFormValid())
         {
+            
             User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userAddressTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
-            DBUsersConnect.addUser(newUser);
+            boolean userAdded = DBUsersConnect.addUser(newUser);
+            
+            if (userAdded)
+            {
+                registerStatusLabel.setText(USER_ADDED);
+                backToLoginScreen();
+                log.log(Level.INFO, "registerNewUser method started");
+            }
+            else
+            {
+                registerStatusLabel.setText(USER_NOT_ADDED);
+                log.log (Level.SEVERE, "User not added for some reason. user input: {0} {1} {2} {3} {4} {5} {6} {7} {8}", new Object[]{userFirstNameTextField.getText(), userLastNameTextField.getText(), userAddressTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText(), userNoteTextField.getText(), userPasswordField.getText()});
+            }
+            
         }
 
     }

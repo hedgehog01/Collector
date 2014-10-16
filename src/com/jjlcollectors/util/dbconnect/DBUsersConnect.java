@@ -86,39 +86,47 @@ public class DBUsersConnect extends DBConnect
      *
      * @param user the user to add
      */
-    public static void addUser(User user)
+    public static boolean addUser(User user)
     {
+        boolean userAdded = false;
         log.log(Level.INFO, "Call to addUser method");
-        addUser(user.getFirstName(), user.getLastName(), user.getUserAddress(), user.getPostalCode(), user.getPhoneNumber(), user.getMobileNumber(), user.getUserEmail(), user.getUserNote(), user.getUserUUID(), user.getUserPassword(),user.getUserSalt());
+        userAdded = addUser(user.getFirstName(), user.getLastName(), user.getUserAddress(), user.getPostalCode(), user.getPhoneNumber(), user.getMobileNumber(), user.getUserEmail(), user.getUserNote(), user.getUserUUID(), user.getUserPassword(),user.getUserSalt());
+        log.log(Level.INFO, "User add status {0}",userAdded);
         //createDBConnection();
         log.log(Level.INFO, "Select * from users...");
         selectAllUsers();
+        return userAdded;
     }
 
-    private static void addUser(String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, UUID userUUID, byte[] userPassword, byte[] userSalt)
+    private static boolean addUser(String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, UUID userUUID, byte[] userPassword, byte[] userSalt)
     {
+        boolean userAdded = false;
         DBConnect.createDBConnection();
         System.out.println("Attemp to add new user to DB...");
         try {
-            System.out.println("Table name: " + TABLE_NAME);
+            log.log(Level.INFO, "Table name: {0}",TABLE_NAME);
             String sqlStatement = "INSERT INTO " + TABLE_NAME +" (FIRST_NAME,LAST_NAME,ADDRESS,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT) VALUES " +"('" + firstName + "','" + lastName + "','" + userAddress + "','" + postalCode + "','" + phoneNumber + "','" + mobileNumber + "','" + userEmail + "','" + userNote + "','" + userUUID + "',?,?)";        
             PreparedStatement prepstmt = conn.prepareStatement(sqlStatement);
             prepstmt.setBytes(1, userPassword);
             prepstmt.setBytes(2, userSalt);
-            prepstmt.execute();
-            prepstmt.close();
-            
-            /*
-            System.out.println("Table name: " + TABLE_NAME);
-            stmt = conn.createStatement();
-            stmt.execute("INSERT INTO " + TABLE_NAME +" (FIRST_NAME,LAST_NAME,ADDRESS,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT) VALUES" 
-            + " ('" + firstName + "','" + lastName + "','" + userAddress + "','" + postalCode + "','" + phoneNumber + "','" + mobileNumber + "','" + userEmail + "','" + userNote + "','" + userUUID + "','" + userPassword + "','" + userSalt + "')");        
-            //+ " ('" + firstName + "','" + lastName + "','" + userAddress + "','" + postalCode + "','" + phoneNumber + "','" + mobileNumber + "','" + userEmail + "','" + userNote + "','" + userUUID + "','" + userPassword + "'," + userSalt + ")");
-              */      
+            int updateCount = prepstmt.executeUpdate();
+            log.log(Level.INFO, "Add user update count is: {0}",updateCount);
+            prepstmt.close();      
             DBConnect.closeDBConnection();
+            
+            if (updateCount == 1)
+            {
+                log.log(Level.INFO, "User added and return value set to true");
+                userAdded = true;
+            }
+            else
+            {
+                log.log(Level.SEVERE, "User NOT added and return value remains false");
+            }
         } catch (SQLException e) {
-            System.err.println (e.getMessage());
+            log.log(Level.SEVERE, "SQL error while tring to add a new user. SQL message: {0} SQL Error code: {1} Stack trace: {2}",new Object [] { e.getMessage(),e.getErrorCode(),e.getStackTrace()});
         }
+        return userAdded;
     }
 
     /**
