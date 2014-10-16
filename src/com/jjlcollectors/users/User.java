@@ -17,8 +17,12 @@
  * MA 02110-1301  USA
  */
 package com.jjlcollectors.users;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * class that represents a user
  * @author Hedgehog01
@@ -26,6 +30,7 @@ import java.util.UUID;
 public final class User
 {
     //instance variables
+    private static final Logger log = Logger.getLogger( User.class.getName() );
     private String _firstName;
     private String _lastName;
     private String _userAddress;
@@ -35,7 +40,8 @@ public final class User
     private String _userEmail;
     private String _userNote;
     private UUID _userUUID;
-    private String _userPassword;
+    private byte [] _userPassword;
+    private byte [] _userSalt;
     
     
     private final String UNKNOWN = "UNKNOWN";
@@ -49,9 +55,12 @@ public final class User
      * @param userEmail the user Email (user for login so must be valid).
      * @param userPassword the user password.
      * all other user attributes are set to default
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.spec.InvalidKeySpecException
      */
-    public User (String userEmail, String userPassword)
+    public User (String userEmail, char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
+        
         setUserUUID();
         setUserEmail(userEmail);
         setUserPassword (userPassword);
@@ -75,8 +84,11 @@ public final class User
      * @param mobileNumber user mobile number
      * @param userEmail user email
      * @param userNote user note
+     * @param userPassword user password
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.spec.InvalidKeySpecException
      */
-    public User (String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote)
+    public User (String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         setUserUUID ();
         setFirstName(firstName);
@@ -87,6 +99,7 @@ public final class User
         setMobileNumber(mobileNumber);
         setUserEmail(userEmail);
         setUserNote(userNote);
+        setUserPassword(userPassword);
         
     }
     
@@ -101,20 +114,25 @@ public final class User
      * @param mobileNumber user mobile number
      * @param userEmail user email
      * @param userNote user note
+     * @param userPassword user password
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.spec.InvalidKeySpecException
      */
-    public User (UUID userUUID, String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote)
+    public User (UUID userUUID, String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote,char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
-        this (firstName,lastName,userAddress,postalCode,phoneNumber,mobileNumber,userEmail,userNote);
+        this (firstName,lastName,userAddress,postalCode,phoneNumber,mobileNumber,userEmail,userNote,userPassword);
         setUserUUID(userUUID);
     }
     
     /**
-     * copy constructor. Copies all User attributes except UUID that is generated randomly.
+     * copy constructor. Copies all User attributes except UUID & password that are generated randomly.
      * @param other the other User to copy from.
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.spec.InvalidKeySpecException
      */
-    public User (User other)
+    public User (User other) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
-        this (other.getFirstName(),other.getLastName(),other.getUserAddress(),other.getPostalCode(),other.getPhoneNumber(),other.getMobileNumber(),other.getUserEmail(),other.getUserNote());
+        this (other.getFirstName(),other.getLastName(),other.getUserAddress(),other.getPostalCode(),other.getPhoneNumber(),other.getMobileNumber(),other.getUserEmail(),other.getUserNote(),"".toCharArray());
         setUserUUID();
         
     }
@@ -328,14 +346,59 @@ public final class User
     * method to set the user password.
     * if the password is invalid a Random password is generated.
     */
-    private void setUserPassword (String userPassword)
+    private void setUserPassword (char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
-         if (userPassword != null && !(userPassword.equals("")) && (userPassword.length() > 6))
-            _userPassword = userPassword;
+        log.log(Level.INFO, "starting password saving");
+         if (userPassword != null && (userPassword.length > 6))
+         {
+             log.log(Level.INFO, "create salt");
+             setUserSalt();
+             PasswordEncryptionService password = new PasswordEncryptionService();
+             log.log(Level.INFO, "Attemp encrypt password");
+             _userPassword = password.getEncryptedPassword(userPassword, _userSalt);             
+         }
+            
         else
-            _userPassword = createRandomPassword(PASS_RANDOM_LEN);               
+         {
+             log.log(Level.SEVERE, "illegal password entered and reached here. attempt to create random password instead. should not happen!!");
+             char [] pass = createRandomPassword(10).toCharArray();
+             log.log(Level.INFO, "create salt if doesn't exist");
+             if (_userSalt == null || _userSalt.length <=10 )
+             {
+                 log.log(Level.INFO, "salt doesn't exist and will be created");
+                 setUserSalt();
+             }
+             PasswordEncryptionService password = new PasswordEncryptionService();
+             log.log(Level.INFO, "Attemp encrypt password");
+             _userPassword = password.getEncryptedPassword(pass, _userSalt);
+             
+         }
     }
+    
+    public byte [] getUserPassword ()
+    {
+        return _userPassword;
+    }
+       
+    /*
+    * method to create a new user salt needed for one way password encryption.
+    */
+    private void setUserSalt () throws NoSuchAlgorithmException
+    {
+        PasswordEncryptionService salt = new PasswordEncryptionService();
         
+        _userSalt = salt.generateSalt();
+    }
+    
+    /**
+     * method to retrieve user salt
+     * @return salt
+     */
+    public byte[] getUserSalt ()
+    {
+        return _userSalt;
+                
+    }
     /*
     * method that creates random password for when user enters invalid password.
     * the password length is set by input int.

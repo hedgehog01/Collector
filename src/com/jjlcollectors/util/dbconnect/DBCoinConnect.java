@@ -15,6 +15,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,7 +28,7 @@ public class DBCoinConnect extends DBConnect{
 
 
     private static final String TABLE_NAME = "COINS";
-
+    private static final Logger log = Logger.getLogger( DBCoinConnect.class.getName() );
 
     /**
      * method to add coin to coin DB
@@ -36,12 +38,11 @@ public class DBCoinConnect extends DBConnect{
         
         
         //insertCoin(uuid, name, grade, faceValue, currency, note);
+        log.log(Level.INFO, "Call to addCoin method");
         addCoin (coin.getItemId().toString(),coin.getItemName(),coin.getCoinGrade().name(),coin.getCoinFaceValue(),coin.getCoinCurrency().name(),coin.getItemNote(),coin.getItemBuyDate(),coin.getBuyPrice(),coin.getItemValue(),coin.getCoinMintMark(),coin.getCoinYear());
         //createDBConnection();
-        System.out.println("Select * from coins...");
+        log.log(Level.INFO, "Select * from coins...");        
         selectAllCoins();
-
-
     }
      /**
      * method to remove coin from coin DB
@@ -91,9 +92,6 @@ public class DBCoinConnect extends DBConnect{
         System.out.println("Attemp to add new coin...");
         try {
             stmt = conn.createStatement();
-            //stmt.execute("insert into " + tableName + " values (" + "'"uuid'" + ",'" + name + "','" + faceValue +"')");
-            //stmt.execute("INSERT INTO COINS (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('"+uuid+"','"+name+"','"+grade+"','"+faceValue+"','"+currency+"','"+note.toString()+"')");
-            //stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE) VALUES" + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "')");
             stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUY_DATE,COIN_BUY_PRICE,COIN_VALUE,COIN_MINT_MARK,COIN_YEAR) VALUES" 
                     + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "','" + date + "','" + coinBuyPrice + "','" + coinValue + "','" + coinMintMark + "'," + coinYear + ")");
             DBConnect.closeDBConnection();

@@ -16,10 +16,9 @@
          <children>
             <Label fx:id="userEmailReTypeLabel" layoutX="41.0" layoutY="207.0" prefHeight="17.0" prefWidth="83.0" text="Confirm Email:" />
             <Label fx:id="userPasswordLabel" layoutX="324.0" layoutY="258.0" text="Password" />
-            <PasswordField fx:id="userPasswordField1" layoutX="424.0" layoutY="253.0" promptText="Password" />
-            <TextField fx:id="userEmailTextField2" alignment="TOP_LEFT" layoutX="124.0" layoutY="203.0" prefHeight="25.0" prefWidth="149.0" promptText="Email confirmation" />
-            <Button fx:id="registerButton" layoutX="449.0" layoutY="343.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="124.0" text="Register" />
-            <Label fx:id="loginStatusLabel" layoutX="304.0" layoutY="237.0" />
+            <PasswordField fx:id="userPasswordField" layoutX="424.0" layoutY="253.0" promptText="Password" />
+            <TextField fx:id="userEmailConfirmTextField" alignment="TOP_LEFT" layoutX="124.0" layoutY="203.0" prefHeight="25.0" prefWidth="149.0" promptText="Email confirmation" />
+            <Button fx:id="registerButton" layoutX="449.0" layoutY="353.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
             <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
                <menus>
                   <Menu text="_File">
@@ -38,7 +37,7 @@
                   </Menu>
                </menus>
             </MenuBar>
-            <TextField fx:id="userEmailTextField1" layoutX="124.0" layoutY="176.0" promptText="Email" />
+            <TextField fx:id="userEmailTextField" layoutX="124.0" layoutY="176.0" promptText="Email" />
             <Label fx:id="userEmailLabel" layoutX="41.0" layoutY="180.0" text="Email:" />
             <Label fx:id="firstNameLabel" layoutX="41.0" layoutY="83.0" text="First Name:" />
             <Label fx:id="lastNameLabel" layoutX="41.0" layoutY="111.0" text="Last Name:" />
@@ -46,15 +45,18 @@
             <Label fx:id="phoneNumberLabel" layoutX="324.0" layoutY="82.0" text="Phone Number:" />
             <Label fx:id="mobilePhoneLabel" layoutX="324.0" layoutY="111.0" text="Mobile Phone:" />
             <Label layoutX="324.0" layoutY="289.0" text="Confirm Password:" />
-            <PasswordField fx:id="userPasswordField2" layoutX="424.0" layoutY="284.0" promptText="Password" />
+            <PasswordField fx:id="userPasswordConfirmField" layoutX="424.0" layoutY="284.0" promptText="Password" />
             <TextField fx:id="userFirstNameTextField" layoutX="129.0" layoutY="80.0" promptText="First Name" />
-            <TextField fx:id="userLastNameTextField1" layoutX="129.0" layoutY="107.0" promptText="Last Name" />
+            <TextField fx:id="userLastNameTextField" layoutX="129.0" layoutY="107.0" promptText="Last Name" />
             <TextField fx:id="userPhoneNumberTextField" layoutX="422.0" layoutY="78.0" promptText="Phone Number" />
             <TextField fx:id="userMobileNumberTextField" layoutX="422.0" layoutY="107.0" promptText="Mobile Number" />
             <TextField fx:id="userAddressTextField" layoutX="124.0" layoutY="254.0" promptText="Address" />
             <Label fx:id="userCommentLabel" layoutX="324.0" layoutY="192.0" text="Additional info:" />
-            <TextField layoutX="423.0" layoutY="159.0" prefHeight="83.0" prefWidth="149.0" promptText="Additional info" />
-            <Button fx:id="alreadyRegisteredButton" layoutX="41.0" layoutY="343.0" mnemonicParsing="false" onAction="#backToLoginScreen" text="Already registered" />
+            <TextField fx:id="userNoteTextField" layoutX="423.0" layoutY="159.0" prefHeight="83.0" prefWidth="149.0" promptText="Additional info" />
+            <Button fx:id="alreadyRegisteredButton" layoutX="41.0" layoutY="353.0" mnemonicParsing="false" onAction="#backToLoginScreen" text="Already registered" />
+            <Label fx:id="registerStatusLabel" layoutX="324.0" layoutY="310.0" prefHeight="41.0" prefWidth="249.0" />
+            <Label layoutX="38.0" layoutY="289.0" text="Postal Code:" />
+            <TextField fx:id="userPostalCodeTextField" layoutX="124.0" layoutY="285.0" promptText="Postal Code" />
          </children>
       </Pane>
    </children>
