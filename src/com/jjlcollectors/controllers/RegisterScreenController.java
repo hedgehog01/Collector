@@ -146,10 +146,8 @@ public class RegisterScreenController implements Initializable, ControlledScreen
 
         if (isUserFormValid())
         {
-            
-            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userAddressTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
+            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userAddressTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
             boolean userAdded = DBUsersConnect.addUser(newUser);
-            
             if (userAdded)
             {
                 registerStatusLabel.setText(USER_ADDED);
@@ -183,7 +181,13 @@ public class RegisterScreenController implements Initializable, ControlledScreen
         boolean isValid = true;
         registerStatusLabel.setText("");
         //check if mandatory fields filled
-        if (!(isUserNameValid()))
+        if ((DBUsersConnect.findUserByEmail(userEmailTextField.getText().toLowerCase())))
+        {
+            log.log(Level.INFO, "user with same email already exits");
+            registerStatusLabel.setText("User with same Email already exits");
+            isValid = false;
+        }
+        else if (!(isUserNameValid()))
         {
             isValid = false;
         } else if (!(isUserEmailValid()))

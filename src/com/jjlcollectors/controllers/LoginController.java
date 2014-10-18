@@ -23,6 +23,8 @@ import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,6 +41,10 @@ import javafx.scene.control.TextField;
  */
 public class LoginController implements Initializable, ControlledScreen
 {
+    private static final Logger log = Logger.getLogger(LoginController.class.getName());
+    private final String PASSWORD_EMPTY = "Enter Password";
+    private final String EMAIL_OR_PASSWORD_INCORRECT = "Email or password are incorrect";
+    
     @FXML
     private TextField userEmailTextField;
     
@@ -56,6 +62,9 @@ public class LoginController implements Initializable, ControlledScreen
     
     @FXML
     private Button forgotPasswordButton;
+    
+    @FXML
+    private Label loginStatusLabel;
 
     private ScreensController myController;
     /**
@@ -81,13 +90,71 @@ public class LoginController implements Initializable, ControlledScreen
      * @param event the login event.
      */
     @FXML
+    /*
+    * method to check login status.
+    */
     public void checkLoginStatus (ActionEvent event)
     {
-        System.out.println ("Login button pressed");
-        System.out.println (userEmailTextField.getText());
-        System.out.println (userPasswordField.getText());
-        
-        System.out.println ("Checking credentials: " + DBUsersConnect.checkUserCredentials(userEmailTextField.getText(), userPasswordField.getText()));
+        loginStatusLabel.setText("");
+        log.log(Level.INFO, "Login button pressed");
+        if (isLoginValid())
+        {
+            log.log(Level.INFO, "login is valid moving to next scene");
+            
+        }
+        else
+        {
+            log.log(Level.INFO, "login is not valid");
+        }
+    }
+    
+    /*
+    * method to check if login credentials are valid.
+    * returns true if the are.
+    */
+    private boolean isLoginValid()
+    {
+        boolean loginValid = true;
+        //verify user with this email exists
+        if (!(DBUsersConnect.findUserByEmail(userEmailTextField.getText().toLowerCase())))
+        {
+            log.log(Level.INFO, "User doesn't exist");
+            loginStatusLabel.setText(EMAIL_OR_PASSWORD_INCORRECT);
+            loginValid = false;
+        }
+        //verify password with this email is valid
+        else if (!(isPasswordValid()))
+        {
+            log.log(Level.INFO, "User password incorrect");
+            
+            loginValid = false;
+        }
+
+        return loginValid;
+    }
+    
+    /*
+    * method to verify if user password is correct
+    * returns true if it is.
+    */
+    private boolean isPasswordValid()
+    {
+        boolean passwordValid = true;
+        //verify password not empty
+        if ((userPasswordField.getText() == null)||(userPasswordField.getText().trim().isEmpty()))
+        {
+            log.log(Level.INFO, "User password Empty or null");
+            passwordValid = false;
+            loginStatusLabel.setText(PASSWORD_EMPTY);
+        }
+        //Check password is NOT valid with this email and update boolean var
+        else if (!(DBUsersConnect.isUserPasswordValid(userEmailTextField.getText().toLowerCase(),userPasswordField.getText().toCharArray())))
+        {
+            log.log(Level.INFO, "User password Invalid!");
+            passwordValid = false;
+            loginStatusLabel.setText(PASSWORD_EMPTY);
+        }
+        return passwordValid;
     }
     
     /*

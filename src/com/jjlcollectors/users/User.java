@@ -62,7 +62,7 @@ public final class User
     {
         
         setUserUUID();
-        setUserEmail(userEmail);
+        setUserEmail(userEmail.toLowerCase());
         setUserPassword (userPassword);
         _firstName = UNKNOWN;
         _lastName = UNKNOWN;
