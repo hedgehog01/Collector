@@ -19,6 +19,7 @@
 package com.jjlcollectors.users;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -42,6 +43,7 @@ public final class User
     private UUID _userUUID;
     private byte [] _userPassword;
     private byte [] _userSalt;
+    private LocalDateTime _userRegistrationTime;
     
     
     private final String UNKNOWN = "UNKNOWN";
@@ -64,6 +66,7 @@ public final class User
         setUserUUID();
         setUserEmail(userEmail.toLowerCase());
         setUserPassword (userPassword);
+        setUserRegistrationTime();
         _firstName = UNKNOWN;
         _lastName = UNKNOWN;
         _userAddress = UNKNOWN;
@@ -399,6 +402,25 @@ public final class User
         return _userSalt;
                 
     }
+    
+    /*
+    * method that sets user registration to currnt date & time (on local machine).
+    */
+    private void setUserRegistrationTime()
+    {
+        _userRegistrationTime = LocalDateTime.now();
+    }
+    
+    /**
+     * method to return date and time user registered. Date and time are from local machine time.
+     * @return local date time user registered on.
+     */
+    public LocalDateTime getUserRegistrationTime()
+    {
+        return _userRegistrationTime;
+    }
+    
+    
     /*
     * method that creates random password for when user enters invalid password.
     * the password length is set by input int.
