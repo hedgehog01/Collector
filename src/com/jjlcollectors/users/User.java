@@ -19,11 +19,11 @@
 package com.jjlcollectors.users;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Timestamp;
 /**
  * class that represents a user
  * @author Hedgehog01
@@ -43,7 +43,7 @@ public final class User
     private UUID _userUUID;
     private byte [] _userPassword;
     private byte [] _userSalt;
-    private LocalDateTime _userRegistrationTime;
+    private Timestamp _userRegistrationTime;
     
     
     private final String UNKNOWN = "UNKNOWN";
@@ -100,9 +100,10 @@ public final class User
         setPostalCode(postalCode);
         setPhoneNumber(phoneNumber);
         setMobileNumber(mobileNumber);
-        setUserEmail(userEmail);
+        setUserEmail(userEmail.toLowerCase());
         setUserNote(userNote);
         setUserPassword(userPassword);
+        setUserRegistrationTime();
         
     }
     
@@ -408,14 +409,15 @@ public final class User
     */
     private void setUserRegistrationTime()
     {
-        _userRegistrationTime = LocalDateTime.now();
+        _userRegistrationTime = new java.sql.Timestamp(
+        System.currentTimeMillis());
     }
     
     /**
      * method to return date and time user registered. Date and time are from local machine time.
      * @return local date time user registered on.
      */
-    public LocalDateTime getUserRegistrationTime()
+    public Timestamp getUserRegistrationTime()
     {
         return _userRegistrationTime;
     }

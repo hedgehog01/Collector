@@ -31,8 +31,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +95,7 @@ public class DBUsersConnect extends DBConnect
     {
         boolean userAdded = false;
         log.log(Level.INFO, "Call to addUser method");
-        userAdded = addUser(user.getFirstName(), user.getLastName(), user.getUserAddress(), user.getPostalCode(), user.getPhoneNumber(), user.getMobileNumber(), user.getUserEmail(), user.getUserNote(), user.getUserUUID(), user.getUserPassword(), user.getUserSalt());
+        userAdded = addUser(user.getFirstName(), user.getLastName(), user.getUserAddress(), user.getPostalCode(), user.getPhoneNumber(), user.getMobileNumber(), user.getUserEmail(), user.getUserNote(), user.getUserUUID(), user.getUserPassword(), user.getUserSalt(), user.getUserRegistrationTime());
         log.log(Level.INFO, "User add status {0}", userAdded);
         //createDBConnection();
         log.log(Level.INFO, "Select * from users...");
@@ -105,22 +103,19 @@ public class DBUsersConnect extends DBConnect
         return userAdded;
     }
 
-    private static boolean addUser(String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, UUID userUUID, byte[] userPassword, byte[] userSalt)
-    {
-        boolean userAdded = false;
+    private static boolean addUser(String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, UUID userUUID, byte[] userPassword, byte[] userSalt, Timestamp userRegTime)
+    {   boolean userAdded = false;
         DBConnect.createDBConnection();
         System.out.println("Attemp to add new user to DB...");
         try
         {
             log.log(Level.INFO, "Table name: {0}", TABLE_NAME);
-            String sqlStatement = "INSERT INTO " + TABLE_NAME + " (FIRST_NAME,LAST_NAME,ADDRESS,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT) VALUES " + "('" + firstName + "','" + lastName + "','" + userAddress + "','" + postalCode + "','" + phoneNumber + "','" + mobileNumber + "','" + userEmail + "','" + userNote + "','" + userUUID + "',?,?)";
+            log.log(Level.INFO, "User time stamp: {0}", userRegTime);
+            String sqlStatement = "INSERT INTO " + TABLE_NAME + " (FIRST_NAME,LAST_NAME,ADDRESS,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT,USER_REGISTRATION_TIME) VALUES " + "('" + firstName + "','" + lastName + "','" + userAddress + "','" + postalCode + "','" + phoneNumber + "','" + mobileNumber + "','" + userEmail + "','" + userNote + "','" + userUUID + "',?,?,'" + userRegTime+"')";
             PreparedStatement prepstmt = conn.prepareStatement(sqlStatement);
-            //log.log(Level.INFO, "localdatetime: {0}", userRegTime);
-            //Timestamp ts = new Timestamp (userRegTime.toEpochSecond(ZoneOffset.UTC));
-            //log.log(Level.INFO, "Attemp insert timestamp: {0}", ts);
             prepstmt.setBytes(1, userPassword);
             prepstmt.setBytes(2, userSalt);
-            //prepstmt.setTimestamp(3,ts);
+            //prepstmt.setTimestamp(3,userRegTime);
             int updateCount = prepstmt.executeUpdate();
             log.log(Level.INFO, "Add user update count is: {0}", updateCount);
             prepstmt.close();
@@ -325,8 +320,9 @@ public class DBUsersConnect extends DBConnect
                     String userUUID = results.getString(10);
                     String userPass = results.getString(11);
                     String userSalt = results.getString(12);
+                    String userRegTime = results.getTimestamp(13).toString();
 
-                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt);
+                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt + "\t" + userRegTime);
                 }
             }
 
