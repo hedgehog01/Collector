@@ -71,21 +71,6 @@ public class DBUsersConnect extends DBConnect
         DBConnect.closeDBConnection();
         return userExists;
     }
-
-    /**
-     * method to check if user credentials are valid.
-     *
-     * @param userName the user name
-     * @param userPassword the password
-     * @return true if credentials are valid.
-     */
-    public static boolean checkUserCredentials(String userName, String userPassword)
-    {
-        System.out.println(userName);
-        System.out.println(userPassword);
-        return (userName.equals("Nathan") && (userPassword.equals("password")));
-    }
-
     /**
      * Method to add a new user to the DB
      *
@@ -279,7 +264,7 @@ public class DBUsersConnect extends DBConnect
 
         return Salt;
     }
-
+    
     /*
      *method to print all users in DB
      */
