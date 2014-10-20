@@ -305,7 +305,8 @@ public class DBUsersConnect extends DBConnect
                 }
 
                 System.out.println("\n-------------------------------------------------");
-
+                Timestamp userRegTime = null;
+                Timestamp lastLoginTime = null;
                 while (results.next())
                 {
                     int id = results.getInt(1);
@@ -320,9 +321,12 @@ public class DBUsersConnect extends DBConnect
                     String userUUID = results.getString(10);
                     String userPass = results.getString(11);
                     String userSalt = results.getString(12);
-                    String userRegTime = results.getTimestamp(13).toString();
-
-                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt + "\t" + userRegTime);
+                    if (results.getTimestamp("USER_REGISTRATION_TIME") != null)
+                        userRegTime = results.getTimestamp("USER_REGISTRATION_TIME");
+                    if (results.getTimestamp("USER_LAST_LOGIN_TIME")!=null)
+                        lastLoginTime = results.getTimestamp("USER_LAST_LOGIN_TIME");
+                    
+                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt + "\t" + userRegTime + "\t" + lastLoginTime);
                 }
             }
 
