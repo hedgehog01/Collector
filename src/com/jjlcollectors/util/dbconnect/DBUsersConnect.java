@@ -71,21 +71,6 @@ public class DBUsersConnect extends DBConnect
         DBConnect.closeDBConnection();
         return userExists;
     }
-
-    /**
-     * method to check if user credentials are valid.
-     *
-     * @param userName the user name
-     * @param userPassword the password
-     * @return true if credentials are valid.
-     */
-    public static boolean checkUserCredentials(String userName, String userPassword)
-    {
-        System.out.println(userName);
-        System.out.println(userPassword);
-        return (userName.equals("Nathan") && (userPassword.equals("password")));
-    }
-
     /**
      * Method to add a new user to the DB
      *
@@ -279,7 +264,7 @@ public class DBUsersConnect extends DBConnect
 
         return Salt;
     }
-
+    
     /*
      *method to print all users in DB
      */
@@ -305,7 +290,8 @@ public class DBUsersConnect extends DBConnect
                 }
 
                 System.out.println("\n-------------------------------------------------");
-
+                Timestamp userRegTime = null;
+                Timestamp lastLoginTime = null;
                 while (results.next())
                 {
                     int id = results.getInt(1);
@@ -320,9 +306,12 @@ public class DBUsersConnect extends DBConnect
                     String userUUID = results.getString(10);
                     String userPass = results.getString(11);
                     String userSalt = results.getString(12);
-                    String userRegTime = results.getTimestamp(13).toString();
-
-                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt + "\t" + userRegTime);
+                    if (results.getTimestamp("USER_REGISTRATION_TIME") != null)
+                        userRegTime = results.getTimestamp("USER_REGISTRATION_TIME");
+                    if (results.getTimestamp("USER_LAST_LOGIN_TIME")!=null)
+                        lastLoginTime = results.getTimestamp("USER_LAST_LOGIN_TIME");
+                    
+                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt + "\t" + userRegTime + "\t" + lastLoginTime);
                 }
             }
 
