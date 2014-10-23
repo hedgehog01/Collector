@@ -22,7 +22,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Abstract class to handle main Database connection tasks
@@ -40,9 +41,8 @@ public abstract class DBConnect
     protected static final String DB_USER_NAME = "Hedgehog01";
     protected static final String DB_PASS = "Jade170213";
     protected static Connection conn = null;
-    protected static Statement stmt = null;
     protected static ResultSet resultSet = null;
-
+    private static final Logger log = Logger.getLogger(DBConnect.class.getName());
     /*
      * method to close database connection
      */
@@ -50,11 +50,11 @@ public abstract class DBConnect
     {
         try
         {
-            System.out.println("Closing DB connection...");
+            log.log(Level.INFO,"Closing DB connection...");
             DBCoinConnect.conn.close();
         } catch (SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.log(Level.SEVERE,"Closing DB connection failed.\nSQL Ex: {0}",e);
         }
     }
 
@@ -66,17 +66,17 @@ public abstract class DBConnect
         try
         {
             Class.forName(DBCoinConnect.DRIVER_CLIENT).newInstance();
-            System.out.println("connecting to DB...");
+            log.log(Level.INFO, "Attempting to establish DB connection...");
             DBCoinConnect.conn = DriverManager.getConnection(DBCoinConnect.DB_Client_URL + DBCoinConnect.CREATE_DB, DBCoinConnect.DB_USER_NAME, DBCoinConnect.DB_PASS);
-            System.out.println("Schema conntected: " + DBCoinConnect.conn.getSchema());
+            
         } catch (ClassNotFoundException e)
         {
-            System.err.print("ClassNotFoundException: ");
-            System.err.println(e.getMessage());
-            System.out.println("\n Make sure your CLASSPATH variable " + "contains %DERBY_HOME%\\lib\\derby.jar (${DERBY_HOME}/lib/derby.jar). \n");
+            log.log(Level.SEVERE,"Exception while creating connection");
+            log.log(Level.SEVERE,"\n Make sure your CLASSPATH variable " + "contains %DERBY_HOME%\\lib\\derby.jar (${DERBY_HOME}/lib/derby.jar). \n");
+            log.log(Level.SEVERE,"ClassNotFoundException:: {0}",e);
         } catch (InstantiationException | IllegalAccessException | SQLException e)
         {
-            System.out.println(e);
+            log.log(Level.SEVERE,"Exception while creating connection: {0}",e);
         }
     }
     

@@ -20,8 +20,6 @@ package com.jjlcollectors.util.dbconnect;
 
 import com.jjlcollectors.users.PasswordEncryptionService;
 import com.jjlcollectors.users.User;
-import static com.jjlcollectors.util.dbconnect.DBConnect.conn;
-import static com.jjlcollectors.util.dbconnect.DBConnect.stmt;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Blob;
@@ -29,7 +27,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -39,7 +36,7 @@ import java.util.logging.Logger;
  *
  * @author Hedgehog01
  */
-public class DBUsersConnect extends DBConnect
+public final class DBUsersConnect extends DBConnect
 {
 
     private static final String TABLE_NAME = "USERDB";
@@ -57,20 +54,22 @@ public class DBUsersConnect extends DBConnect
         DBConnect.createDBConnection();
         try
         {
-            Statement st = conn.createStatement();
+            PreparedStatement prepStamt = conn.prepareStatement("SELECT USER_ID from " + TABLE_NAME + "WHERE ID = ?");
+            prepStamt.setInt(1, userId);
 
-            try (ResultSet rs = st.executeQuery("SELECT USER_ID from " + TABLE_NAME + "WHERE ID = " + userId))
+            try (ResultSet rs = prepStamt.executeQuery())
             {
                 userExists = rs.isBeforeFirst();
             }
         } catch (SQLException sql)
         {
-            System.err.println(sql);
+            log.log(Level.SEVERE, "find user by ID failed with error: {0}",sql);
         }
-
+        
         DBConnect.closeDBConnection();
         return userExists;
     }
+
     /**
      * Method to add a new user to the DB
      *
@@ -89,21 +88,34 @@ public class DBUsersConnect extends DBConnect
     }
 
     private static boolean addUser(String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, UUID userUUID, byte[] userPassword, byte[] userSalt, Timestamp userRegTime)
-    {   boolean userAdded = false;
+    {
+        boolean userAdded = false;
         DBConnect.createDBConnection();
-        System.out.println("Attemp to add new user to DB...");
+        log.log(Level.INFO, "Attemp to add new user to DB...");
+
         try
         {
             log.log(Level.INFO, "Table name: {0}", TABLE_NAME);
             log.log(Level.INFO, "User time stamp: {0}", userRegTime);
-            String sqlStatement = "INSERT INTO " + TABLE_NAME + " (FIRST_NAME,LAST_NAME,ADDRESS,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT,USER_REGISTRATION_TIME) VALUES " + "('" + firstName + "','" + lastName + "','" + userAddress + "','" + postalCode + "','" + phoneNumber + "','" + mobileNumber + "','" + userEmail + "','" + userNote + "','" + userUUID + "',?,?,'" + userRegTime+"')";
-            PreparedStatement prepstmt = conn.prepareStatement(sqlStatement);
-            prepstmt.setBytes(1, userPassword);
-            prepstmt.setBytes(2, userSalt);
-            //prepstmt.setTimestamp(3,userRegTime);
-            int updateCount = prepstmt.executeUpdate();
-            log.log(Level.INFO, "Add user update count is: {0}", updateCount);
-            prepstmt.close();
+            String sqlStatement = "INSERT INTO " + TABLE_NAME + " (FIRST_NAME,LAST_NAME,ADDRESS,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT,USER_REGISTRATION_TIME) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            int updateCount;
+            try (PreparedStatement prepstmt = conn.prepareStatement(sqlStatement))
+            {
+                prepstmt.setString(1, firstName);
+                prepstmt.setString(2, lastName);
+                prepstmt.setString(3, userAddress);
+                prepstmt.setString(4, postalCode);
+                prepstmt.setString(5, phoneNumber);
+                prepstmt.setString(6, mobileNumber);
+                prepstmt.setString(7, userEmail);
+                prepstmt.setString(8, userNote);
+                prepstmt.setString(9, userUUID.toString());
+                prepstmt.setBytes(10, userPassword);
+                prepstmt.setBytes(11, userSalt);
+                prepstmt.setTimestamp(12, userRegTime);
+                updateCount = prepstmt.executeUpdate();
+                log.log(Level.INFO, "Add user update count is: {0}", updateCount);
+            }
             DBConnect.closeDBConnection();
 
             if (updateCount == 1)
@@ -137,8 +149,6 @@ public class DBUsersConnect extends DBConnect
         DBConnect.createDBConnection();
         try
         {
-        //Statement st = conn.createStatement();
-            //try (ResultSet rs = st.executeQuery("SELECT * from " + TABLE_NAME + "WHERE MAIN_EMAIL = 'nathan.randelman@gmail.com'"))
             PreparedStatement prepStmt = conn.prepareStatement("SELECT USER_ID FROM " + TABLE_NAME + " WHERE MAIN_EMAIL = ?");
             prepStmt.setString(1, userEmail);
             ResultSet rs = prepStmt.executeQuery();
@@ -169,102 +179,133 @@ public class DBUsersConnect extends DBConnect
         //Use private method to retrieve password and salt for authentication.
         password = getUserPassword(userEmail);
         salt = getUserSalt(userEmail);
-        
+
         //make sure password and salt are not null
         if (password != null && salt != null)
         {
             try
             {
                 passwordValid = new PasswordEncryptionService().authenticate(attemptedPassword, password, salt);
-                log.log(Level.INFO, "Password & salt are not null, attempted validate result is: {0}", new Object[] {passwordValid});
+                log.log(Level.INFO, "Password & salt are not null, attempted validate result is: {0}", new Object[]
+                {
+                    passwordValid
+                });
             } catch (NoSuchAlgorithmException | InvalidKeySpecException ex)
             {
-                log.log(Level.SEVERE, "Exception while trying to authenticate password.\nException msg: {0}",ex);
+                log.log(Level.SEVERE, "Exception while trying to authenticate password.\nException msg: {0}", ex);
             }
-            
+
         }
-        
+
         return passwordValid;
     }
     /*
-    * method to get binary password in DB by user email.
-    */
+     * method to get binary password in DB by user email.
+     */
+
     private static byte[] getUserPassword(String userEmail)
     {
         byte[] password = null;
         DBConnect.createDBConnection();
         try
         {
-            log.log(Level.INFO, "Attempting get user password from DB with email {0}", new Object[] {userEmail});
-            PreparedStatement prepStmt = conn.prepareStatement("SELECT USER_PASSWORD from " + TABLE_NAME + " WHERE MAIN_EMAIL = ?");
-            prepStmt.setString(1, userEmail);
-            ResultSet rs = prepStmt.executeQuery();
-            
-            if (rs.next())
+            log.log(Level.INFO, "Attempting get user password from DB with email {0}", new Object[]
             {
-                Blob blob = rs.getBlob("USER_PASSWORD");
-                long blobLength = blob.length();
-
-                int pos = 1; // position is 1-based
-                int len = (int) blobLength;
-                password = blob.getBytes(pos, len);
-                log.log(Level.INFO, "Getting user password from DB with email {0} OK.\nBlob length: {1}", new Object[] {userEmail, len});
-                //InputStream is = blob.getBinaryStream();
-                //int b = is.read();
+                userEmail
+            });
+            try (PreparedStatement prepStmt = conn.prepareStatement("SELECT USER_PASSWORD from " + TABLE_NAME + " WHERE MAIN_EMAIL = ?"))
+            {
+                prepStmt.setString(1, userEmail);
+                ResultSet rs = prepStmt.executeQuery();
+                
+                if (rs.next())
+                {
+                    Blob blob = rs.getBlob("USER_PASSWORD");
+                    long blobLength = blob.length();
+                    
+                    int pos = 1; // position is 1-based
+                    int len = (int) blobLength;
+                    password = blob.getBytes(pos, len);
+                    log.log(Level.INFO, "Getting user password from DB with email {0} OK.\nBlob length: {1}", new Object[]
+                    {
+                        userEmail, len
+                    });
+                    //InputStream is = blob.getBinaryStream();
+                    //int b = is.read();
+                }
+                rs.close();
             }
-            rs.close();
-            prepStmt.close();
             conn.close();
         } catch (SQLException e)
         {
-            log.log(Level.SEVERE, "Getting user password from DB with email {0} failed.\nSQL error: {1}", new Object[] {userEmail, e.getErrorCode()});
+            log.log(Level.SEVERE, "Getting user password from DB with email {0} failed.\nSQL error: {1}", new Object[]
+            {
+                userEmail, e.getErrorCode()
+            });
         } catch (Exception e)
         {
-            log.log(Level.SEVERE, "Getting user password from DB with email {0} failed.\nException error: {1}", new Object[]{userEmail, e.getMessage() });
+            log.log(Level.SEVERE, "Getting user password from DB with email {0} failed.\nException error: {1}", new Object[]
+            {
+                userEmail, e.getMessage()
+            });
         }
 
         return password;
     }
     /*
-    * method to get binary user Salt in DB by user email.
-    */
+     * method to get binary user Salt in DB by user email.
+     */
+
     private static byte[] getUserSalt(String userEmail)
     {
         byte[] Salt = null;
         DBConnect.createDBConnection();
         try
         {
-            log.log(Level.INFO, "Attempting get user USER_SALT from DB with email {0}", new Object[] {userEmail});
-            PreparedStatement prepStmt = conn.prepareStatement("SELECT USER_SALT from " + TABLE_NAME + " WHERE MAIN_EMAIL = ?");
-            prepStmt.setString(1, userEmail);
-            ResultSet rs = prepStmt.executeQuery();
-            
-            if (rs.next())
+            log.log(Level.INFO, "Attempting get user USER_SALT from DB with email {0}", new Object[]
             {
-                Blob blob = rs.getBlob("USER_SALT");
-                long blobLength = blob.length();
-
-                int pos = 1; // position is 1-based
-                int len = (int) blobLength;
-                Salt = blob.getBytes(pos, len);
-                log.log(Level.INFO, "Getting user USER_SALT from DB with email {0} OK.\nBlob length: {1}", new Object[] {userEmail, len});
-                //InputStream is = blob.getBinaryStream();
-                //int b = is.read();
+                userEmail
+            });
+            try (PreparedStatement prepStmt = conn.prepareStatement("SELECT USER_SALT from " + TABLE_NAME + " WHERE MAIN_EMAIL = ?"))
+            {
+                prepStmt.setString(1, userEmail);
+                ResultSet rs = prepStmt.executeQuery();
+                
+                if (rs.next())
+                {
+                    Blob blob = rs.getBlob("USER_SALT");
+                    long blobLength = blob.length();
+                    
+                    int pos = 1; // position is 1-based
+                    int len = (int) blobLength;
+                    Salt = blob.getBytes(pos, len);
+                    log.log(Level.INFO, "Getting user USER_SALT from DB with email {0} OK.\nBlob length: {1}", new Object[]
+                    {
+                        userEmail, len
+                    });
+                    //InputStream is = blob.getBinaryStream();
+                    //int b = is.read();
+                }
+                rs.close();
             }
-            rs.close();
-            prepStmt.close();
             conn.close();
         } catch (SQLException e)
         {
-            log.log(Level.SEVERE, "Getting user Salt from DB with email {0} failed.\nSQL error: {1}", new Object[] {userEmail, e.getErrorCode()});
+            log.log(Level.SEVERE, "Getting user Salt from DB with email {0} failed.\nSQL error: {1}", new Object[]
+            {
+                userEmail, e.getErrorCode()
+            });
         } catch (Exception e)
         {
-            log.log(Level.SEVERE, "Getting user Salt from DB with email {0} failed.\nException error: {1}", new Object[]{userEmail, e.getMessage() });
+            log.log(Level.SEVERE, "Getting user Salt from DB with email {0} failed.\nException error: {1}", new Object[]
+            {
+                userEmail, e.getMessage()
+            });
         }
 
         return Salt;
     }
-    
+
     /*
      *method to print all users in DB
      */
@@ -273,7 +314,6 @@ public class DBUsersConnect extends DBConnect
         try
         {
             DBConnect.createDBConnection();
-            stmt = conn.createStatement();
             log.log(Level.INFO, "prepare statement starting");
 
             PreparedStatement statement = conn.prepareStatement("SELECT * from " + TABLE_NAME);
@@ -302,20 +342,33 @@ public class DBUsersConnect extends DBConnect
                     String phoneNum = results.getString(6);
                     String MobileNum = results.getString(7);
                     String email = results.getString(8);
-                    String userNote = results.getString(9);
-                    String userUUID = results.getString(10);
-                    String userPass = results.getString(11);
-                    String userSalt = results.getString(12);
-                    if (results.getTimestamp("USER_REGISTRATION_TIME") != null)
-                        userRegTime = results.getTimestamp("USER_REGISTRATION_TIME");
-                    if (results.getTimestamp("USER_LAST_LOGIN_TIME")!=null)
-                        lastLoginTime = results.getTimestamp("USER_LAST_LOGIN_TIME");
+                    String userNote = results.getString(10);
+                    String userUUID = results.getString(11);
+                    String userPass = results.getString(12);
+                    String userSalt = results.getString(13);
                     
-                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt + "\t" + userRegTime + "\t" + lastLoginTime);
+                    boolean tempPassword = results.getBoolean(16);
+                    if (results.getTimestamp("USER_REGISTRATION_TIME") != null)
+                    {
+                        userRegTime = results.getTimestamp("USER_REGISTRATION_TIME");
+                    }
+                    else
+                    {
+                        userRegTime = null;
+                    }                        
+                    if (results.getTimestamp("USER_LAST_LOGIN_TIME") != null)
+                    {
+                        lastLoginTime = results.getTimestamp("USER_LAST_LOGIN_TIME");
+                    }
+                    else
+                    {
+                        lastLoginTime = null;
+                    }
+
+                    System.out.println(id + "\t" + firstName + "\t" + LastName + "\t" + Address + "\t" + PostalCode + "\t" + phoneNum + "\t" + MobileNum + "\t" + email + "\t" + userNote + "\t" + userUUID + "\t" + userPass + "\t" + userSalt + "\t" + userRegTime + "\t" + lastLoginTime + "\t" + tempPassword);
+
                 }
             }
-
-            stmt.close();
 
         } catch (SQLException e)
         {

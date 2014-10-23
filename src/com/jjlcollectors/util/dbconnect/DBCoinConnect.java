@@ -22,11 +22,9 @@ import java.util.logging.Logger;
  *
  * @author nathanr
  */
-public class DBCoinConnect extends DBConnect{
+public final class DBCoinConnect extends DBConnect{
+
     //Class variables
-
-
-
     private static final String TABLE_NAME = "COINS";
     private static final Logger log = Logger.getLogger( DBCoinConnect.class.getName() );
 
@@ -61,9 +59,11 @@ public class DBCoinConnect extends DBConnect{
          int id = -1;
         DBConnect.createDBConnection();
         try{
-        Statement st = conn.createStatement();
+            String sql = "SELECT MAX(ID) from " + TABLE_NAME;
+            PreparedStatement prepStmt = conn.prepareStatement(sql);
+        
  
-        ResultSet rs = st.executeQuery("SELECT MAX(ID) from " + TABLE_NAME);
+        ResultSet rs = prepStmt.executeQuery();
        
         while (rs.next()) {
             id = rs.getInt(1);
@@ -92,6 +92,7 @@ public class DBCoinConnect extends DBConnect{
         System.out.println("Attemp to add new coin...");
         try {
             stmt = conn.createStatement();
+            PreparedStatement prepStmt = conn.prepareStatement
             stmt.execute("INSERT INTO " + TABLE_NAME +" (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUY_DATE,COIN_BUY_PRICE,COIN_VALUE,COIN_MINT_MARK,COIN_YEAR) VALUES" 
                     + " ('" + uuid + "','" + name + "','" + grade + "','" + faceValue + "','" + currency + "','" + note.toString() + "','" + date + "','" + coinBuyPrice + "','" + coinValue + "','" + coinMintMark + "'," + coinYear + ")");
             DBConnect.closeDBConnection();
@@ -106,10 +107,6 @@ public class DBCoinConnect extends DBConnect{
      */
     private static void shutdown() {
         try {
-            if (stmt != null) {
-                System.out.println("Closing staatemnet...");
-                stmt.close();
-            }
             if (conn != null) {
                 System.out.println("Shutting down connection staatemnet...");
                 DriverManager.getConnection(DB_Client_URL + ";user=" + DB_USER_NAME + ";password=" + DB_PASS + SHUTDOWN_DB);
@@ -125,12 +122,12 @@ public class DBCoinConnect extends DBConnect{
     private static void selectAllCoins() {
         try {
             DBConnect.createDBConnection();
-            stmt = conn.createStatement();
+            
             System.out.println("prepare statement starting");
             PreparedStatement statement = conn.prepareStatement("SELECT * from " + TABLE_NAME);
             System.out.println("prepare statement done");
-            try //(ResultSet results = stmt.executeQuery("select * from " + tableName)) 
-                    (ResultSet results = statement.executeQuery()) {
+            try (ResultSet results = statement.executeQuery()) 
+            {
                 ResultSetMetaData rsmd = results.getMetaData();
                 int numberCols = rsmd.getColumnCount();
                 for (int i = 1; i <= numberCols; i++) {
@@ -157,8 +154,7 @@ public class DBCoinConnect extends DBConnect{
                     System.out.println(id + "\t" + uuid + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note  +"\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear );
                 }
             }
-
-            stmt.close();
+            
 
         } catch (SQLException e) {
             System.err.println (e.getMessage());
@@ -173,15 +169,14 @@ public class DBCoinConnect extends DBConnect{
         try {
             DBConnect.createDBConnection();
             System.out.println("prepare delete statement starting...");
-            Statement stmt = conn.createStatement();
-            //PreparedStatement statement = conn.prepareStatement("DELETE * from " + TABLE_NAME +" WHERE id = "+ id);
-            String sql = ("DELETE from " + TABLE_NAME +" WHERE id = "+ id);
-            System.out.println("prepare statement done...");
-            count = stmt.executeUpdate(sql);
-            System.out.println("Number of deleted rows: " + count);
+            PreparedStatement prepStmt = conn.prepareStatement("DELETE from " + TABLE_NAME +" WHERE id = ?");
+            prepStmt.setInt(1, id);
+            log.log(Level.INFO, "prepare statement done...");
+            count = prepStmt.executeUpdate();
+            log.log(Level.INFO, "Number of deleted rows: {0}", count);
             DBConnect.closeDBConnection();
         } catch (SQLException e) {
-            System.out.println (e.getMessage());
+            log.log(Level.SEVERE, "Failed to delete coin. SQL error: {0}", e);
         }
         
         return count;
