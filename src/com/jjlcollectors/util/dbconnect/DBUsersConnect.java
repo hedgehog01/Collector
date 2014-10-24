@@ -347,7 +347,7 @@ public final class DBUsersConnect extends DBConnect
                     String userPass = results.getString(12);
                     String userSalt = results.getString(13);
                     
-                    boolean tempPassword = results.getBoolean(16);
+                    boolean tempPassword = results.getBoolean(15);
                     if (results.getTimestamp("USER_REGISTRATION_TIME") != null)
                     {
                         userRegTime = results.getTimestamp("USER_REGISTRATION_TIME");
@@ -372,7 +372,7 @@ public final class DBUsersConnect extends DBConnect
 
         } catch (SQLException e)
         {
-            log.log(Level.SEVERE, "Printing of user DB failed, sql error: {0}", e.getErrorCode());
+            log.log(Level.SEVERE, "Printing of user DB failed, sql error: {0}", e);
         } catch (Exception e)
         {
             log.log(Level.SEVERE, "Printing of user DB failed, exception error: {0}", e.getMessage());

@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.CollectionViewController">
+<VBox prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.CollectionViewController">
    <children>
       <MenuBar VBox.vgrow="ALWAYS">
          <menus>
@@ -65,11 +65,21 @@
                   </Label>
                </children>
             </AnchorPane>
-            <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
+            <ScrollPane prefHeight="751.0" prefWidth="463.0">
                <content>
-                  <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
+                  <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="753.0" prefWidth="508.0">
                      <children>
-                        <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                        <VBox layoutX="50.0" layoutY="60.0" prefHeight="753.0" prefWidth="505.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <TableView prefHeight="615.0" prefWidth="505.0">
+                                <columns>
+                                  <TableColumn prefWidth="75.0" text="C1" />
+                                  <TableColumn prefWidth="75.0" text="C2" />
+                                </columns>
+                              </TableView>
+                              <Pane VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
                      </children>
                   </AnchorPane>
                </content>

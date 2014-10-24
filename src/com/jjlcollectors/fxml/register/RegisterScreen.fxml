@@ -10,13 +10,36 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.RegisterScreenController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.RegisterScreenController">
    <children>
-      <Pane prefHeight="414.0" prefWidth="606.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="userEmailReTypeLabel" layoutX="41.0" layoutY="207.0" prefHeight="17.0" prefWidth="83.0" text="Confirm Email:" />
-            <Label fx:id="userPasswordLabel" layoutX="324.0" layoutY="258.0" text="Password" />
-            <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
+            <Label fx:id="userPasswordLabel" layoutX="419.0" layoutY="329.0" text="Password" />
+            <Label fx:id="userEmailReTypeLabel" layoutX="136.0" layoutY="278.0" prefHeight="17.0" prefWidth="83.0" text="Confirm Email:" />
+            <Label fx:id="userEmailLabel" layoutX="136.0" layoutY="251.0" text="Email:" />
+            <Label fx:id="firstNameLabel" layoutX="136.0" layoutY="154.0" text="First Name:" />
+            <Label fx:id="lastNameLabel" layoutX="136.0" layoutY="182.0" text="Last Name:" />
+            <Label fx:id="addressLabel" layoutX="136.0" layoutY="329.0" text="Address:" />
+            <Label fx:id="phoneNumberLabel" layoutX="419.0" layoutY="153.0" text="Phone Number:" />
+            <Label fx:id="mobilePhoneLabel" layoutX="419.0" layoutY="182.0" text="Mobile Phone:" />
+            <Label layoutX="419.0" layoutY="360.0" text="Confirm Password:" />
+            <TextField fx:id="userFirstNameTextField" layoutX="224.0" layoutY="151.0" promptText="First Name" />
+            <TextField fx:id="userLastNameTextField" layoutX="224.0" layoutY="178.0" promptText="Last Name" />
+            <TextField fx:id="userEmailTextField" layoutX="219.0" layoutY="247.0" promptText="Email" />
+            <TextField fx:id="userEmailConfirmTextField" alignment="TOP_LEFT" layoutX="219.0" layoutY="274.0" prefHeight="25.0" prefWidth="149.0" promptText="Email confirmation" />
+            <TextField fx:id="userAddressTextField" layoutX="219.0" layoutY="325.0" promptText="Address" />
+            <TextField fx:id="userPostalCodeTextField" layoutX="219.0" layoutY="356.0" promptText="Postal Code" />
+            <TextField fx:id="userPhoneNumberTextField" layoutX="517.0" layoutY="151.0" promptText="Phone Number" />
+            <TextField fx:id="userMobileNumberTextField" layoutX="517.0" layoutY="178.0" promptText="Mobile Number" />
+            <TextField fx:id="userNoteTextField" layoutX="518.0" layoutY="230.0" prefHeight="83.0" prefWidth="149.0" promptText="Additional info" />
+            <PasswordField fx:id="userPasswordField" layoutX="519.0" layoutY="324.0" promptText="Password" />
+            <PasswordField fx:id="userPasswordConfirmField" layoutX="519.0" layoutY="355.0" promptText="Password" />
+            <Button fx:id="registerButton" layoutX="544.0" layoutY="424.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
+            <Button fx:id="alreadyRegisteredButton" layoutX="136.0" layoutY="424.0" mnemonicParsing="false" onAction="#backToLoginScreen" text="Already registered" />
+            <Label layoutX="133.0" layoutY="360.0" text="Postal Code:" />
+            <Label fx:id="userCommentLabel" layoutX="419.0" layoutY="263.0" text="Additional info:" />
+            <Label fx:id="registerStatusLabel" layoutX="419.0" layoutY="381.0" prefHeight="41.0" prefWidth="249.0" />
+            <MenuBar layoutY="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="800.0">
                <menus>
                   <Menu text="_File">
                      <items>
@@ -34,29 +57,6 @@
                   </Menu>
                </menus>
             </MenuBar>
-            <Label fx:id="userEmailLabel" layoutX="41.0" layoutY="180.0" text="Email:" />
-            <Label fx:id="firstNameLabel" layoutX="41.0" layoutY="83.0" text="First Name:" />
-            <Label fx:id="lastNameLabel" layoutX="41.0" layoutY="111.0" text="Last Name:" />
-            <Label fx:id="addressLabel" layoutX="41.0" layoutY="258.0" text="Address:" />
-            <Label fx:id="phoneNumberLabel" layoutX="324.0" layoutY="82.0" text="Phone Number:" />
-            <Label fx:id="mobilePhoneLabel" layoutX="324.0" layoutY="111.0" text="Mobile Phone:" />
-            <Label layoutX="324.0" layoutY="289.0" text="Confirm Password:" />
-            <TextField fx:id="userFirstNameTextField" layoutX="129.0" layoutY="80.0" promptText="First Name" />
-            <TextField fx:id="userLastNameTextField" layoutX="129.0" layoutY="107.0" promptText="Last Name" />
-            <TextField fx:id="userEmailTextField" layoutX="124.0" layoutY="176.0" promptText="Email" />
-            <TextField fx:id="userEmailConfirmTextField" alignment="TOP_LEFT" layoutX="124.0" layoutY="203.0" prefHeight="25.0" prefWidth="149.0" promptText="Email confirmation" />
-            <TextField fx:id="userAddressTextField" layoutX="124.0" layoutY="254.0" promptText="Address" />
-            <TextField fx:id="userPostalCodeTextField" layoutX="124.0" layoutY="285.0" promptText="Postal Code" />
-            <TextField fx:id="userPhoneNumberTextField" layoutX="422.0" layoutY="80.0" promptText="Phone Number" />
-            <TextField fx:id="userMobileNumberTextField" layoutX="422.0" layoutY="107.0" promptText="Mobile Number" />
-            <TextField fx:id="userNoteTextField" layoutX="423.0" layoutY="159.0" prefHeight="83.0" prefWidth="149.0" promptText="Additional info" />
-            <PasswordField fx:id="userPasswordField" layoutX="424.0" layoutY="253.0" promptText="Password" />
-            <PasswordField fx:id="userPasswordConfirmField" layoutX="424.0" layoutY="284.0" promptText="Password" />
-            <Button fx:id="registerButton" layoutX="449.0" layoutY="353.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
-            <Button fx:id="alreadyRegisteredButton" layoutX="41.0" layoutY="353.0" mnemonicParsing="false" onAction="#backToLoginScreen" text="Already registered" />
-            <Label layoutX="38.0" layoutY="289.0" text="Postal Code:" />
-            <Label fx:id="userCommentLabel" layoutX="324.0" layoutY="192.0" text="Additional info:" />
-            <Label fx:id="registerStatusLabel" layoutX="324.0" layoutY="310.0" prefHeight="41.0" prefWidth="249.0" />
          </children>
       </Pane>
    </children>
