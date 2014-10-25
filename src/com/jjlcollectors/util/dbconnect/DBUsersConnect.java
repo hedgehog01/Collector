@@ -41,6 +41,7 @@ public final class DBUsersConnect extends DBConnect
 
     private static final String TABLE_NAME = "USERDB";
     private static final Logger log = Logger.getLogger(DBUsersConnect.class.getName());
+    
 
     /**
      * method to find user by the userId

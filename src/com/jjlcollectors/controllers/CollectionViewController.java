@@ -17,18 +17,31 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.interfaces.ControlledScreen;
+import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 
 /**
  * FXML Controller class
  *
  * @author Hedgehog01
  */
-public class CollectionViewController implements Initializable
+public class CollectionViewController implements Initializable, ControlledScreen
 {
 
+    private ScreensController myController;
+    
+    @FXML
+    TableView tableView;
+    
+    @FXML
+    Button refreshButton;
+    
     /**
      * Initializes the controller class.
      */
@@ -37,5 +50,17 @@ public class CollectionViewController implements Initializable
     {
         // TODO
     }    
+    
+    @FXML
+    private void getData()
+    {
+        tableView = DBCoinConnect.buildData();
+    }
+
+    @Override
+    public void setScreenParent(ScreensController screenParent)
+    {
+        myController = screenParent;
+    }
     
 }

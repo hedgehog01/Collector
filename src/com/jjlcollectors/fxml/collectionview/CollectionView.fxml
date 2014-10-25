@@ -63,6 +63,7 @@
                         <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
                      </textFill>
                   </Label>
+                  <Button fx:id="refreshButton" layoutX="101.0" layoutY="363.0" mnemonicParsing="false" onAction="#getData" text="Refresh" />
                </children>
             </AnchorPane>
             <ScrollPane prefHeight="751.0" prefWidth="463.0">
@@ -71,13 +72,15 @@
                      <children>
                         <VBox layoutX="50.0" layoutY="60.0" prefHeight="753.0" prefWidth="505.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <TableView prefHeight="615.0" prefWidth="505.0">
-                                <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
-                                </columns>
-                              </TableView>
-                              <Pane VBox.vgrow="ALWAYS" />
+                              <Pane VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TableView fx:id="tableView" prefHeight="615.0" prefWidth="505.0">
+                                       <columns>
+                                          <TableColumn prefWidth="75.0" text="Column X" />
+                                          <TableColumn prefWidth="75.0" text="Column X" />
+                                       </columns>
+                                    </TableView>
+                                 </children></Pane>
                            </children>
                         </VBox>
                      </children>

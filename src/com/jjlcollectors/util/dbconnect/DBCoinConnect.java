@@ -15,6 +15,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableView;
+import javafx.util.Callback;
 
 /**
  *
@@ -26,7 +34,8 @@ public final class DBCoinConnect extends DBConnect
     //Class variables
     private static final String TABLE_NAME = "COINS";
     private static final Logger log = Logger.getLogger(DBCoinConnect.class.getName());
-    private static Date sqldate;
+    private static Date sqlDate;
+    private static TableView tableView;
 
     /**
      * method to add coin to coin DB
@@ -94,7 +103,7 @@ public final class DBCoinConnect extends DBConnect
         try
         {
             long d = date.toEpochDay();
-            sqldate = new Date(d);
+            sqlDate = new Date(d);
             String sql = ("INSERT INTO " + TABLE_NAME + " (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUY_DATE,COIN_BUY_PRICE,COIN_VALUE,COIN_MINT_MARK,COIN_YEAR) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement prepStmt = conn.prepareStatement(sql);
 
@@ -104,7 +113,7 @@ public final class DBCoinConnect extends DBConnect
             prepStmt.setString(4, faceValue);
             prepStmt.setString(5, currency);
             prepStmt.setString(6, note.toString());
-            prepStmt.setDate(7, sqldate);
+            prepStmt.setDate(7, sqlDate);
             prepStmt.setString(8, coinBuyPrice);
             prepStmt.setString(9, coinValue);
             prepStmt.setString(10, coinMintMark);
@@ -113,9 +122,85 @@ public final class DBCoinConnect extends DBConnect
             DBConnect.closeDBConnection();
         } catch (SQLException e)
         {
-            log.log(Level.SEVERE, "Exception while writing coin to DB. sql exception: {0}",e);
+            log.log(Level.SEVERE, "Exception while writing coin to DB. sql exception: {0}", e);
         }
 
+    }
+
+    /**
+     * method to populate and return tableview
+     *
+     * @return table view with populated table view from DB
+     */
+    public static TableView buildData()
+    {
+        ObservableList<ObservableList> userObservableListData;
+        
+
+        userObservableListData = FXCollections.observableArrayList();
+        try
+        {
+            
+            DBConnect.createDBConnection();
+            //SQL FOR SELECTING ALL OF CUSTOMER
+            String SQL = "SELECT * from USERDB";
+            //ResultSet
+            ResultSet rs = conn.createStatement().executeQuery(SQL);
+            log.log(Level.INFO, "setting result set to query: {0}",SQL);
+            log.log(Level.INFO, "number of colomns in the table: {0}",rs.getMetaData().getColumnCount());
+
+            /**
+             * ********************************
+             * TABLE COLUMN ADDED DYNAMICALLY *
+             *********************************
+             */
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++)
+            {
+                log.log(Level.INFO, "in the for loop of coolumn get data. col num: {0}", i);
+                //We are using non property style for making dynamic table
+                final int j = i;
+                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
+                col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>()
+                {
+                    
+                    public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param)
+                    {
+                        log.log(Level.INFO, "Creating cell...");
+                        return new SimpleStringProperty(param.getValue().get(j).toString());
+                    }
+                });
+
+                tableView.getColumns().addAll(col);
+                System.out.println("Column [" + i + "] ");
+            }
+
+            /**
+             * ******************************
+             * Data added to ObservableList *
+             *******************************
+             */
+            while (rs.next())
+            {
+                //Iterate Row
+                ObservableList<String> row = FXCollections.observableArrayList();
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++)
+                {
+                    //Iterate Column
+                    row.add(rs.getString(i));
+                }
+                System.out.println("Row [1] added " + row);
+                userObservableListData.add(row);
+
+            }
+
+            //FINALLY ADDED TO TableView
+            tableView.setItems(userObservableListData);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("Error on Building Data");
+        }
+        return tableView;
     }
 
     /*

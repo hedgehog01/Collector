@@ -101,6 +101,7 @@ public class LoginController implements Initializable, ControlledScreen
         {
             log.log(Level.INFO, "login is valid moving to next scene");
             
+            myController.setScreen(MainScreenLoader.collectionView1ID);
         }
         else
         {
