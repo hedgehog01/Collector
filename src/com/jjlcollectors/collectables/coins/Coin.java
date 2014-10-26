@@ -8,7 +8,7 @@ import com.jjlcollectors.collectables.CollectableItem;
  * @author Nathan Randelman
  * @version 08.09.2014
  */
-public class Coin extends CollectableItem {
+public final class Coin extends CollectableItem {
 
     //instance variables
 

@@ -17,10 +17,14 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.coins.CoinCreator;
+import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -35,13 +39,13 @@ public class CollectionViewController implements Initializable, ControlledScreen
 {
 
     private ScreensController myController;
-    
+
     @FXML
-    TableView tableView;
-    
+    TableView<CoinProperty> tableView;
+
     @FXML
     Button refreshButton;
-    
+
     /**
      * Initializes the controller class.
      */
@@ -49,12 +53,6 @@ public class CollectionViewController implements Initializable, ControlledScreen
     public void initialize(URL url, ResourceBundle rb)
     {
         // TODO
-    }    
-    
-    @FXML
-    private void getData()
-    {
-        tableView = DBCoinConnect.buildData();
     }
 
     @Override
@@ -62,5 +60,12 @@ public class CollectionViewController implements Initializable, ControlledScreen
     {
         myController = screenParent;
     }
-    
+
+    @FXML
+    protected void addCoin(ActionEvent event)
+    {
+        ObservableList<CoinProperty> data = tableView.getItems();
+
+        data.addAll(CoinCreator.getCoinProperties(data));
+    }
 }
