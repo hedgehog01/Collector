@@ -23,6 +23,7 @@ import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -65,7 +66,7 @@ public class CollectionViewController implements Initializable, ControlledScreen
     protected void addCoin(ActionEvent event)
     {
         ObservableList<CoinProperty> data = tableView.getItems();
-
+        ObservableList<CoinProperty> data2 = new ListProperty<CoinProperty> (data);
         data.addAll(CoinCreator.getCoinProperties(data));
     }
 }

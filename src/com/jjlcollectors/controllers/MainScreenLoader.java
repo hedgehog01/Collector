@@ -29,7 +29,7 @@ import javafx.stage.Stage;
  */
 public class MainScreenLoader extends Application
 {
-
+    public static final String TITLE = "Collector";
     public static String loginScreen1ID = "login1";
     public static String loginScreen1FXML = "/com/jjlcollectors/fxml/login/Login.fxml";  
     public static String loginScreen1CSS = "/com/jjlcollectors/fxml/login/login.css";
@@ -57,6 +57,8 @@ public class MainScreenLoader extends Application
         root.getChildren().addAll(mainContainer);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setTitle(TITLE);
+        primaryStage.sizeToScene();
         primaryStage.show();
     }
 
