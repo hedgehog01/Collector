@@ -25,7 +25,7 @@ import javafx.collections.ObservableList;
  */
 public class CoinCreator
 {
-     public  static ObservableList<CoinProperty> getCoinProperties(ObservableList<CoinProperty> data)
+     public static ObservableList<CoinProperty> getCoinProperties(ObservableList<CoinProperty> data)
     {
         int year = 1982;
         CoinProperty a = new CoinProperty("name1", "lastname1", "email1","name1", "lastname1", "email1","name1", "lastname1", "email1","name1", year, "email1");

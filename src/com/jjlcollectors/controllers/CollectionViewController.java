@@ -20,10 +20,9 @@ package com.jjlcollectors.controllers;
 import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.interfaces.ControlledScreen;
-import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.property.ListProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,5 +67,7 @@ public class CollectionViewController implements Initializable, ControlledScreen
         ObservableList<CoinProperty> data = tableView.getItems();
         //ObservableList<CoinProperty> data2 = tableView.;
         data.addAll(CoinCreator.getCoinProperties(data));
+        //To Do
+
     }
 }
