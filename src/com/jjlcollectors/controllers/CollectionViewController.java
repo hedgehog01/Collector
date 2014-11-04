@@ -53,7 +53,7 @@ public class CollectionViewController implements Initializable, ControlledScreen
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CollectionViewController implements Initializable, ControlledScreen
     protected void addCoin(ActionEvent event)
     {
         ObservableList<CoinProperty> data = tableView.getItems();
-        ObservableList<CoinProperty> data2 = new ListProperty<CoinProperty> (data);
+        //ObservableList<CoinProperty> data2 = tableView.;
         data.addAll(CoinCreator.getCoinProperties(data));
     }
 }
