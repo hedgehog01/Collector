@@ -82,7 +82,9 @@ public class LoginController implements Initializable, ControlledScreen
     @Override
     public void setScreenParent(ScreensController screenParent)
     {
+        
         myController = screenParent;
+        
     }
     
     /**
