@@ -52,11 +52,7 @@ public class CollectionViewController implements Initializable, ControlledScreen
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-                ObservableList<CoinProperty> data = tableView.getItems();
-        ObservableList<CoinProperty> data2 = FXCollections.observableArrayList();
         
-        
-        data.addAll(CoinCreator.getCoinProperties(data2));
     }
 
     @Override
@@ -68,6 +64,9 @@ public class CollectionViewController implements Initializable, ControlledScreen
     @FXML
     protected void addCoin(ActionEvent event)
     {
+        ObservableList<CoinProperty> data = tableView.getItems();
+        //ObservableList<CoinProperty> data2 = tableView.;
+        data.addAll(CoinCreator.getCoinProperties(data));
         //To Do
 
     }
