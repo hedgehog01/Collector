@@ -20,6 +20,7 @@ package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+import com.sun.glass.ui.Screen;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -44,6 +45,7 @@ public class LoginController implements Initializable, ControlledScreen
     private static final Logger log = Logger.getLogger(LoginController.class.getName());
     private final String PASSWORD_EMPTY = "Enter Password";
     private final String EMAIL_OR_PASSWORD_INCORRECT = "Email or password are incorrect";
+    
     
     @FXML
     private TextField userEmailTextField;
@@ -102,7 +104,6 @@ public class LoginController implements Initializable, ControlledScreen
         if (isLoginValid())
         {
             log.log(Level.INFO, "login is valid moving to next scene");
-            
             myController.setScreen(MainScreenLoader.collectionView1ID);
         }
         else

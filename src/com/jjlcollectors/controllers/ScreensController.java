@@ -64,7 +64,7 @@ import javafx.util.Duration;
 public class ScreensController  extends StackPane {
     //Holds the screens to be displayed
 
-    private HashMap<String, Node> screens = new HashMap<>();
+    private HashMap<String, Node> screens = new HashMap<>();    
     
     public ScreensController() {
         super();
