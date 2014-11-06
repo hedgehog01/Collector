@@ -19,10 +19,9 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox prefHeight="446.0" prefWidth="1126.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.CollectionViewController">
+<VBox fx:id="vBoxMain" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.CollectionViewController">
    <children>
-        <MenuBar prefHeight="25.0" prefWidth="429.0">
+        <MenuBar fx:id="mainMenuBar" prefHeight="25.0" prefWidth="429.0">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
@@ -61,9 +60,9 @@
                 </Menu>
             </menus>
         </MenuBar>
-      <SplitPane prefHeight="424.0" prefWidth="941.0">
+      <SplitPane>
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
                               <TableView fx:id="tableView" prefHeight="419.0" prefWidth="936.0">
                                   <columns>
@@ -129,7 +128,7 @@
                                       </TableColumn>
                                   </columns>
                               </TableView>
-                  <Button fx:id="refreshButton" layoutX="1058.0" layoutY="14.0" mnemonicParsing="false" onAction="#addCoin" text="Refresh" />
+                  <Button fx:id="refreshButton" layoutX="978.0" layoutY="380.0" mnemonicParsing="false" onAction="#addCoin" text="Refresh" />
                </children>
             </AnchorPane>
         </items>

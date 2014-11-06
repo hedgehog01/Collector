@@ -27,8 +27,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -39,12 +44,18 @@ public class CollectionViewController implements Initializable, ControlledScreen
 {
 
     private ScreensController myController;
+    
+    @FXML
+    private VBox vBoxMain;
 
     @FXML
-    TableView<CoinProperty> tableView;
+    private TableView<CoinProperty> tableView;
 
     @FXML
-    Button refreshButton;
+    private Button refreshButton;
+    
+    @FXML
+    private MenuBar mainMenuBar;
 
     /**
      * Initializes the controller class.
@@ -53,7 +64,14 @@ public class CollectionViewController implements Initializable, ControlledScreen
     public void initialize(URL url, ResourceBundle rb)
     {
         
+        //mainMenuBar.getScene().getWindow().sizeToScene();
+        //((Node)(vBoxMain.getScene().getWindow().sizeToScene());
+        ObservableList<CoinProperty> data = tableView.getItems();
+        ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
+        
+        data.addAll(CoinCreator.getCoinProperties(newData));
     }
+    
 
     @Override
     public void setScreenParent(ScreensController screenParent)
@@ -64,9 +82,11 @@ public class CollectionViewController implements Initializable, ControlledScreen
     @FXML
     protected void addCoin(ActionEvent event)
     {
+        ((Node)(event.getSource())).getScene().getWindow().sizeToScene();
         ObservableList<CoinProperty> data = tableView.getItems();
-        //ObservableList<CoinProperty> data2 = tableView.;
-        data.addAll(CoinCreator.getCoinProperties(data));
+        ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
+        
+        data.addAll(CoinCreator.getCoinProperties(newData));
         //To Do
 
     }

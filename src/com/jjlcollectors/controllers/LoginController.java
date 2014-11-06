@@ -20,7 +20,6 @@ package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
-import com.sun.glass.ui.Screen;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,6 +29,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -104,7 +104,11 @@ public class LoginController implements Initializable, ControlledScreen
         if (isLoginValid())
         {
             log.log(Level.INFO, "login is valid moving to next scene");
+            ((Node)(event.getSource())).getScene().getWindow().sizeToScene();
+            //((Node)(event.getSource())).getScene().getWindow().setWidth(1100);
+            //((Node)(event.getSource())).getScene().getWindow().setHeight(446);
             myController.setScreen(MainScreenLoader.collectionView1ID);
+
         }
         else
         {
