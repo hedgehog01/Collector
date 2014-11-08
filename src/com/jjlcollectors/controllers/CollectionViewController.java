@@ -90,4 +90,9 @@ public class CollectionViewController implements Initializable, ControlledScreen
         //To Do
 
     }
+    
+    protected final void setUserData(String userEmail, String userPass)
+    {
+        
+    }
 }
