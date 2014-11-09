@@ -20,16 +20,17 @@ package com.jjlcollectors.controllers;
 import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.interfaces.ControlledScreen;
+import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableView;
@@ -40,10 +41,11 @@ import javafx.scene.layout.VBox;
  *
  * @author Hedgehog01
  */
-public class CollectionViewController implements Initializable, ControlledScreen
+public final class CollectionViewController implements Initializable, ControlledScreen
 {
-
+    private static final Logger log = Logger.getLogger(CollectionViewController.class.getName());
     private ScreensController myController;
+    private String userEmail = "";
     
     @FXML
     private VBox vBoxMain;
@@ -70,6 +72,7 @@ public class CollectionViewController implements Initializable, ControlledScreen
         ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
         
         data.addAll(CoinCreator.getCoinProperties(newData));
+        
     }
     
 
@@ -90,9 +93,81 @@ public class CollectionViewController implements Initializable, ControlledScreen
         //To Do
 
     }
-    
+    /*
+    * method to set user data.
+    After validating data is valid, initialize the data according to user data.
+    */
     protected final void setUserData(String userEmail, String userPass)
     {
+        checkLoginStatus (userEmail,userPass);
+    }
+    
+    /*
+    * method to validate user credentials
+    */
+    private void checkLoginStatus(String userEmail, String userPass)
+    {
         
+        log.log(Level.INFO, "Verifying login details");
+        if (isLoginValid(userEmail,userPass))
+        {
+            log.log(Level.INFO, "login is valid set user email");
+            setUserEmail(userEmail);
+        } else
+        {
+            log.log(Level.INFO, "login is not valid");
+        }
+    }
+
+    /*
+     * method to check if login credentials are valid.
+     * returns true if the are.
+     */
+    private boolean isLoginValid(String userEmail, String userPass)
+    {
+        boolean loginValid = true;
+        //verify user with this email exists
+        if (!(DBUsersConnect.findUserByEmail(userEmail)))
+        {
+            log.log(Level.INFO, "User doesn't exist");
+            loginValid = false;
+        } //verify password with this email is valid
+        else if (!(isPasswordValid(userEmail,userPass)))
+        {
+            log.log(Level.INFO, "User password incorrect");
+
+            loginValid = false;
+        }
+
+        return loginValid;
+    }
+
+    /*
+     * method to verify if user password is correct
+     * returns true if it is.
+     */
+    private boolean isPasswordValid(String userEmail, String userPass)
+    {
+        boolean passwordValid = true;
+        //verify password not empty
+        if ((userPass == null) || (userPass.trim().isEmpty()))
+        {
+            log.log(Level.INFO, "User password Empty or null");
+            passwordValid = false;
+        } //Check password is NOT valid with this email and update boolean var
+        else if (!(DBUsersConnect.isUserPasswordValid(userEmail, userPass.toCharArray())))
+        {
+            log.log(Level.INFO, "User password Invalid!");
+            passwordValid = false;
+        }
+        return passwordValid;
+    }
+    
+    /*
+    * set user email                           
+    */
+    private void setUserEmail (final String userEmail)
+    {
+        this.userEmail = userEmail;
     }
 }
