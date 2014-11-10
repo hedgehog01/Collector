@@ -18,17 +18,117 @@
 package com.jjlcollectors.collectables;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * class that represents abstract collection
  * @author nathanr
  */
-public abstract class Collection
+public final class Collection
 {
-    protected UUID _collectionID;
+    protected UUID _collectionUUID;
     protected UUID _userID;
-    protected String collectionName;
+    protected String _collectionName;
     protected CollectionType _collectionType;
+    protected String _CollectionNote;
+    private static final Logger LOG = Logger.getLogger(Collection.class.getName());
+
+    /**
+     * Collection constructor
+     * @param collectionUUID collection UUID (UUID)
+     * @param userID USER ID (UUID)
+     * @param collectionName Collection name
+     * @param collectionType Collection type (ENUM)
+     * @param CollectionNote Collection note
+     */
+    public Collection(UUID collectionUUID, UUID userID, String collectionName, CollectionType collectionType, String CollectionNote)
+    {
+        this._collectionUUID = collectionUUID;
+        this._userID = userID;
+        this._collectionName = collectionName;
+        this._collectionType = collectionType;
+        this._CollectionNote = CollectionNote;
+    }
+    
+    /**
+     * Collection constructor.
+     * Collection UUID is randomly generated.
+     * @param userID User ID (UUID)
+     * @param collectionName Collection name
+     * @param collectionType Collection type (CollectioType)
+     * @param CollectionNote collection Note
+     */
+    public Collection(UUID userID, String collectionName, CollectionType collectionType, String CollectionNote)
+    {
+        Collection.this.setCollectionUUID();
+        this._userID = userID;
+        this._collectionName = collectionName;
+        this._collectionType = collectionType;
+        this._CollectionNote = CollectionNote;
+    }
+
+    
+    
+    
+    protected UUID getCollectionID()
+    {
+        return _collectionUUID;
+    }
+    
+    
+    protected void setCollectionUUID(UUID collectionID)
+    {
+        this._collectionUUID = collectionID;
+    }
+    
+    /**
+     * method that creates random UUID for collection UUID
+     */
+    protected void setCollectionUUID()
+    {
+        this._collectionUUID = UUID.randomUUID();
+    }
+
+    protected UUID getUserID()
+    {
+        return _userID;
+    }
+
+    protected void setUserID(UUID userID)
+    {
+        this._userID = userID;
+    }
+
+    protected String getCollectionName()
+    {
+        return _collectionName;
+    }
+
+    protected void setCollectionName(String collectionName)
+    {
+        this._collectionName = collectionName;
+    }
+
+    protected CollectionType getCollectionType()
+    {
+        return _collectionType;
+    }
+
+    protected void setCollectionType(CollectionType collectionType)
+    {
+        this._collectionType = collectionType;
+    }
+
+    protected String getCollectionNote()
+    {
+        return _CollectionNote;
+    }
+
+    protected void setCollectionNote(String CollectionNote)
+    {
+        this._CollectionNote = CollectionNote;
+    }
+    
     
     
     

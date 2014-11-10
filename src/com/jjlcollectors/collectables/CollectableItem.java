@@ -16,14 +16,13 @@ public abstract class CollectableItem
     private final String DEFAULT_NAME = "Default_name";
     private final String DEFAULT_PRICE = "-1.0";
     private final String DEFAULT_VALUE = "-1.0";
-    private final int DEFAULT_USER_ID = -1;
     protected String _itemName; //item name
     protected UUID _itemId;     //item unique uuid 
     protected StringBuilder _longNote; //item long note
     protected LocalDate _buyDate; //item purchase date
     protected String _buyPrice; //item purchase price
     protected String _itemValue; //current item value
-    protected int _userId; //id of user who owns the item
+    protected UUID _userUUID; //id of user who owns the item
     
     
     //========================================================================================//
@@ -33,7 +32,7 @@ public abstract class CollectableItem
      * Default constructor - Sets item id to random UUID and default name.
      * @param userID the id of the user who the item belongs to.
      */
-    protected CollectableItem (int userID)
+    protected CollectableItem (UUID userID)
     {
         setUserId(userID);
         _itemId = UUID.randomUUID();
@@ -48,7 +47,7 @@ public abstract class CollectableItem
      * @param userID the user ID.
      * @param name the user name.
      */
-    protected CollectableItem (int userID,String name)
+    protected CollectableItem (UUID userID,String name)
     {
         this(userID);
         setItemName(name);
@@ -175,19 +174,16 @@ public abstract class CollectableItem
     
     /**
      * method to return item owner by user ID
-     * @return int user id
+     * @return UUID user UUID
      */
-    public int getUserId()
+    public UUID getUserUUID()
     {
-        return _userId;
+        return _userUUID;
     }
     
-    protected void setUserId (int userId)
+    protected void setUserId (UUID userId)
     {
-        if (isUserIdValid(userId))
-            _userId = userId;
-        else
-            _userId = DEFAULT_USER_ID;
+            _userUUID = userId;
     }
     
     /**
@@ -215,9 +211,5 @@ public abstract class CollectableItem
         return true;  
     }
     
-    private boolean isUserIdValid (int userId)
-    {
-        //make sure user id is not zero or less
-        return userId > 0; //To Do
-    }
+
 }

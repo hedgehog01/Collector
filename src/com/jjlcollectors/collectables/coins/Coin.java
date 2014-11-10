@@ -1,6 +1,7 @@
 package com.jjlcollectors.collectables.coins;
 
 import com.jjlcollectors.collectables.CollectableItem;
+import java.util.UUID;
 
 /**
  * Class that represents a Coin.
@@ -33,7 +34,7 @@ public final class Coin extends CollectableItem {
      * @param userID the id of the user who the item belongs to.
      * @param name the coin name.
      */
-    public Coin(int userID, String name) {
+    public Coin(UUID userID, String name) {
         super(userID, name);
         _grade = CoinGrade.UNKNOWN;
         _faceValue = UNKNOWN;
@@ -49,8 +50,8 @@ public final class Coin extends CollectableItem {
      * @param name the coin name.
      * @param grade the Coin grade
      */
-    public Coin(int userID,String name, CoinGrade grade) {
-        super(userID,name);
+    public Coin(UUID userUUID,String name, CoinGrade grade) {
+        super(userUUID,name);
         setCoinGrade(grade);
     }
 
@@ -63,8 +64,8 @@ public final class Coin extends CollectableItem {
      * @param currency the coin currency.
      * @param note the coin note.
      */
-    public Coin(int userID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note) {
-        this (userID,name,grade);
+    public Coin(UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note) {
+        this (userUUID,name,grade);
         setFaceValue(facevalue);
         setCurrency(currency);
         setItemNote(note);
@@ -83,9 +84,9 @@ public final class Coin extends CollectableItem {
      * @param buyPrice the coin buy price
      * @param coinValue the coin estimated value
      */
-    public Coin (int userID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
+    public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
     {
-        this (userID, name, grade, facevalue, currency, note);
+        this (userUUID, name, grade, facevalue, currency, note);
         setCoinYear(coinYear);
         setCoinMintMark(coinMintMark);
         setItemBuyPrice(buyPrice);
@@ -98,7 +99,7 @@ public final class Coin extends CollectableItem {
      */
     public Coin (Coin other)
     {
-        this (other.getUserId(),other.getItemName(), other.getCoinGrade(), other.getFaceValue(), other.getCoinCurrency(), other.getItemNote(),other.getCoinYear(),other.getCoinMintMark(),other.getBuyPrice(),other.getItemValue());
+        this (other.getUserUUID(),other.getItemName(), other.getCoinGrade(), other.getFaceValue(), other.getCoinCurrency(), other.getItemNote(),other.getCoinYear(),other.getCoinMintMark(),other.getBuyPrice(),other.getItemValue());
     }
     
     
