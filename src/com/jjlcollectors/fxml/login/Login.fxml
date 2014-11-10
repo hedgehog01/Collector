@@ -14,36 +14,31 @@
         <URL value="@login.css" />
     </stylesheets>
    <children>
-      <Pane layoutX="-2.0" layoutY="-11.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Label fx:id="userEmailLabel" layoutX="274.0" layoutY="210.0" prefHeight="17.0" prefWidth="51.0" text="Email" />
-            <Label fx:id="userPasswordLabel" layoutX="274.0" layoutY="250.0" text="Password" />
-            <TextField fx:id="userEmailTextField" alignment="TOP_LEFT" layoutX="343.0" layoutY="205.0" prefHeight="25.0" prefWidth="183.0" promptText="Email" />
-            <PasswordField fx:id="userPasswordField" layoutX="343.0" layoutY="245.0" prefHeight="25.0" prefWidth="183.0" promptText="Password" />
-            <Button fx:id="loginButton" layoutX="402.0" layoutY="329.0" mnemonicParsing="false" onAction="#checkLoginStatus" prefHeight="25.0" prefWidth="124.0" text="Login" />
-            <Button fx:id="forgotPasswordButton" layoutX="402.0" layoutY="371.0" mnemonicParsing="false" onAction="#goToRetrievePassword" prefHeight="25.0" prefWidth="124.0" text="Forgot my password" />
-            <Button fx:id="registerButton" layoutX="662.0" layoutY="561.0" mnemonicParsing="false" onAction="#goToRegisterUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
-            <Label fx:id="loginStatusLabel" layoutX="404.0" layoutY="305.0" />
-            <Label fx:id="loginStatusLabel" layoutX="343.0" layoutY="277.0" prefHeight="47.0" prefWidth="183.0" />
-            <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="800.0">
-              <menus>
-                <Menu text="_File">
-                  <items>
-                    <MenuItem onAction="#doExit" text="E_xit">
-                           <accelerator>
-                              <KeyCodeCombination alt="DOWN" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-         </children>
-      </Pane>
+      <Label fx:id="loginStatusLabel" prefHeight="47.0" prefWidth="183.0" />
+      <Button fx:id="registerButton" layoutX="662.0" layoutY="561.0" mnemonicParsing="false" onAction="#goToRegisterUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
+      <Label fx:id="userEmailLabel" layoutX="268.0" layoutY="192.0" prefHeight="17.0" prefWidth="51.0" text="Email" />
+      <Label fx:id="userPasswordLabel" layoutX="269.0" layoutY="239.0" text="Password" />
+      <TextField fx:id="userEmailTextField" alignment="TOP_LEFT" layoutX="355.0" layoutY="188.0" prefHeight="25.0" prefWidth="183.0" promptText="Email" />
+      <PasswordField fx:id="userPasswordField" layoutX="355.0" layoutY="235.0" prefHeight="25.0" prefWidth="183.0" promptText="Password" />
+      <Button fx:id="loginButton" layoutX="385.0" layoutY="341.0" mnemonicParsing="false" onAction="#checkLoginStatus" prefHeight="25.0" prefWidth="124.0" text="Login" />
+      <Button fx:id="forgotPasswordButton" layoutX="385.0" layoutY="300.0" mnemonicParsing="false" onAction="#goToRetrievePassword" prefHeight="25.0" prefWidth="124.0" text="Forgot my password" />
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
+        <menus>
+          <Menu text="_File">
+            <items>
+              <MenuItem onAction="#doExit" text="E_xit">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </AnchorPane>
