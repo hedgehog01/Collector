@@ -15,13 +15,13 @@
     </stylesheets>
    <children>
       <Label fx:id="loginStatusLabel" prefHeight="47.0" prefWidth="183.0" />
-      <Button fx:id="registerButton" layoutX="662.0" layoutY="561.0" mnemonicParsing="false" onAction="#goToRegisterUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
       <Label fx:id="userEmailLabel" layoutX="268.0" layoutY="192.0" prefHeight="17.0" prefWidth="51.0" text="Email" />
       <Label fx:id="userPasswordLabel" layoutX="269.0" layoutY="239.0" text="Password" />
       <TextField fx:id="userEmailTextField" alignment="TOP_LEFT" layoutX="355.0" layoutY="188.0" prefHeight="25.0" prefWidth="183.0" promptText="Email" />
       <PasswordField fx:id="userPasswordField" layoutX="355.0" layoutY="235.0" prefHeight="25.0" prefWidth="183.0" promptText="Password" />
-      <Button fx:id="loginButton" layoutX="385.0" layoutY="341.0" mnemonicParsing="false" onAction="#checkLoginStatus" prefHeight="25.0" prefWidth="124.0" text="Login" />
-      <Button fx:id="forgotPasswordButton" layoutX="385.0" layoutY="300.0" mnemonicParsing="false" onAction="#goToRetrievePassword" prefHeight="25.0" prefWidth="124.0" text="Forgot my password" />
+      <Button fx:id="loginButton" layoutX="385.0" layoutY="288.0" mnemonicParsing="false" onAction="#checkLoginStatus" prefHeight="25.0" prefWidth="124.0" text="Login" />
+      <Button fx:id="forgotPasswordButton" layoutX="385.0" layoutY="327.0" mnemonicParsing="false" onAction="#goToRetrievePassword" prefHeight="25.0" prefWidth="124.0" text="Forgot my password" />
+      <Button fx:id="registerButton" layoutX="662.0" layoutY="561.0" mnemonicParsing="false" onAction="#goToRegisterUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
         <menus>
           <Menu text="_File">

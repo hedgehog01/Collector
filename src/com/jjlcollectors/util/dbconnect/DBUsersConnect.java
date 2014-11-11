@@ -41,7 +41,6 @@ public final class DBUsersConnect extends DBConnect
 
     private static final String TABLE_NAME = "USERDB";
     private static final Logger log = Logger.getLogger(DBUsersConnect.class.getName());
-    
 
     /**
      * method to find user by the userId
@@ -64,9 +63,9 @@ public final class DBUsersConnect extends DBConnect
             }
         } catch (SQLException sql)
         {
-            log.log(Level.SEVERE, "find user by ID failed with error: {0}",sql);
+            log.log(Level.SEVERE, "find user by ID failed with error: {0}", sql);
         }
-        
+
         DBConnect.closeDBConnection();
         return userExists;
     }
@@ -135,6 +134,36 @@ public final class DBUsersConnect extends DBConnect
             });
         }
         return userAdded;
+    }
+
+    /**
+     * method to return user UUID by Email
+     *
+     * @param userEmail the user email
+     * @return UUID of the user with that Email
+     */
+    public static UUID getUserUUID(String userEmail)
+    {
+        UUID userUUID = null;
+        
+        DBConnect.createDBConnection();
+        try
+        {
+            PreparedStatement prepStamt = conn.prepareStatement("SELECT USER_UUID from " + TABLE_NAME + "WHERE MAIN_EMAIL = ?");
+            prepStamt.setString(1, userEmail);
+
+            try (ResultSet rs = prepStamt.executeQuery())
+            {
+                log.log(Level.SEVERE, "found user UUID by Email");
+                userUUID = UUID.fromString(rs.getString("USER_UUID"));
+            }
+        } catch (SQLException sql)
+        {
+            log.log(Level.SEVERE, "find user by ID failed with error: {0}", sql);
+        }
+
+        DBConnect.closeDBConnection();
+        return userUUID;
     }
 
     /**
@@ -218,12 +247,12 @@ public final class DBUsersConnect extends DBConnect
             {
                 prepStmt.setString(1, userEmail);
                 ResultSet rs = prepStmt.executeQuery();
-                
+
                 if (rs.next())
                 {
                     Blob blob = rs.getBlob("USER_PASSWORD");
                     long blobLength = blob.length();
-                    
+
                     int pos = 1; // position is 1-based
                     int len = (int) blobLength;
                     password = blob.getBytes(pos, len);
@@ -271,12 +300,12 @@ public final class DBUsersConnect extends DBConnect
             {
                 prepStmt.setString(1, userEmail);
                 ResultSet rs = prepStmt.executeQuery();
-                
+
                 if (rs.next())
                 {
                     Blob blob = rs.getBlob("USER_SALT");
                     long blobLength = blob.length();
-                    
+
                     int pos = 1; // position is 1-based
                     int len = (int) blobLength;
                     Salt = blob.getBytes(pos, len);
@@ -347,21 +376,19 @@ public final class DBUsersConnect extends DBConnect
                     String userUUID = results.getString(11);
                     String userPass = results.getString(12);
                     String userSalt = results.getString(13);
-                    
+
                     boolean tempPassword = results.getBoolean(15);
                     if (results.getTimestamp("USER_REGISTRATION_TIME") != null)
                     {
                         userRegTime = results.getTimestamp("USER_REGISTRATION_TIME");
-                    }
-                    else
+                    } else
                     {
                         userRegTime = null;
-                    }                        
+                    }
                     if (results.getTimestamp("USER_LAST_LOGIN_TIME") != null)
                     {
                         lastLoginTime = results.getTimestamp("USER_LAST_LOGIN_TIME");
-                    }
-                    else
+                    } else
                     {
                         lastLoginTime = null;
                     }

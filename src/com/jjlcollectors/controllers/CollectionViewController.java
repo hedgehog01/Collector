@@ -23,8 +23,10 @@ import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -43,10 +45,12 @@ import javafx.scene.layout.VBox;
  */
 public final class CollectionViewController implements Initializable, ControlledScreen
 {
+
     private static final Logger log = Logger.getLogger(CollectionViewController.class.getName());
     private ScreensController myController;
     private String userEmail = "";
-    
+    private UUID userUUID;
+
     @FXML
     private VBox vBoxMain;
 
@@ -55,7 +59,10 @@ public final class CollectionViewController implements Initializable, Controlled
 
     @FXML
     private Button refreshButton;
-    
+
+    @FXML
+    private Button addCoinBtn;
+
     @FXML
     private MenuBar mainMenuBar;
 
@@ -65,16 +72,15 @@ public final class CollectionViewController implements Initializable, Controlled
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        
+
         //mainMenuBar.getScene().getWindow().sizeToScene();
         //((Node)(vBoxMain.getScene().getWindow().sizeToScene());
         ObservableList<CoinProperty> data = tableView.getItems();
         ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
-        
+
         data.addAll(CoinCreator.getCoinProperties(newData));
-        
+
     }
-    
 
     @Override
     public void setScreenParent(ScreensController screenParent)
@@ -85,34 +91,37 @@ public final class CollectionViewController implements Initializable, Controlled
     @FXML
     protected void addCoin(ActionEvent event)
     {
-        ((Node)(event.getSource())).getScene().getWindow().sizeToScene();
+        ((Node) (event.getSource())).getScene().getWindow().sizeToScene();
         ObservableList<CoinProperty> data = tableView.getItems();
         ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
-        
+
         data.addAll(CoinCreator.getCoinProperties(newData));
         //To Do
 
     }
     /*
-    * method to set user data.
-    After validating data is valid, initialize the data according to user data.
-    */
+     * method to set user data.
+     After validating data is valid, initialize the data according to user data.
+     */
+
     protected final void setUserData(String userEmail, String userPass)
     {
-        checkLoginStatus (userEmail,userPass);
+        checkLoginStatus(userEmail, userPass);
     }
-    
+
     /*
-    * method to validate user credentials
-    */
+     * method to validate user credentials
+     */
     private void checkLoginStatus(String userEmail, String userPass)
     {
-        
+
         log.log(Level.INFO, "Verifying login details");
-        if (isLoginValid(userEmail,userPass))
+        if (isLoginValid(userEmail, userPass))
         {
             log.log(Level.INFO, "login is valid set user email");
             setUserEmail(userEmail);
+            setUserUUID();
+
         } else
         {
             log.log(Level.INFO, "login is not valid");
@@ -132,7 +141,7 @@ public final class CollectionViewController implements Initializable, Controlled
             log.log(Level.INFO, "User doesn't exist");
             loginValid = false;
         } //verify password with this email is valid
-        else if (!(isPasswordValid(userEmail,userPass)))
+        else if (!(isPasswordValid(userEmail, userPass)))
         {
             log.log(Level.INFO, "User password incorrect");
 
@@ -162,12 +171,33 @@ public final class CollectionViewController implements Initializable, Controlled
         }
         return passwordValid;
     }
-    
+
     /*
-    * set user email                           
-    */
-    private void setUserEmail (final String userEmail)
+     * set user email                           
+     */
+    private void setUserEmail(final String userEmail)
     {
         this.userEmail = userEmail;
+    }
+
+    /**
+     * method to exit the program.
+     */
+    @FXML
+    public void doExit()
+    {
+
+        Platform.exit();
+    }
+
+    private void setUserUUID()
+    {
+        if (DBUsersConnect.getUserUUID(userEmail) != null)
+        {
+            userUUID = DBUsersConnect.getUserUUID(userEmail);
+        } else
+        {
+            log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
+        }
     }
 }
