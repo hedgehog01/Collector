@@ -133,7 +133,7 @@
                                   </columns>
                               </TableView>
                   <Button fx:id="refreshButton" layoutX="948.0" layoutY="44.0" mnemonicParsing="false" onAction="#addCoin" prefHeight="25.0" prefWidth="66.0" text="Refresh" />
-                  <Button fx:id="addCoinBtn" layoutX="948.0" layoutY="82.0" mnemonicParsing="false" text="Add Coin" />
+                  <Button fx:id="addCoinBtn" layoutX="948.0" layoutY="82.0" mnemonicParsing="false" onAction="#addNewCoin" text="Add Coin" />
                </children>
             </AnchorPane>
         </items>

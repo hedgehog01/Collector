@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.AddCoinController">
+    <stylesheets>
+        <URL value="@addcoin.css" />
+    </stylesheets>
+   <children>
+      <Button fx:id="addCoinBtn" layoutX="526.0" layoutY="361.0" mnemonicParsing="false" text="Add" />
+      <Label layoutX="38.0" layoutY="53.0" text="Label" />
+      <Label layoutX="38.0" layoutY="89.0" text="Label" />
+      <TextField layoutX="93.0" layoutY="49.0" />
+      <TextField layoutX="93.0" layoutY="85.0" />
+      <Button fx:id="cancelBtn" layoutX="12.0" layoutY="361.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
+   </children>
+</AnchorPane>

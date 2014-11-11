@@ -46,7 +46,7 @@ import javafx.stage.Stage;
  *
  * @author Hedgehog01
  */
-public class LoginController implements Initializable, ControlledScreen
+public final class LoginController implements Initializable, ControlledScreen
 {
 
     private static final Logger log = Logger.getLogger(LoginController.class.getName());

@@ -21,6 +21,7 @@ import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -31,12 +32,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -199,5 +205,37 @@ public final class CollectionViewController implements Initializable, Controlled
         {
             log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
         }
+    }
+    
+    
+    @FXML
+    private boolean addNewCoin()
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage = (Stage) addCoinBtn.getScene().getWindow();
+            //currentStage.hide();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            String filePath = "/com/jjlcollectors/fxml/addcoin/addcoin.fxml";
+            URL location = AddCoinController.class.getResource(filePath);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
+            addCoinController.setUserData(userUUID);
+            
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene (root);
+            stage.setScene(scene);
+            stage.show();
+            
+            loadScreen = true;           
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
     }
 }
