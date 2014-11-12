@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -12,11 +13,18 @@
         <URL value="@addcoin.css" />
     </stylesheets>
    <children>
-      <Button fx:id="addCoinBtn" layoutX="526.0" layoutY="361.0" mnemonicParsing="false" text="Add" />
-      <Label layoutX="38.0" layoutY="53.0" text="Label" />
-      <Label layoutX="38.0" layoutY="89.0" text="Label" />
-      <TextField layoutX="93.0" layoutY="49.0" />
-      <Button fx:id="cancelBtn" layoutX="12.0" layoutY="361.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
-      <ComboBox fx:id="currencyComboBox" layoutX="93.0" layoutY="85.0" prefWidth="150.0" />
+      <Button fx:id="addCoinBtn" layoutX="433.0" layoutY="349.0" mnemonicParsing="false" text="Add" />
+      <TextField fx:id="coinNameTxtField" layoutX="93.0" layoutY="49.0" promptText="Name" />
+      <Button fx:id="cancelBtn" layoutX="142.0" layoutY="349.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
+      <ComboBox fx:id="currencyComboBox" layoutX="93.0" layoutY="85.0" prefWidth="150.0" promptText="Currency" />
+      <ComboBox fx:id="coinGradeComboBox" layoutX="93.0" layoutY="154.0" prefWidth="150.0" promptText="Grade" />
+      <TextField fx:id="coinFaceValueTxtField" layoutX="93.0" layoutY="120.0" promptText="Face Value" />
+      <TextField fx:id="coinNoteTxtField" layoutX="378.0" layoutY="126.0" prefHeight="81.0" prefWidth="149.0" promptText="More info" />
+      <TextField fx:id="coinMintMarkTxtField" layoutX="377.0" layoutY="49.0" promptText="Mint mark" />
+      <TextField fx:id="coinBuyPriceTxtField" layoutX="377.0" layoutY="85.0" promptText="Buy Price" />
+      <TextField fx:id="coinValueTxtField" layoutX="93.0" layoutY="280.0" promptText="Estimated Value" />
+      <DatePicker fx:id="coinBuyDatePicker" layoutX="94.0" layoutY="241.0" prefHeight="25.0" prefWidth="149.0" promptText="Buy date" />
+      <TextField fx:id="coinYearTxtField" layoutX="93.0" layoutY="200.0" promptText="Mint year" />
+      <Label fx:id="addCoinStatus" layoutX="378.0" layoutY="219.0" prefHeight="107.0" prefWidth="149.0" />
    </children>
 </AnchorPane>

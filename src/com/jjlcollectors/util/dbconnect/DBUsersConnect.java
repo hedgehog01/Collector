@@ -141,12 +141,31 @@ public final class DBUsersConnect extends DBConnect
      *
      * @param userEmail the user email
      * @return UUID of the user with that Email
+     * @throws java.sql.SQLException
      */
     public static UUID getUserUUID(String userEmail)
     {
-        UUID userUUID = null;
+        
+        UUID userUuid = null;
         
         DBConnect.createDBConnection();
+            try (PreparedStatement prepStmt = conn.prepareStatement("SELECT USER_UUID from " + TABLE_NAME + " WHERE MAIN_EMAIL = ?"))
+            {
+                prepStmt.setString(1, userEmail);
+                ResultSet rs = prepStmt.executeQuery();
+
+                if (rs.next())
+                {
+                    userUuid = UUID.fromString(rs.getString("USER_UUID"));
+                    
+                }
+                rs.close();
+            } catch (SQLException ex)
+        {
+            Logger.getLogger(DBUsersConnect.class.getName()).log(Level.SEVERE, "Couldn't get userUUID by Email\n ", ex);
+        }
+    
+        /*
         try
         {
             PreparedStatement prepStamt = conn.prepareStatement("SELECT USER_UUID from " + TABLE_NAME + "WHERE MAIN_EMAIL = ?");
@@ -154,16 +173,16 @@ public final class DBUsersConnect extends DBConnect
 
             try (ResultSet rs = prepStamt.executeQuery())
             {
-                log.log(Level.SEVERE, "found user UUID by Email");
+                log.log(Level.INFO, "found user UUID by Email");
                 userUUID = UUID.fromString(rs.getString("USER_UUID"));
             }
         } catch (SQLException sql)
         {
             log.log(Level.SEVERE, "find user by ID failed with error: {0}", sql);
         }
-
+        */
         DBConnect.closeDBConnection();
-        return userUUID;
+        return userUuid;
     }
 
     /**
