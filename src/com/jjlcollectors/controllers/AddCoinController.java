@@ -17,12 +17,16 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.coins.CoinCurrency;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 /**
@@ -39,6 +43,15 @@ public final class AddCoinController implements Initializable
     
     @FXML
     private Button cancelBtn;
+    
+    @FXML
+    ComboBox <CoinCurrency> currencyComboBox;
+    
+    
+    ObservableList<String> currencyList = FXCollections.observableArrayList();
+    
+    
+
 
     /**
      * Initializes the controller class.
@@ -47,6 +60,15 @@ public final class AddCoinController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         userUUID = null;
+        currencyComboBox.getItems().addAll(
+                CoinCurrency.ABKHAZIAN_APSAR,
+                CoinCurrency.AFGHAN_AFGHANI,
+                CoinCurrency.ALBANIAN_LEK,
+                CoinCurrency.ALDERNEY_POUND
+                
+                
+        );
+                
     }    
     
     
@@ -60,6 +82,16 @@ public final class AddCoinController implements Initializable
     void setUserData(UUID userUUID)
     {
         this.userUUID = userUUID;
+    }
+    
+    @FXML
+    private void addNewCoin()
+    {
+        if (isCoinValid())
+        {
+            //public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
+            Coin newCoin = Coin (userUUID, currencyComboBox.getValue(),);
+        }
     }
     
 }

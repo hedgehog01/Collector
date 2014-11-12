@@ -16,7 +16,7 @@
       <Label layoutX="38.0" layoutY="53.0" text="Label" />
       <Label layoutX="38.0" layoutY="89.0" text="Label" />
       <TextField layoutX="93.0" layoutY="49.0" />
-      <TextField layoutX="93.0" layoutY="85.0" />
       <Button fx:id="cancelBtn" layoutX="12.0" layoutY="361.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
+      <ComboBox fx:id="currencyComboBox" layoutX="93.0" layoutY="85.0" prefWidth="150.0" />
    </children>
 </AnchorPane>
