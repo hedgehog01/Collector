@@ -33,9 +33,10 @@ public final class Coin extends CollectableItem {
      * 
      * @param userID the id of the user who the item belongs to.
      * @param name the coin name.
+     * @param collectionUUID the collection the item belongs to.
      */
-    public Coin(UUID userID, String name) {
-        super(userID, name);
+    public Coin(UUID userID, String name,UUID collectionUUID) {
+        super(userID, name,collectionUUID);
         _grade = CoinGrade.UNKNOWN;
         _faceValue = UNKNOWN;
         _currency = CoinCurrency.UNKNOWN;
@@ -46,34 +47,37 @@ public final class Coin extends CollectableItem {
     /**
      * Constructor that sets coin name. Grade set to default.
      *
-     * @param userID the id of the user who the item belongs to.
+     * @param userUUID the id of the user who the item belongs to.
      * @param name the coin name.
      * @param grade the Coin grade
+     * @param collectionUUID the collection the item belongs to.
      */
-    public Coin(UUID userUUID,String name, CoinGrade grade) {
-        super(userUUID,name);
+    public Coin(UUID userUUID,String name, CoinGrade grade,UUID collectionUUID) {
+        super(userUUID,name,collectionUUID);
         setCoinGrade(grade);
     }
 
     /**
      * Constructor that sets coin name. Grade set to default.
-     *@param userID the id of the user who the item belongs to.
+     *@param userUUID the id of the user who the item belongs to.
      * @param name the coin name.
      * @param grade the Coin grade.
      * @param facevalue the coin face value.
      * @param currency the coin currency.
      * @param note the coin note.
+     * @param collectionUUID the collection the item belongs to.
      */
-    public Coin(UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note) {
-        this (userUUID,name,grade);
+    public Coin(UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note,UUID collectionUUID) {
+        this (userUUID,name,grade,collectionUUID);
         setFaceValue(facevalue);
         setCurrency(currency);
         setItemNote(note);
+        
     }
     
     /**
      * 
-     * @param userID the id of the user who the item belongs to.
+     * @param userUUID the id of the user who the item belongs to.
      * @param name the coin name.
      * @param grade the Coin grade.
      * @param facevalue the coin face value.
@@ -83,14 +87,16 @@ public final class Coin extends CollectableItem {
      * @param coinMintMark the coin mint mark
      * @param buyPrice the coin buy price
      * @param coinValue the coin estimated value
+     * @param collectionUUID the collection the item belongs to.
      */
-    public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
+    public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue, UUID collectionUUID)
     {
-        this (userUUID, name, grade, facevalue, currency, note);
+        this (userUUID, name, grade, facevalue, currency, note,collectionUUID);
         setCoinYear(coinYear);
         setCoinMintMark(coinMintMark);
         setItemBuyPrice(buyPrice);
         setFaceValue(coinValue);
+        
     }
 
     /**
@@ -99,7 +105,7 @@ public final class Coin extends CollectableItem {
      */
     public Coin (Coin other)
     {
-        this (other.getUserUUID(),other.getItemName(), other.getCoinGrade(), other.getFaceValue(), other.getCoinCurrency(), other.getItemNote(),other.getCoinYear(),other.getCoinMintMark(),other.getBuyPrice(),other.getItemValue());
+        this (other.getUserUUID(),other.getItemName(), other.getCoinGrade(), other.getFaceValue(), other.getCoinCurrency(), other.getItemNote(),other.getCoinYear(),other.getCoinMintMark(),other.getBuyPrice(),other.getItemValue(),other.getItemCollectionUUID());
     }
     
     

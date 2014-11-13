@@ -14,7 +14,7 @@
         <URL value="@login.css" />
     </stylesheets>
    <children>
-      <Label fx:id="loginStatusLabel" prefHeight="47.0" prefWidth="183.0" />
+      <Label fx:id="loginStatusLabel" layoutX="355.0" layoutY="363.0" prefHeight="47.0" prefWidth="183.0" />
       <Label fx:id="userEmailLabel" layoutX="268.0" layoutY="192.0" prefHeight="17.0" prefWidth="51.0" text="Email" />
       <Label fx:id="userPasswordLabel" layoutX="269.0" layoutY="239.0" text="Password" />
       <TextField fx:id="userEmailTextField" alignment="TOP_LEFT" layoutX="355.0" layoutY="188.0" prefHeight="25.0" prefWidth="183.0" promptText="Email" />

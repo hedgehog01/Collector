@@ -23,5 +23,5 @@ package com.jjlcollectors.collectables;
  */
 public enum CollectionType
 {
-    COIN,STAMP
+    COIN,STAMP,CAR
 }

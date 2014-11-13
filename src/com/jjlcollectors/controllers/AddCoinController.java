@@ -129,7 +129,7 @@ public final class AddCoinController implements Initializable
 
             //public Coin           (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
             Coin newCoin = new Coin (userUUID,coinNameTxtField.getText(),coinGradeComboBox.getValue() ,coinFaceValueTxtField.getText(),currencyComboBox.getValue(),coinNote, coinYear,coinMintMarkTxtField.getText(),coinBuyPriceTxtField.getText(),coinValueTxtField.getText());
-            LOG.log(Level.INFO, "coin created, user uuid is {0}",userUUID.toString());
+            LOG.log(Level.INFO, "New Coin created, user uuid is {0}",userUUID.toString());
         }
     }
 

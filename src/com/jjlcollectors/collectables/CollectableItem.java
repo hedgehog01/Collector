@@ -23,6 +23,7 @@ public abstract class CollectableItem
     protected String _buyPrice; //item purchase price
     protected String _itemValue; //current item value
     protected UUID _userUUID; //id of user who owns the item
+    protected UUID _collectionUUID; //id of the collection the item belongs to.
     
     
     //========================================================================================//
@@ -47,10 +48,11 @@ public abstract class CollectableItem
      * @param userID the user ID.
      * @param name the user name.
      */
-    protected CollectableItem (UUID userID,String name)
+    protected CollectableItem (UUID userID,String name,UUID collectionUUID)
     {
         this(userID);
         setItemName(name);
+        setItemCollectionUUID(collectionUUID);
     }
 
     //========================================================================================//
@@ -181,10 +183,34 @@ public abstract class CollectableItem
         return _userUUID;
     }
     
+    /**
+     * method to set user UUID
+     * @param userId the user UUID
+     */
     protected void setUserId (UUID userId)
     {
             _userUUID = userId;
     }
+    
+    /**
+     * method to set the item collection UUID
+     * @param collectionUUID the item collection UUID
+     */
+    protected void setItemCollectionUUID(UUID collectionUUID)
+    {
+        _collectionUUID = collectionUUID;
+    }
+    
+    /**
+     * method to return item collection UUID
+     * @return UUID of collection item belongs to.
+     */
+    protected UUID getItemCollectionUUID ()
+    {
+        return _collectionUUID;
+    }
+    
+    
     
     /**
      * Method to print item details
