@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="401.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.jjlcollectors.controllers.AddCollectionController">
+    <stylesheets>
+        <URL value="@addcollection.css" />
+    </stylesheets>
+   <children>
+      <Text layoutX="144.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new collection" />
+      <ComboBox layoutX="126.0" layoutY="71.0" prefWidth="150.0" promptText="Collection Type" />
+      <TextField layoutX="126.0" layoutY="110.0" promptText="Name" />
+      <TextField layoutX="126.0" layoutY="164.0" prefHeight="111.0" prefWidth="149.0" promptText="More Info" />
+      <Button layoutX="224.0" layoutY="296.0" mnemonicParsing="false" text="Create" />
+      <Button layoutX="126.0" layoutY="296.0" mnemonicParsing="false" text="Cancel" />
+   </children>
+</AnchorPane>
