@@ -165,22 +165,6 @@ public final class DBUsersConnect extends DBConnect
             Logger.getLogger(DBUsersConnect.class.getName()).log(Level.SEVERE, "Couldn't get userUUID by Email\n ", ex);
         }
     
-        /*
-        try
-        {
-            PreparedStatement prepStamt = conn.prepareStatement("SELECT USER_UUID from " + TABLE_NAME + "WHERE MAIN_EMAIL = ?");
-            prepStamt.setString(1, userEmail);
-
-            try (ResultSet rs = prepStamt.executeQuery())
-            {
-                log.log(Level.INFO, "found user UUID by Email");
-                userUUID = UUID.fromString(rs.getString("USER_UUID"));
-            }
-        } catch (SQLException sql)
-        {
-            log.log(Level.SEVERE, "find user by ID failed with error: {0}", sql);
-        }
-        */
         DBConnect.closeDBConnection();
         return userUuid;
     }

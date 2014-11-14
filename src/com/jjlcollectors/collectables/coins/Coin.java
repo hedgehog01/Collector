@@ -89,6 +89,9 @@ public final class Coin extends CollectableItem {
      * @param coinValue the coin estimated value
      * @param collectionUUID the collection the item belongs to.
      */
+    //(userUUID,coinNameTxtField.getText(),coinGradeComboBox.getValue() ,coinFaceValueTxtField.getText(),currencyComboBox.getValue(),coinNote, coinYear,coinMintMarkTxtField.getText(),coinBuyPriceTxtField.getText(),);
+    //(UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue,)
+    
     public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue, UUID collectionUUID)
     {
         this (userUUID, name, grade, facevalue, currency, note,collectionUUID);
@@ -105,6 +108,7 @@ public final class Coin extends CollectableItem {
      */
     public Coin (Coin other)
     {
+        
         this (other.getUserUUID(),other.getItemName(), other.getCoinGrade(), other.getFaceValue(), other.getCoinCurrency(), other.getItemNote(),other.getCoinYear(),other.getCoinMintMark(),other.getBuyPrice(),other.getItemValue(),other.getItemCollectionUUID());
     }
     

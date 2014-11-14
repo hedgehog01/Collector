@@ -20,6 +20,7 @@ package com.jjlcollectors.controllers;
 import com.jjlcollectors.collectables.coins.Coin;
 import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.collectables.coins.CoinGrade;
+import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -43,10 +44,11 @@ import javafx.stage.Stage;
  */
 public final class AddCoinController implements Initializable
 {
-    private static final Logger LOG = Logger.getLogger(AddCoinController.class.getName());
-    
-    
-    
+    private static final Logger log = Logger.getLogger(AddCoinController.class.getName());
+    private final String COLLECTION_TYPE_NOT_SELECTED = "Collection must be selected.\n";
+    private final String COLLECTION_NAME_EMPTY = "Enter colletion name.\n";
+    private final String COLLECTION_NAME_EXISTS = "Name already exists.\n";
+
     UUID userUUID;
     //public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
     
@@ -81,7 +83,12 @@ public final class AddCoinController implements Initializable
     private Button cancelBtn;
     
     @FXML
-    ComboBox <CoinCurrency> currencyComboBox;
+    private ComboBox <CoinCurrency> currencyComboBox;
+    
+    @FXML
+    private ComboBox <String> collectionComboBox;
+    
+
     
     @FXML
     Label addCoinStatus;
@@ -126,16 +133,41 @@ public final class AddCoinController implements Initializable
         {
             StringBuilder coinNote = new StringBuilder(coinNoteTxtField.getText());
             int coinYear = Integer.parseInt(coinYearTxtField.getText());
-
+            UUID collectionUuid = DBCollectionConnect.getCollectionUUID (collectionComboBox.getValue());
             //public Coin           (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
-            Coin newCoin = new Coin (userUUID,coinNameTxtField.getText(),coinGradeComboBox.getValue() ,coinFaceValueTxtField.getText(),currencyComboBox.getValue(),coinNote, coinYear,coinMintMarkTxtField.getText(),coinBuyPriceTxtField.getText(),coinValueTxtField.getText());
-            LOG.log(Level.INFO, "New Coin created, user uuid is {0}",userUUID.toString());
+            Coin newCoin = new Coin (userUUID,coinNameTxtField.getText(),coinGradeComboBox.getValue() ,coinFaceValueTxtField.getText(),currencyComboBox.getValue(),coinNote, coinYear,coinMintMarkTxtField.getText(),coinBuyPriceTxtField.getText(),coinValueTxtField.getText(),collectionUuid);
+            log.log(Level.INFO, "New Coin created, user uuid is {0}",userUUID.toString());
         }
     }
 
     private boolean isCoinValid()
     {
-        return true;
+        boolean coinValid = true;
+        StringBuilder issues = new StringBuilder("");
+        if (coinNameTxtField.getText() == null || coinNameTxtField.getText().trim().isEmpty())
+        {
+            issues.append(COLLECTION_NAME_EMPTY);
+             coinValid = false;
+             log.log(Level.INFO, "collection name is: {0}",coinNameTxtField.getText());
+        }
+        else if (DBCollectionConnect.getCollectionUUID(coinNameTxtField.getText()) != null) //check if collection name already exists
+        {
+            issues.append(COLLECTION_NAME_EXISTS);
+             coinValid = false;
+             log.log(Level.INFO, "collection name already exists: {0}",coinNameTxtField.getText());
+        }
+        
+        
+        
+        if (collectionComboBox.getValue() == null)
+         {
+             issues.append(COLLECTION_TYPE_NOT_SELECTED);
+             coinValid = false;
+             log.log(Level.INFO, "collection selected is: {0}",collectionComboBox.getValue());
+         }
+        
+
+        return coinValid;
         //To Do
     }
     

@@ -19,7 +19,11 @@ package com.jjlcollectors.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 
 /**
  * FXML Controller class
@@ -28,6 +32,11 @@ import javafx.fxml.Initializable;
  */
 public class AddCollectionController implements Initializable
 {
+    
+    private static final Logger log = Logger.getLogger(AddCollectionController.class.getName());
+    
+    
+
 
     /**
      * Initializes the controller class.

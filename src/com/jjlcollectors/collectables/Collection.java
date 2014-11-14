@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public final class Collection
 {
     protected UUID _collectionUUID;
-    protected UUID _userID;
+    protected UUID _userUUID;
     protected String _collectionName;
     protected CollectionType _collectionType;
     protected String _CollectionNote;
@@ -44,7 +44,7 @@ public final class Collection
     public Collection(UUID collectionUUID, UUID userID, String collectionName, CollectionType collectionType, String CollectionNote)
     {
         this._collectionUUID = collectionUUID;
-        this._userID = userID;
+        this._userUUID = userID;
         this._collectionName = collectionName;
         this._collectionType = collectionType;
         this._CollectionNote = CollectionNote;
@@ -61,7 +61,7 @@ public final class Collection
     public Collection(UUID userID, String collectionName, CollectionType collectionType, String CollectionNote)
     {
         Collection.this.setCollectionUUID();
-        this._userID = userID;
+        this._userUUID = userID;
         this._collectionName = collectionName;
         this._collectionType = collectionType;
         this._CollectionNote = CollectionNote;
@@ -69,8 +69,11 @@ public final class Collection
 
     
     
-    
-    protected UUID getCollectionID()
+    /**
+     * return collection unique ID (UUID)
+     * @return UUID of the collection
+     */
+    public UUID getCollectionUUID()
     {
         return _collectionUUID;
     }
@@ -89,17 +92,17 @@ public final class Collection
         this._collectionUUID = UUID.randomUUID();
     }
 
-    protected UUID getUserID()
+    public UUID getUserUUID()
     {
-        return _userID;
+        return _userUUID;
     }
 
-    protected void setUserID(UUID userID)
+    protected void setUserUUID(UUID userUUID)
     {
-        this._userID = userID;
+        this._userUUID = userUUID;
     }
 
-    protected String getCollectionName()
+    public String getCollectionName()
     {
         return _collectionName;
     }
@@ -109,7 +112,7 @@ public final class Collection
         this._collectionName = collectionName;
     }
 
-    protected CollectionType getCollectionType()
+    public CollectionType getCollectionType()
     {
         return _collectionType;
     }
@@ -119,7 +122,7 @@ public final class Collection
         this._collectionType = collectionType;
     }
 
-    protected String getCollectionNote()
+    public String getCollectionNote()
     {
         return _CollectionNote;
     }
