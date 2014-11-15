@@ -167,7 +167,7 @@ public final class LoginController implements Initializable, ControlledScreen
         {
             log.log(Level.INFO, "User password Invalid!");
             passwordValid = false;
-            loginStatusLabel.setText(PASSWORD_EMPTY);
+            loginStatusLabel.setText(EMAIL_OR_PASSWORD_INCORRECT);
         }
         return passwordValid;
     }

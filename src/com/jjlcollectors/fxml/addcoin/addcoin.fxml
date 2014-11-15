@@ -17,7 +17,7 @@
       <ComboBox fx:id="currencyComboBox" layoutX="92.0" layoutY="99.0" prefWidth="150.0" promptText="Currency" />
       <TextField fx:id="coinFaceValueTxtField" layoutX="92.0" layoutY="134.0" promptText="Face Value" />
       <ComboBox fx:id="coinGradeComboBox" layoutX="92.0" layoutY="168.0" prefWidth="150.0" promptText="Grade" />
-      <TextField fx:id="coinYearTxtField" layoutX="92.0" layoutY="214.0" promptText="Mint year" />
+      <TextField fx:id="coinMintYearTxtField" layoutX="92.0" layoutY="214.0" promptText="Mint year" />
       <DatePicker fx:id="coinBuyDatePicker" layoutX="93.0" layoutY="255.0" prefHeight="25.0" prefWidth="149.0" promptText="Buy date" />
       <TextField fx:id="coinValueTxtField" layoutX="92.0" layoutY="294.0" promptText="Estimated Value" />
       <TextField fx:id="coinMintMarkTxtField" layoutX="376.0" layoutY="63.0" promptText="Mint mark" />

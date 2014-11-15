@@ -119,6 +119,7 @@ public final class AddCoinController implements Initializable
         userUUID = null;
         currencyComboBox.getItems().addAll(CoinCurrency.values());
         coinGradeComboBox.getItems().addAll(CoinGrade.values());
+        coinAddStatus.setVisible(false);
     }    
     
     
@@ -137,8 +138,10 @@ public final class AddCoinController implements Initializable
     @FXML
     private void addNewCoin()
     {
+        
         if (isCoinValid())
         {
+            coinAddStatus.setVisible(false);
             StringBuilder coinNote = new StringBuilder(coinNoteTxtField.getText());
             int coinYear = Integer.parseInt(coinMintYearTxtField.getText());
             UUID collectionUuid = DBCollectionConnect.getCollectionUUID (collectionComboBox.getValue());
@@ -186,7 +189,7 @@ public final class AddCoinController implements Initializable
              log.log(Level.INFO, "Face value is: {0}",coinFaceValueTxtField.getText());
         }
         
-        if (!(isNumeric(coinFaceValueTxtField.getText())))
+        else if (!(isNumeric(coinFaceValueTxtField.getText())))
         {
              issues.append(FACEVALUE_NONNUMERIC);
              coinValid = false;
@@ -201,7 +204,7 @@ public final class AddCoinController implements Initializable
              log.log(Level.INFO, "Face value is: {0}",coinMintYearTxtField.getText());
         }
         
-        if (!(isNumeric(coinMintYearTxtField.getText())))
+        else if (!(isNumeric(coinMintYearTxtField.getText())))
         {
              issues.append(Mint_YEAR_NONNUMERIC);
              coinValid = false;
