@@ -17,9 +17,16 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.CollectionProperty;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableView;
 
 /**
  * FXML Controller class
@@ -29,6 +36,23 @@ import javafx.fxml.Initializable;
 public class HomePageController implements Initializable
 {
 
+    private static final Logger log = Logger.getLogger(HomePageController.class.getName());
+    
+    @FXML
+    private ComboBox <String> collectionComboBox;
+    
+    @FXML
+    private Button previewCollectionBtn;
+    
+    @FXML
+    private Button openCollectionBtn;
+    
+    @FXML
+    private Button createNewCollectionBtn;
+    
+    @FXML
+    private TableView<CollectionProperty> collectionTableView;
+    
     /**
      * Initializes the controller class.
      */
@@ -38,4 +62,14 @@ public class HomePageController implements Initializable
         // TODO
     }    
     
+    
+    /**
+     * method to exit the program.
+     */
+    @FXML
+    public void doExit()
+    {
+
+        Platform.exit();
+    }
 }
