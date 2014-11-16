@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 nathanr
+ * Copyright (C) 2014 Hedgehog01
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,11 +17,24 @@
  */
 package com.jjlcollectors.collectables;
 
+
+import javafx.collections.ObservableList;
+
 /**
- * Enums that represent collection types
- * @author nathanr
+ *
+ * @author Hedgehog01
  */
-public enum CollectionType
+public class CollectionCreator
 {
-    GENERIC,COIN,STAMP,CAR
+
+     public static ObservableList<CollectionProperty> getCollectionProperties(ObservableList<CollectionProperty> data)
+    {
+
+        CollectionProperty a = new CollectionProperty();
+        
+        data.add(a);
+        
+        return data;
+    }
+    
 }

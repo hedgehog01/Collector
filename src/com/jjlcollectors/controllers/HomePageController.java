@@ -17,11 +17,16 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.CollectionCreator;
 import com.jjlcollectors.collectables.CollectionProperty;
+import com.jjlcollectors.collectables.coins.CoinCreator;
+import com.jjlcollectors.collectables.coins.CoinProperty;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -59,7 +64,10 @@ public class HomePageController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        ObservableList<CollectionProperty> data = collectionTableView.getItems();
+        ObservableList<CollectionProperty> newData = FXCollections.observableArrayList();
+
+        data.addAll(CollectionCreator.getCollectionProperties(newData));
     }    
     
     

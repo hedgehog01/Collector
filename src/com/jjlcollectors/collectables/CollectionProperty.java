@@ -17,11 +17,125 @@
  */
 package com.jjlcollectors.collectables;
 
+
+import java.util.logging.Logger;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  *
  * @author nathanr
  */
-public class CollectionProperty
+public final class CollectionProperty
 {
+    private static final Logger LOG = Logger.getLogger(CollectionProperty.class.getName());
+    //Property instance variables
+
+    //private final IntegerProperty collectionNumberOfItems = new SimpleIntegerProperty(-1);
+    private final StringProperty collectionName = new SimpleStringProperty("");
+    private final StringProperty collectionType = new SimpleStringProperty("");
+    private final StringProperty collectionNote = new SimpleStringProperty("");
+    private final StringProperty collectionUUID = new SimpleStringProperty("");
+    private final IntegerProperty collectionNumberOfItems = new SimpleIntegerProperty(-1);
+
+    public CollectionProperty()
+    {
+        this ("",CollectionType.COIN,"","",-1);
+    }
+    
+    public CollectionProperty(String coinName, CollectionType collectionType, String collectionNote,String collectionUUID,int numberOfItems)
+    {
+        setCollectionName(coinName);
+        setCollectionType(collectionType.name());
+        setCollectionNote(collectionNote);
+        setCollectionUUID(collectionUUID);
+        setCollectionNumberOfItems(numberOfItems);
+
+    }
+
+
+    
+    
+    public int getCollectionNumberOfItems()
+    {
+        return collectionNumberOfItems.get();
+    }
+
+    public void setCollectionNumberOfItems(int value)
+    {
+        collectionNumberOfItems.set(value);
+    }
+
+    public IntegerProperty collectionNumberOfItemsProperty()
+    {
+        return collectionNumberOfItems;
+    }
+    
+    
+    public String getCollectionUUID()
+    {
+        return collectionUUID.get();
+    }
+
+    public void setCollectionUUID(String value)
+    {
+        collectionUUID.set(value);
+    }
+
+    public StringProperty collectionUUIDProperty()
+    {
+        return collectionUUID;
+    }
+    
+
+    public String getCollectionNote()
+    {
+        return collectionNote.get();
+    }
+
+    public void setCollectionNote(String value)
+    {
+        collectionNote.set(value);
+    }
+
+    public StringProperty collectionNoteProperty()
+    {
+        return collectionNote;
+    }
+    
+    
+    public String getCollectionType()
+    {
+        return collectionType.get();
+    }
+
+    public void setCollectionType(String value)
+    {
+        collectionType.set(value);
+    }
+
+    public StringProperty collectionTypeProperty()
+    {
+        return collectionType;
+    }
+    
+    
+    public String getCollectionName()
+    {
+        return collectionName.get();
+    }
+
+    public void setCollectionName(String value)
+    {
+        collectionName.set(value);
+    }
+
+    public StringProperty collectionNameProperty()
+    {
+        return collectionName;
+    }
+    
     
 }
