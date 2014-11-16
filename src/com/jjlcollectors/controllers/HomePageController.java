@@ -19,19 +19,26 @@ package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.collectables.CollectionCreator;
 import com.jjlcollectors.collectables.CollectionProperty;
-import com.jjlcollectors.collectables.coins.CoinCreator;
-import com.jjlcollectors.collectables.coins.CoinProperty;
+import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -40,7 +47,8 @@ import javafx.scene.control.TableView;
  */
 public class HomePageController implements Initializable
 {
-
+    private String userEmail = "";
+    private UUID userUUID;
     private static final Logger log = Logger.getLogger(HomePageController.class.getName());
     
     @FXML
@@ -70,6 +78,128 @@ public class HomePageController implements Initializable
         data.addAll(CollectionCreator.getCollectionProperties(newData));
     }    
     
+    @FXML
+    private boolean goToCollectionView()
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage = (Stage) previewCollectionBtn.getScene().getWindow();
+            //currentStage.hide();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            String filePath = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
+            URL location = AddCoinController.class.getResource(filePath);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
+            addCoinController.setUserData(userUUID);
+            
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene (root);
+            stage.setScene(scene);
+            stage.show();
+            
+            loadScreen = true;           
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
+    }
+    
+    
+        /*
+     * method to set user data.
+     After validating data is valid, initialize the data according to user data.
+     */
+
+    protected final void setUserData(String userEmail, String userPass)
+    {
+        checkLoginStatus(userEmail, userPass);
+    }
+
+    /*
+     * method to validate user credentials
+     */
+    private void checkLoginStatus(String userEmail, String userPass)
+    {
+
+        log.log(Level.INFO, "Verifying login details");
+        if (isLoginValid(userEmail, userPass))
+        {
+            log.log(Level.INFO, "login is valid set user email");
+            setUserEmail(userEmail);
+            setUserUUID();
+
+        } else
+        {
+            log.log(Level.INFO, "login is not valid");
+        }
+    }
+
+    /*
+     * method to check if login credentials are valid.
+     * returns true if the are.
+     */
+    private boolean isLoginValid(String userEmail, String userPass)
+    {
+        boolean loginValid = true;
+        //verify user with this email exists
+        if (!(DBUsersConnect.findUserByEmail(userEmail)))
+        {
+            log.log(Level.INFO, "User doesn't exist");
+            loginValid = false;
+        } //verify password with this email is valid
+        else if (!(isPasswordValid(userEmail, userPass)))
+        {
+            log.log(Level.INFO, "User password incorrect");
+
+            loginValid = false;
+        }
+
+        return loginValid;
+    }
+
+    /*
+     * method to verify if user password is correct
+     * returns true if it is.
+     */
+    private boolean isPasswordValid(String userEmail, String userPass)
+    {
+        boolean passwordValid = true;
+        //verify password not empty
+        if ((userPass == null) || (userPass.trim().isEmpty()))
+        {
+            log.log(Level.INFO, "User password Empty or null");
+            passwordValid = false;
+        } //Check password is NOT valid with this email and update boolean var
+        else if (!(DBUsersConnect.isUserPasswordValid(userEmail, userPass.toCharArray())))
+        {
+            log.log(Level.INFO, "User password Invalid!");
+            passwordValid = false;
+        }
+        return passwordValid;
+    }
+
+    /*
+     * set user email                           
+     */
+    private void setUserEmail(final String userEmail)
+    {
+        this.userEmail = userEmail;
+    }
+    private void setUserUUID()
+    {
+        if (DBUsersConnect.getUserUUID(userEmail) != null)
+        {
+            userUUID = DBUsersConnect.getUserUUID(userEmail);
+        } else
+        {
+            log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
+        }
+    }
     
     /**
      * method to exit the program.

@@ -185,17 +185,6 @@ public final class CollectionViewController implements Initializable, Controlled
     {
         this.userEmail = userEmail;
     }
-
-    /**
-     * method to exit the program.
-     */
-    @FXML
-    public void doExit()
-    {
-
-        Platform.exit();
-    }
-
     private void setUserUUID()
     {
         if (DBUsersConnect.getUserUUID(userEmail) != null)
@@ -206,6 +195,17 @@ public final class CollectionViewController implements Initializable, Controlled
             log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
         }
     }
+    /**
+     * method to exit the program.
+     */
+    @FXML
+    public void doExit()
+    {
+
+        Platform.exit();
+    }
+
+
     
     
     @FXML

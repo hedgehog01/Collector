@@ -30,7 +30,7 @@ public class CollectionCreator
      public static ObservableList<CollectionProperty> getCollectionProperties(ObservableList<CollectionProperty> data)
     {
 
-        CollectionProperty a = new CollectionProperty();
+        CollectionProperty a = new CollectionProperty("Name",CollectionType.GENERIC,"collection Note","collection UUID",100);
         
         data.add(a);
         
