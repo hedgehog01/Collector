@@ -58,7 +58,8 @@ public class MainScreenLoader extends Application
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle(TITLE);
-       // primaryStage.sizeToScene();
+        primaryStage.sizeToScene();
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

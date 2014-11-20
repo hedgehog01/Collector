@@ -39,6 +39,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -67,6 +69,9 @@ public final class LoginController implements Initializable, ControlledScreen
 
     @FXML
     private Button registerButton;
+
+    @FXML
+    private Button loginButton;
 
     @FXML
     private Button forgotPasswordButton;
@@ -105,7 +110,7 @@ public final class LoginController implements Initializable, ControlledScreen
     /*
      * method to check login status.
      */
-    public void checkLoginStatus(ActionEvent event)
+    public void checkLoginStatus()
     {
         loginStatusLabel.setText("");
         log.log(Level.INFO, "Login button pressed");
@@ -113,12 +118,6 @@ public final class LoginController implements Initializable, ControlledScreen
         {
             log.log(Level.INFO, "login is valid moving to next scene");
             loadNextScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText());
-            /*
-            ((Node) (event.getSource())).getScene().getWindow().sizeToScene();
-            //((Node)(event.getSource())).getScene().getWindow().setWidth(1100);
-            //((Node)(event.getSource())).getScene().getWindow().setHeight(446);
-            myController.setScreen(MainScreenLoader.collectionView1ID);
-            */
         } else
         {
             log.log(Level.INFO, "login is not valid");
@@ -173,8 +172,8 @@ public final class LoginController implements Initializable, ControlledScreen
     }
 
     /*
-    * method to load next scene after user login was validated.
-    */
+     * method to load next scene after user login was validated.
+     */
     private boolean loadNextScene(String userEmail, String userAttemptedPassword)
     {
         boolean loadScreen = false;
@@ -190,17 +189,17 @@ public final class LoginController implements Initializable, ControlledScreen
             Parent root = fxmlLoader.load(location.openStream());
             HomePageController cvController = (HomePageController) fxmlLoader.getController();
             cvController.setUserData(userEmail, userAttemptedPassword);
-            
+
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage stage = new Stage();
-            Scene scene = new Scene (root);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.sizeToScene();
             stage.setResizable(false);
             stage.setTitle("Collector - Home");
             stage.show();
-            
-            loadScreen = true;           
+
+            loadScreen = true;
         } catch (IOException ex)
         {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
@@ -225,6 +224,33 @@ public final class LoginController implements Initializable, ControlledScreen
     {
         myController.setScreen(MainScreenLoader.registerScreen1ID);
     }
+
+    @FXML
+    private void handleregisterEnterPressed(KeyEvent event)
+    {
+        if (event.getCode() == KeyCode.ENTER)
+        {
+            goToRegisterUser();
+        }
+    }
+    
+    @FXML
+    private void handleLoginEnterPressed(KeyEvent event)
+    {
+        if (event.getCode() == KeyCode.ENTER)
+        {
+            checkLoginStatus();
+        }
+    }
+    @FXML
+    private void handleForgotPassEnterPressed(KeyEvent event)
+    {
+        if (event.getCode() == KeyCode.ENTER)
+        {
+            //ToDo
+        }
+    }
+    
 
     /**
      * method to exit the program.
