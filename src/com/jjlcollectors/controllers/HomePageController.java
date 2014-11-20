@@ -201,6 +201,40 @@ public class HomePageController implements Initializable
         }
     }
     
+    
+        private boolean loadNextScene(String userEmail, String userAttemptedPassword)
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage = (Stage) collectionComboBox.getScene().getWindow();
+            currentStage.hide();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            String filePath = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
+            URL location = CollectionViewController.class.getResource(filePath);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            CollectionViewController cvController = (CollectionViewController) fxmlLoader.getController();
+            cvController.setUserData(userEmail, userAttemptedPassword);
+            
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene (root);
+            stage.setScene(scene);
+            stage.sizeToScene();
+            stage.setResizable(false);
+            stage.setTitle("Collector - Collection Viewer");
+            stage.show();
+            
+            loadScreen = true;           
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
+    }
+    
     /**
      * method to exit the program.
      */

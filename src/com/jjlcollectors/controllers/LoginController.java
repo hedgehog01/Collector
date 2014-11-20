@@ -183,18 +183,21 @@ public final class LoginController implements Initializable, ControlledScreen
             Stage currentStage = (Stage) userEmailLabel.getScene().getWindow();
             currentStage.hide();
             FXMLLoader fxmlLoader = new FXMLLoader();
-            String filePath = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
-            URL location = CollectionViewController.class.getResource(filePath);
+            String filePath = "/com/jjlcollectors/fxml/homepage/HomePage.fxml";
+            URL location = HomePageController.class.getResource(filePath);
             fxmlLoader.setLocation(location);
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
-            CollectionViewController cvController = (CollectionViewController) fxmlLoader.getController();
+            HomePageController cvController = (HomePageController) fxmlLoader.getController();
             cvController.setUserData(userEmail, userAttemptedPassword);
             
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene (root);
             stage.setScene(scene);
+            stage.sizeToScene();
+            stage.setResizable(false);
+            stage.setTitle("Collector - Home");
             stage.show();
             
             loadScreen = true;           
