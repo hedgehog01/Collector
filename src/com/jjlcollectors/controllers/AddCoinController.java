@@ -105,7 +105,7 @@ public final class AddCoinController implements Initializable
     DatePicker coinBuyDatePicker;
     
     
-    ObservableList<String> currencyList = FXCollections.observableArrayList();
+    private final ObservableList<String> currencyList = FXCollections.observableArrayList();
     
     
 

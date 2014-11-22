@@ -42,17 +42,15 @@ public final class CollectionProperty
 
     public CollectionProperty()
     {
-        this ("",CollectionType.COIN,"","",-1);
+        this ("",CollectionType.COIN.toString(),"","");
     }
     
-    public CollectionProperty(String coinName, CollectionType collectionType, String collectionNote,String collectionUUID,int numberOfItems)
+    public CollectionProperty(String collectionName, String collectionType, String collectionNote,String collectionUUID)
     {
-        setCollectionName(coinName);
-        setCollectionType(collectionType.name());
+        setCollectionName(collectionName);
+        setCollectionType(collectionType);
         setCollectionNote(collectionNote);
         setCollectionUUID(collectionUUID);
-        setCollectionNumberOfItems(numberOfItems);
-
     }
 
 

@@ -18,6 +18,7 @@
 package com.jjlcollectors.util.dbconnect;
 
 import com.jjlcollectors.collectables.Collection;
+import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.CollectionType;
 import static com.jjlcollectors.util.dbconnect.DBConnect.conn;
 import java.sql.PreparedStatement;
@@ -26,6 +27,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 
 /**
  * class to manage creation and connection to a collection
@@ -128,6 +130,36 @@ public final class DBCollectionConnect extends DBConnect
         DBConnect.closeDBConnection();
         return collectionUUID;
 
+    }
+    
+    public static ObservableList<CollectionProperty> getUserCollections (UUID userUUID, ObservableList<CollectionProperty> data)
+    {
+        log.log(Level.INFO, "Attempting to get collections by user");
+        DBConnect.createDBConnection();
+        try (PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " WHERE USER_UUID = ?"))
+        {
+            prepStmt.setString(1, userUUID.toString());
+            ResultSet rs = prepStmt.executeQuery();
+
+            while (rs.next())
+            {
+                String collectionName = rs.getString("COLLECTION_NAME");
+                String collectionType = rs.getString("COLLECTION_TYPE");
+                String collectionNote = rs.getString("COLLECTION_NOTE");
+                String collectionUUID = rs.getString("COLLECTION_UUID");
+                
+                CollectionProperty collectionProperty = new CollectionProperty(collectionName, collectionType, collectionNote, collectionUUID);
+                data.add(collectionProperty);
+            }
+            rs.close();
+        } catch (SQLException ex)
+        {
+            log.log(Level.SEVERE, "Couldn't get collections by user ", ex);
+        }
+
+        DBConnect.closeDBConnection();
+
+        return data;
     }
 
 

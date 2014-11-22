@@ -173,25 +173,22 @@ public final class LoginController implements Initializable
         boolean loadScreen = false;
         try
         {
-            Stage currentStage = (Stage) userEmailLabel.getScene().getWindow();
-            currentStage.hide();
+            Stage currentStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL location = HomePageController.class.getResource(HOME_PAGE_FXML_PATH);
             fxmlLoader.setLocation(location);
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             HomePageController cvController = (HomePageController) fxmlLoader.getController();
+            currentStage.hide();
             cvController.setUserData(userEmail, userAttemptedPassword);
-
-            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
-            //Stage homeScreenStage = new Stage();
-            Stage homeScreenStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
+           
             Scene scene = new Scene(root);
-            homeScreenStage.setScene(scene);
-            homeScreenStage.sizeToScene();
-            homeScreenStage.setResizable(false);
-            homeScreenStage.setTitle(HOME_PAGE_TITLE);
-            homeScreenStage.show();
+            currentStage.setScene(scene);
+            currentStage.sizeToScene();
+            currentStage.setResizable(false);
+            currentStage.setTitle(HOME_PAGE_TITLE);
+            currentStage.show();
 
             loadScreen = true;
         } catch (IOException ex)

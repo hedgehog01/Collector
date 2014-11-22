@@ -17,8 +17,9 @@
  */
 package com.jjlcollectors.controllers;
 
-import com.jjlcollectors.collectables.CollectionCreator;
+
 import com.jjlcollectors.collectables.CollectionProperty;
+import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.io.IOException;
 import java.net.URL;
@@ -66,6 +67,8 @@ public class HomePageController implements Initializable
     @FXML
     private TableView<CollectionProperty> collectionTableView;
     
+    private ObservableList<String> collectionList = FXCollections.observableArrayList();
+    
     /**
      * Initializes the controller class.
      */
@@ -75,7 +78,7 @@ public class HomePageController implements Initializable
         ObservableList<CollectionProperty> data = collectionTableView.getItems();
         ObservableList<CollectionProperty> newData = FXCollections.observableArrayList();
 
-        data.addAll(CollectionCreator.getCollectionProperties(newData));
+        //data.addAll(DBCollectionConnect.getUserCollections(userUUID, data));
     }    
     
     @FXML
