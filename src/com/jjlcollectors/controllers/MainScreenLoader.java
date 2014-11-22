@@ -18,8 +18,11 @@
  */
 package com.jjlcollectors.controllers;
 
+import java.io.IOException;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -27,12 +30,14 @@ import javafx.stage.Stage;
  *
  * @author Hedgehog01
  */
-public class MainScreenLoader extends Application
+public final class MainScreenLoader extends Application
 {
-    public static final String TITLE = "Collector";
-    public static String loginScreen1ID = "login1";
-    public static String loginScreen1FXML = "/com/jjlcollectors/fxml/login/Login.fxml";  
-    public static String loginScreen1CSS = "/com/jjlcollectors/fxml/login/login.css";
+    private final String LOGIN_TITLE = "Collector - Login";
+    //public static String loginScreen1ID = "login1";
+    private final String LOGIN_SCENE_FXML = "/com/jjlcollectors/fxml/login/Login.fxml";  
+    private final String LOGIN_SCENE_CSS = "/com/jjlcollectors/fxml/login/login.css";
+    
+    /*
     public static String registerScreen1ID = "register1";
     public static String registerScreen1FXML = "/com/jjlcollectors/fxml/register/RegisterScreen.fxml";    
     public static String passwordRetrieve1ID = "passwordRetrieve1";
@@ -40,24 +45,25 @@ public class MainScreenLoader extends Application
     public static String collectionView1ID = "collectionview1";
     public static String collectionViewScreen1FXML = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";    
 
-    
+    */
 
     @Override
-    public void start(Stage primaryStage)
+    public void start(Stage primaryStage) throws IOException
     {
-
+        /*
         ScreensController mainContainer = new ScreensController();
         mainContainer.loadScreen(MainScreenLoader.loginScreen1ID, MainScreenLoader.loginScreen1FXML);
         mainContainer.loadScreen(MainScreenLoader.registerScreen1ID, MainScreenLoader.registerScreen1FXML);
         mainContainer.loadScreen(MainScreenLoader.passwordRetrieve1ID, MainScreenLoader.passwordRetrieve1FXML);
         mainContainer.loadScreen(MainScreenLoader.collectionView1ID, MainScreenLoader.collectionViewScreen1FXML);
         mainContainer.setScreen(MainScreenLoader.loginScreen1ID);
-
-        Group root = new Group();
-        root.getChildren().addAll(mainContainer);
+        */
+        
+        Parent root = FXMLLoader.load(getClass().getResource(LOGIN_SCENE_FXML));
+        //root.getChildren().addAll(mainContainer);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setTitle(TITLE);
+        primaryStage.setTitle(LOGIN_TITLE);
         primaryStage.sizeToScene();
         primaryStage.setResizable(false);
         primaryStage.show();

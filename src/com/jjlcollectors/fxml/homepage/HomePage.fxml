@@ -20,7 +20,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.HomePageController">
+<VBox prefHeight="400.0" prefWidth="764.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.HomePageController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -67,7 +67,7 @@
         </MenuBar>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="391.0" prefWidth="633.0" VBox.vgrow="ALWAYS">
             <children>
-                <SplitPane dividerPositions="0.29797979797979796" layoutX="-3.0" layoutY="-3.0" prefHeight="394.0" prefWidth="649.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-3.0">
+                <SplitPane dividerPositions="0.29797979797979796" layoutX="-3.0" layoutY="-3.0" prefHeight="378.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-3.0">
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="392.0" prefWidth="138.0">
                             <children>
@@ -77,28 +77,28 @@
                                 <Button fx:id="createNewCollectionBtn" layoutX="23.0" layoutY="337.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="New Collection" />
                             </children>
                         </AnchorPane>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="376.0" prefWidth="576.0">
                             <children>
-                                <TableView fx:id="collectionTableView" layoutX="3.0" prefHeight="376.0" prefWidth="451.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <TableView fx:id="collectionTableView" layoutX="3.0" prefHeight="376.0" prefWidth="540.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="0.0">
                                     <columns>
-                                        <TableColumn prefWidth="75.0" text="Name">
+                                        <TableColumn prefWidth="107.0" text="Name">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinName" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn prefWidth="75.0" text="Category">
+                                        <TableColumn prefWidth="102.0" text="Category">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="collectionType" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn prefWidth="75.0" text="More Info">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="collectionNote" />
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn prefWidth="117.0" text="Number of Items">
+                                        <TableColumn prefWidth="111.0" text="Number of Items">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="collectionNumberOfItems" />
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="228.0" text="More Info">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="collectionNote" />
                                             </cellValueFactory>
                                         </TableColumn>
                                     </columns>

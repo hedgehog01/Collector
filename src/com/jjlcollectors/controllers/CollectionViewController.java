@@ -19,7 +19,6 @@ package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
-import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.io.IOException;
 import java.net.URL;
@@ -49,11 +48,10 @@ import javafx.stage.Stage;
  *
  * @author Hedgehog01
  */
-public final class CollectionViewController implements Initializable, ControlledScreen
+public final class CollectionViewController implements Initializable
 {
 
     private static final Logger log = Logger.getLogger(CollectionViewController.class.getName());
-    private ScreensController myController;
     private String userEmail = "";
     private UUID userUUID;
 
@@ -88,11 +86,6 @@ public final class CollectionViewController implements Initializable, Controlled
 
     }
 
-    @Override
-    public void setScreenParent(ScreensController screenParent)
-    {
-        myController = screenParent;
-    }
 
     @FXML
     protected void addCoin(ActionEvent event)

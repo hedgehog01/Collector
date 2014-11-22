@@ -17,9 +17,9 @@
  */
 package com.jjlcollectors.controllers;
 
-import com.jjlcollectors.interfaces.ControlledScreen;
 import com.jjlcollectors.users.User;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+import java.io.IOException;
 
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
@@ -30,22 +30,31 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Hedgehog01
  */
-public class RegisterScreenController implements Initializable, ControlledScreen
+public class RegisterScreenController implements Initializable
 {
 
     private static final Logger log = Logger.getLogger(RegisterScreenController.class.getName());
+    private final String LOGIN_TITLE = "Collector - Login";
+    private final String LOGIN_SCENE_FXML = "/com/jjlcollectors/fxml/login/Login.fxml";
     private final String INVALID_FIELDS = "First & last names & email\nare mandatory fields";
     private final String EMAIL_FIELDS_DIFF = "Emails don't match";
     private final String EMAIL_INVALID = "Email appears to be invalid";
@@ -55,8 +64,6 @@ public class RegisterScreenController implements Initializable, ControlledScreen
     private final String USER_NOT_ADDED = "Could not create a new user.\nContact Program creator.";
     private final String USER_ADDED = "New user created successfully";
             
-
-    private ScreensController myController;
 
     //FXML linked variables
     @FXML
@@ -120,26 +127,54 @@ public class RegisterScreenController implements Initializable, ControlledScreen
         // TODO
     }
 
-    @Override
-    public void setScreenParent(ScreensController screenParent)
-    {
-        myController = screenParent;
-    }
 
     /*
      * method to get back to Login screen
      */
     @FXML
-    private void backToLoginScreen()
+    private void backToLoginScreen(ActionEvent event)
     {
-        myController.setScreen(MainScreenLoader.loginScreen1ID);
+        loadLoginScene(event);
+    }
+    
+        private boolean loadLoginScene(ActionEvent event)
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage =((Stage) ((Node)event.getSource()).getScene().getWindow());
+            
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            URL location = HomePageController.class.getResource(LOGIN_SCENE_FXML);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            //HomePageController cvController = (HomePageController) fxmlLoader.getController();
+            currentStage.hide();
+
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            //Stage homeScreenStage = new Stage();
+            //Stage homeScreenStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
+            Scene scene = new Scene(root);
+            currentStage.setScene(scene);
+            currentStage.sizeToScene();
+            currentStage.setResizable(false);
+            currentStage.setTitle(LOGIN_TITLE);
+            currentStage.show();
+
+            loadScreen = true;
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
     }
 
     @FXML
     /*
      * method to validate and register new user
      */
-    private void registerNewUser() throws NoSuchAlgorithmException, InvalidKeySpecException
+    private void registerNewUser(ActionEvent event) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         //log.setLevel(Level.SEVERE);
         log.log(Level.INFO, "registerNewUser method started");
@@ -151,7 +186,7 @@ public class RegisterScreenController implements Initializable, ControlledScreen
             if (userAdded)
             {
                 registerStatusLabel.setText(USER_ADDED);
-                backToLoginScreen();
+                backToLoginScreen(event);
                 log.log(Level.INFO, "registerNewUser method started");
             }
             else

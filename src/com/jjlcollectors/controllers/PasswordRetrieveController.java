@@ -17,21 +17,31 @@
  */
 package com.jjlcollectors.controllers;
 
-import com.jjlcollectors.interfaces.ControlledScreen;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Hedgehog01
  */
-public class PasswordRetrieveController implements Initializable, ControlledScreen
+public class PasswordRetrieveController implements Initializable
 {
-    private ScreensController myController;
+    private final String LOGIN_TITLE = "Collector - Login";
+    private final String LOGIN_SCENE_FXML = "/com/jjlcollectors/fxml/login/Login.fxml"; 
     /**
      * Initializes the controller class.
      */
@@ -40,20 +50,47 @@ public class PasswordRetrieveController implements Initializable, ControlledScre
     {
         // TODO
     }    
-
-    @Override
-    public void setScreenParent(ScreensController screenParent)
-    {
-        myController = screenParent;
-    }
     
     /*
     * method to get back to Login screen
     */
     @FXML
-    private void backToLoginScreen()
+    private void backToLoginScreen(ActionEvent event)
     {
-        myController.setScreen(MainScreenLoader.loginScreen1ID);
+        loadLoginScene(event);
+    }
+    
+    private boolean loadLoginScene(ActionEvent event)
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage =((Stage) ((Node)event.getSource()).getScene().getWindow());
+            currentStage.hide();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            URL location = HomePageController.class.getResource(LOGIN_SCENE_FXML);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            //HomePageController cvController = (HomePageController) fxmlLoader.getController();
+            
+
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            //Stage homeScreenStage = new Stage();
+            //Stage homeScreenStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
+            Scene scene = new Scene(root);
+            currentStage.setScene(scene);
+            currentStage.sizeToScene();
+            currentStage.setResizable(false);
+            currentStage.setTitle(LOGIN_TITLE);
+            currentStage.show();
+
+            loadScreen = true;
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
     }
     
     /**

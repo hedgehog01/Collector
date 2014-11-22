@@ -18,7 +18,7 @@
  */
 package com.jjlcollectors.controllers;
 
-import com.jjlcollectors.interfaces.ControlledScreen;
+
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.io.IOException;
 
@@ -48,10 +48,14 @@ import javafx.stage.Stage;
  *
  * @author Hedgehog01
  */
-public final class LoginController implements Initializable, ControlledScreen
+public final class LoginController implements Initializable
 {
 
     private static final Logger log = Logger.getLogger(LoginController.class.getName());
+    private final String HOME_PAGE_FXML_PATH = "/com/jjlcollectors/fxml/homepage/HomePage.fxml";
+    private final String REGISTER_PAGE_FXML_PATH = "/com/jjlcollectors/fxml/register/RegisterScreen.fxml";
+    private final String HOME_PAGE_TITLE = "Collector - Home";
+    private final String REGISTER_PAGE_TITLE = "Collector - Register";    
     private final String PASSWORD_EMPTY = "Enter Password";
     private final String EMAIL_OR_PASSWORD_INCORRECT = "Email or password are incorrect";
 
@@ -79,7 +83,6 @@ public final class LoginController implements Initializable, ControlledScreen
     @FXML
     private Label loginStatusLabel;
 
-    private ScreensController myController;
 
     /**
      * Initializes the controller class.
@@ -88,17 +91,6 @@ public final class LoginController implements Initializable, ControlledScreen
     public void initialize(URL url, ResourceBundle rb)
     {
         // TODO
-    }
-
-    /*
-     Imeplements the interface method from ControlledScreen
-     */
-    @Override
-    public void setScreenParent(ScreensController screenParent)
-    {
-
-        myController = screenParent;
-
     }
 
     /**
@@ -110,20 +102,22 @@ public final class LoginController implements Initializable, ControlledScreen
     /*
      * method to check login status.
      */
-    public void checkLoginStatus()
+    private void checkLoginStatus(ActionEvent event)
     {
         loginStatusLabel.setText("");
         log.log(Level.INFO, "Login button pressed");
         if (isLoginValid())
         {
             log.log(Level.INFO, "login is valid moving to next scene");
-            loadNextScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText());
+            loadHomePageScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText(),event);
+            
         } else
         {
             log.log(Level.INFO, "login is not valid");
         }
     }
 
+    
     /*
      * method to check if login credentials are valid.
      * returns true if the are.
@@ -174,7 +168,7 @@ public final class LoginController implements Initializable, ControlledScreen
     /*
      * method to load next scene after user login was validated.
      */
-    private boolean loadNextScene(String userEmail, String userAttemptedPassword)
+    private boolean loadHomePageScene(String userEmail, String userAttemptedPassword, ActionEvent event)
     {
         boolean loadScreen = false;
         try
@@ -182,8 +176,7 @@ public final class LoginController implements Initializable, ControlledScreen
             Stage currentStage = (Stage) userEmailLabel.getScene().getWindow();
             currentStage.hide();
             FXMLLoader fxmlLoader = new FXMLLoader();
-            String filePath = "/com/jjlcollectors/fxml/homepage/HomePage.fxml";
-            URL location = HomePageController.class.getResource(filePath);
+            URL location = HomePageController.class.getResource(HOME_PAGE_FXML_PATH);
             fxmlLoader.setLocation(location);
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
@@ -191,13 +184,51 @@ public final class LoginController implements Initializable, ControlledScreen
             cvController.setUserData(userEmail, userAttemptedPassword);
 
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
-            Stage stage = new Stage();
+            //Stage homeScreenStage = new Stage();
+            Stage homeScreenStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
             Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.sizeToScene();
-            stage.setResizable(false);
-            stage.setTitle("Collector - Home");
-            stage.show();
+            homeScreenStage.setScene(scene);
+            homeScreenStage.sizeToScene();
+            homeScreenStage.setResizable(false);
+            homeScreenStage.setTitle(HOME_PAGE_TITLE);
+            homeScreenStage.show();
+
+            loadScreen = true;
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
+    }
+    
+        /*
+     * method to load next scene after user login was validated.
+     */
+    private boolean loadRegisterScene(ActionEvent event)
+    {
+        boolean loadScreen = false;
+        try
+        {
+            //Stage currentStage = (Stage) userEmailLabel.getScene().getWindow();
+            Stage currentStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
+            
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            URL location = HomePageController.class.getResource(REGISTER_PAGE_FXML_PATH);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            currentStage.hide();
+            
+
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            //Stage homeScreenStage = new Stage();
+            
+            Scene scene = new Scene(root);
+            currentStage.setScene(scene);
+            currentStage.sizeToScene();
+            currentStage.setResizable(false);
+            currentStage.setTitle(REGISTER_PAGE_TITLE);
+            currentStage.show();
 
             loadScreen = true;
         } catch (IOException ex)
@@ -211,18 +242,18 @@ public final class LoginController implements Initializable, ControlledScreen
      * method to move to password retrieve screen
      */
     @FXML
-    private void goToRetrievePassword()
+    private void goToRetrievePassword(ActionEvent event)
     {
-        myController.setScreen(MainScreenLoader.passwordRetrieve1ID);
+        
     }
 
     /*
      * method to move to user
      */
     @FXML
-    private void goToRegisterUser()
+    private void goToRegisterUser(ActionEvent event)
     {
-        myController.setScreen(MainScreenLoader.registerScreen1ID);
+        loadRegisterScene(event);
     }
 
     @FXML
@@ -230,16 +261,16 @@ public final class LoginController implements Initializable, ControlledScreen
     {
         if (event.getCode() == KeyCode.ENTER)
         {
-            goToRegisterUser();
+            
         }
     }
     
     @FXML
-    private void handleLoginEnterPressed(KeyEvent event)
+    private void handleLoginEnterPressed(KeyEvent keyEvent)
     {
-        if (event.getCode() == KeyCode.ENTER)
+        if (keyEvent.getCode() == KeyCode.ENTER)
         {
-            checkLoginStatus();
+            
         }
     }
     @FXML
