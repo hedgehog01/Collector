@@ -19,6 +19,7 @@ package com.jjlcollectors.controllers;
 
 
 import com.jjlcollectors.collectables.CollectionProperty;
+import com.jjlcollectors.collectables.CollectionType;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.io.IOException;
@@ -53,8 +54,8 @@ public class HomePageController implements Initializable
     private static final Logger log = Logger.getLogger(HomePageController.class.getName());
     
     @FXML
-    private ComboBox <String> collectionComboBox;
-    
+    private ComboBox <CollectionProperty> collectionComboBox;
+
     @FXML
     private Button previewCollectionBtn;
     
@@ -67,7 +68,7 @@ public class HomePageController implements Initializable
     @FXML
     private TableView<CollectionProperty> collectionTableView;
     
-    private ObservableList<String> collectionList = FXCollections.observableArrayList();
+    private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     
     /**
      * Initializes the controller class.
@@ -75,10 +76,12 @@ public class HomePageController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        ObservableList<CollectionProperty> data = collectionTableView.getItems();
-        ObservableList<CollectionProperty> newData = FXCollections.observableArrayList();
-
+        //ObservableList<CollectionProperty> data = collectionTableView.getItems();
+        //ObservableList<CollectionProperty> newData = FXCollections.observableArrayList();
         //data.addAll(DBCollectionConnect.getUserCollections(userUUID, data));
+        collectionComboListData.add(new CollectionProperty("test Collection",CollectionType.COIN.name(), "collection note", "collectionUUID"));
+        collectionComboBox.setItems(collectionComboListData);
+        
     }    
     
     @FXML
