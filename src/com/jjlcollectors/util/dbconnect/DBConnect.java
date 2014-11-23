@@ -27,11 +27,12 @@ import java.util.logging.Logger;
 
 /**
  * Abstract class to handle main Database connection tasks
+ *
  * @author Hedgehog01
  */
 public abstract class DBConnect
 {
-    
+
     //instance variables
     protected static final String DB_Client_URL = "jdbc:derby://localhost:1527/CollectionDB";//create=true;DB_USER_NAME=Hedgehog01;password=Jade170213";
     protected static final String CREATE_DB = ";create=true";
@@ -46,15 +47,16 @@ public abstract class DBConnect
     /*
      * method to close database connection
      */
+
     protected static void closeDBConnection()
     {
         try
         {
-            log.log(Level.INFO,"Closing DB connection...");
+            log.log(Level.INFO, "Closing DB connection...");
             DBCoinConnect.conn.close();
         } catch (SQLException e)
         {
-            log.log(Level.SEVERE,"Closing DB connection failed.\nSQL Ex: {0}",e);
+            log.log(Level.SEVERE, "Closing DB connection failed.\nSQL Ex: {0}", e);
         }
     }
 
@@ -68,16 +70,45 @@ public abstract class DBConnect
             Class.forName(DBCoinConnect.DRIVER_CLIENT).newInstance();
             log.log(Level.INFO, "Attempting to establish DB connection...");
             DBCoinConnect.conn = DriverManager.getConnection(DBCoinConnect.DB_Client_URL + DBCoinConnect.CREATE_DB, DBCoinConnect.DB_USER_NAME, DBCoinConnect.DB_PASS);
-            
+
         } catch (ClassNotFoundException e)
         {
-            log.log(Level.SEVERE,"Exception while creating connection");
-            log.log(Level.SEVERE,"\n Make sure your CLASSPATH variable " + "contains %DERBY_HOME%\\lib\\derby.jar (${DERBY_HOME}/lib/derby.jar). \n");
-            log.log(Level.SEVERE,"ClassNotFoundException:: {0}",e);
+            log.log(Level.SEVERE, "Exception while creating connection");
+            log.log(Level.SEVERE, "\n Make sure your CLASSPATH variable " + "contains %DERBY_HOME%\\lib\\derby.jar (${DERBY_HOME}/lib/derby.jar). \n");
+            log.log(Level.SEVERE, "ClassNotFoundException:: {0}", e);
         } catch (InstantiationException | IllegalAccessException | SQLException e)
         {
-            log.log(Level.SEVERE,"Exception while creating connection: {0}",e);
+            log.log(Level.SEVERE, "Exception while creating connection: {0}", e);
         }
     }
     
+    /**
+     * Checks if DB can be reached
+     * @return true if DB can be reached
+     */
+    public static boolean isDBConnectable()
+    {
+        boolean connect = false;
+        try
+        {
+            Class.forName(DBCoinConnect.DRIVER_CLIENT).newInstance();
+            log.log(Level.INFO, "Attempting to establish DB connection...");
+            DBCoinConnect.conn = DriverManager.getConnection(DBCoinConnect.DB_Client_URL + DBCoinConnect.CREATE_DB, DBCoinConnect.DB_USER_NAME, DBCoinConnect.DB_PASS);
+            connect = true;
+            conn.close();
+        } catch (ClassNotFoundException e)
+        {
+            log.log(Level.SEVERE, "Exception while creating connection");
+            log.log(Level.SEVERE, "\n Make sure your CLASSPATH variable " + "contains %DERBY_HOME%\\lib\\derby.jar (${DERBY_HOME}/lib/derby.jar). \n");
+            log.log(Level.SEVERE, "ClassNotFoundException:: {0}", e);
+            connect = false;
+        } catch (InstantiationException | IllegalAccessException | SQLException e)
+        {
+            connect = false;
+            log.log(Level.SEVERE, "Exception while creating connection: {0}", e);
+        }
+        log.log(Level.INFO, "connection status: {0}",connect);
+        return connect;
+    }
+
 }

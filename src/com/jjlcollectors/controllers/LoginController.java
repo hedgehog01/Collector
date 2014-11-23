@@ -18,7 +18,7 @@
  */
 package com.jjlcollectors.controllers;
 
-
+import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.io.IOException;
 
@@ -55,9 +55,10 @@ public final class LoginController implements Initializable
     private final String HOME_PAGE_FXML_PATH = "/com/jjlcollectors/fxml/homepage/HomePage.fxml";
     private final String REGISTER_PAGE_FXML_PATH = "/com/jjlcollectors/fxml/register/RegisterScreen.fxml";
     private final String HOME_PAGE_TITLE = "Collector - Home";
-    private final String REGISTER_PAGE_TITLE = "Collector - Register";    
+    private final String REGISTER_PAGE_TITLE = "Collector - Register";
     private final String PASSWORD_EMPTY = "Enter Password";
     private final String EMAIL_OR_PASSWORD_INCORRECT = "Email or password are incorrect";
+    private final String CONNECTION_NOT_ESTABLISHED = "Can not establish a connection.\nPlease try again later.";
 
     @FXML
     private TextField userEmailTextField;
@@ -83,7 +84,6 @@ public final class LoginController implements Initializable
     @FXML
     private Label loginStatusLabel;
 
-
     /**
      * Initializes the controller class.
      */
@@ -106,18 +106,38 @@ public final class LoginController implements Initializable
     {
         loginStatusLabel.setText("");
         log.log(Level.INFO, "Login button pressed");
-        if (isLoginValid())
+        if (!(checkDBConnect()))
+        {
+            log.log(Level.INFO, "Connection appears to be problem");
+            
+        } 
+        else if (isLoginValid())
         {
             log.log(Level.INFO, "login is valid moving to next scene");
-            loadHomePageScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText(),event);
-            
+            loadHomePageScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText(), event);
+
         } else
         {
             log.log(Level.INFO, "login is not valid");
         }
     }
 
-    
+    private boolean checkDBConnect()
+    {
+        boolean connect = false;
+        if (!(DBConnect.isDBConnectable()))
+        {
+            log.log(Level.INFO, "Connection can't be established");
+            loginStatusLabel.setText(CONNECTION_NOT_ESTABLISHED);
+        }
+        else
+        {
+            log.log(Level.INFO, "Connection established");
+            connect = true;
+        }
+        return connect;
+    }
+
     /*
      * method to check if login credentials are valid.
      * returns true if the are.
@@ -173,7 +193,7 @@ public final class LoginController implements Initializable
         boolean loadScreen = false;
         try
         {
-            Stage currentStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
+            Stage currentStage = ((Stage) ((Node) event.getSource()).getScene().getWindow());
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL location = HomePageController.class.getResource(HOME_PAGE_FXML_PATH);
             fxmlLoader.setLocation(location);
@@ -182,7 +202,7 @@ public final class LoginController implements Initializable
             HomePageController cvController = (HomePageController) fxmlLoader.getController();
             currentStage.hide();
             cvController.setUserData(userEmail, userAttemptedPassword);
-           
+
             Scene scene = new Scene(root);
             currentStage.setScene(scene);
             currentStage.sizeToScene();
@@ -197,8 +217,8 @@ public final class LoginController implements Initializable
         }
         return loadScreen;
     }
-    
-        /*
+
+    /*
      * method to load next scene after user login was validated.
      */
     private boolean loadRegisterScene(ActionEvent event)
@@ -207,19 +227,17 @@ public final class LoginController implements Initializable
         try
         {
             //Stage currentStage = (Stage) userEmailLabel.getScene().getWindow();
-            Stage currentStage = ((Stage) ((Node)event.getSource()).getScene().getWindow());
-            
+            Stage currentStage = ((Stage) ((Node) event.getSource()).getScene().getWindow());
+
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL location = HomePageController.class.getResource(REGISTER_PAGE_FXML_PATH);
             fxmlLoader.setLocation(location);
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             currentStage.hide();
-            
 
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             //Stage homeScreenStage = new Stage();
-            
             Scene scene = new Scene(root);
             currentStage.setScene(scene);
             currentStage.sizeToScene();
@@ -241,7 +259,7 @@ public final class LoginController implements Initializable
     @FXML
     private void goToRetrievePassword(ActionEvent event)
     {
-        
+
     }
 
     /*
@@ -258,18 +276,19 @@ public final class LoginController implements Initializable
     {
         if (event.getCode() == KeyCode.ENTER)
         {
-            
+
         }
     }
-    
+
     @FXML
     private void handleLoginEnterPressed(KeyEvent keyEvent)
     {
         if (keyEvent.getCode() == KeyCode.ENTER)
         {
-            
+
         }
     }
+
     @FXML
     private void handleForgotPassEnterPressed(KeyEvent event)
     {
@@ -278,7 +297,6 @@ public final class LoginController implements Initializable
             //ToDo
         }
     }
-    
 
     /**
      * method to exit the program.
