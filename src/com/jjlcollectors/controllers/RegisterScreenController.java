@@ -212,7 +212,7 @@ public final class RegisterScreenController implements Initializable
 
         if (isUserFormValid())
         {
-            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userCityTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
+            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(),userCountryComboBox.getValue().toString(),userCountryComboBox.getValue().toString(), userCityTextField.getText(),userStreetTextField.getText(),userApartmentTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
             boolean userAdded = DBUsersConnect.addUser(newUser);
             if (userAdded)
             {

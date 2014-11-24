@@ -35,6 +35,11 @@ public final class User
     private String _firstName;
     private String _lastName;
     private String _userAddress;
+    private String _country;
+    private String _state;
+    private String _city;
+    private String _street;
+    private String _apartment;
     private String _postalCode;
     private String _phoneNumber;
     private String _mobileNumber;
@@ -91,12 +96,16 @@ public final class User
      * @throws java.security.NoSuchAlgorithmException
      * @throws java.security.spec.InvalidKeySpecException
      */
-    public User (String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
+    public User (String firstName, String lastName, String userCountry,String userState,String userCity,String userStreet,String userApartment, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote, char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         setUserUUID ();
         setFirstName(firstName);
         setLastName(lastName);
-        setUserAddress(userAddress);
+        setCountry(userCountry);
+        setState(userState);
+        setCity(userCity);
+        setStreet(userStreet);
+        setApartment(userApartment);
         setPostalCode(postalCode);
         setPhoneNumber(phoneNumber);
         setMobileNumber(mobileNumber);
@@ -112,7 +121,6 @@ public final class User
      * @param userUUID user UUID.
      * @param firstName user first name
      * @param lastName user last name
-     * @param userAddress user address
      * @param postalCode user postal code
      * @param phoneNumber user phone number
      * @param mobileNumber user mobile number
@@ -122,9 +130,9 @@ public final class User
      * @throws java.security.NoSuchAlgorithmException
      * @throws java.security.spec.InvalidKeySpecException
      */
-    public User (UUID userUUID, String firstName, String lastName, String userAddress, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote,char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
+    public User (UUID userUUID, String firstName, String lastName,String userCountry,String userState,String userCity,String userStreet,String userApartment, String postalCode, String phoneNumber, String mobileNumber, String userEmail, String userNote,char [] userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
-        this (firstName,lastName,userAddress,postalCode,phoneNumber,mobileNumber,userEmail,userNote,userPassword);
+        this (firstName,lastName,userCountry,userState,userCity,userStreet,userApartment,postalCode,phoneNumber,mobileNumber,userEmail,userNote,userPassword);
         setUserUUID(userUUID);
     }
     
@@ -136,7 +144,7 @@ public final class User
      */
     public User (User other) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
-        this (other.getFirstName(),other.getLastName(),other.getUserAddress(),other.getPostalCode(),other.getPhoneNumber(),other.getMobileNumber(),other.getUserEmail(),other.getUserNote(),"".toCharArray());
+        this (other.getFirstName(),other.getLastName(),other.getCountry(),other.getState(),other.getCity(), other.getStreet(),other.getApartment(),other.getPostalCode(),other.getPhoneNumber(),other.getMobileNumber(),other.getUserEmail(),other.getUserNote(),"".toCharArray());
         setUserUUID();
         
     }
@@ -422,6 +430,61 @@ public final class User
         return _userRegistrationTime;
     }
     
+        public String getCountry()
+    {
+        return _country;
+    }
+
+    public void setCountry(String country)
+    {
+        if (country != null)
+            this._country = country;
+        else
+            this._country = "";
+    }
+
+    public String getState()
+    {
+        return _state;
+    }
+
+    public void setState(String state)
+    {
+        if (state != null)
+            this._state = state;
+        else
+            this._state = "";
+    }
+
+    public String getCity()
+    {
+        return _city;
+    }
+
+    public void setCity(String city)
+    {
+        this._city = city;
+    }
+
+    public String getStreet()
+    {
+        return _street;
+    }
+
+    public void setStreet(String street)
+    {
+        this._street = street;
+    }
+
+    public String getApartment()
+    {
+        return _apartment;
+    }
+
+    public void setApartment(String apartment)
+    {
+        this._apartment = apartment;
+    }
     
     /*
     * method that creates random password for when user enters invalid password.
@@ -452,4 +515,6 @@ public final class User
                 "\nEmail: " + getUserEmail() +
                 "\nUser note: " + getUserNote();
     }
+
+
 }

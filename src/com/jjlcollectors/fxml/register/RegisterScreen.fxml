@@ -37,11 +37,11 @@
             <TextField fx:id="userNoteTextField" layoutX="475.0" layoutY="194.0" prefHeight="80.0" prefWidth="149.0" promptText="Additional info" />
             <PasswordField fx:id="userPasswordField" layoutX="475.0" layoutY="279.0" promptText="Password" />
             <PasswordField fx:id="userPasswordConfirmField" layoutX="475.0" layoutY="310.0" promptText="Password" />
-            <Button fx:id="registerButton" layoutX="487.0" layoutY="381.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
+            <Button fx:id="registerButton" layoutX="487.0" layoutY="392.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="25.0" prefWidth="124.0" text="Register" />
             <Button fx:id="alreadyRegisteredButton" layoutX="487.0" layoutY="421.0" mnemonicParsing="false" onAction="#backToLoginScreen" prefHeight="25.0" prefWidth="124.0" text="Already registered" />
             <Label layoutX="82.0" layoutY="424.0" text="Postal Code:" />
             <Label fx:id="userCommentLabel" layoutX="365.0" layoutY="215.0" text="Additional info:" />
-            <Label fx:id="registerStatusLabel" layoutX="365.0" layoutY="318.0" prefHeight="41.0" prefWidth="249.0" />
+            <Label fx:id="registerStatusLabel" layoutX="365.0" layoutY="347.0" prefHeight="41.0" prefWidth="259.0" />
             <Label layoutX="82.0" layoutY="310.0" text="State:" />
             <Label layoutX="83.0" layoutY="339.0" text="City" />
             <Label layoutX="83.0" layoutY="276.0" text="Country" />
