@@ -17,11 +17,13 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.users.User;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.io.IOException;
-
 import java.net.URL;
+import com.jjlcollectors.util.service.CountryList;
+import com.jjlcollectors.util.service.United_States_Of_America;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ResourceBundle;
@@ -30,7 +32,10 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -39,6 +44,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -49,7 +55,7 @@ import javafx.stage.Stage;
  *
  * @author Hedgehog01
  */
-public class RegisterScreenController implements Initializable
+public final class RegisterScreenController implements Initializable
 {
 
     private static final Logger log = Logger.getLogger(RegisterScreenController.class.getName());
@@ -63,7 +69,6 @@ public class RegisterScreenController implements Initializable
     private final String PASSWORD_INVALID = "Password must be at least\n8 characters long";
     private final String USER_NOT_ADDED = "Could not create a new user.\nContact Program creator.";
     private final String USER_ADDED = "New user created successfully";
-            
 
     //FXML linked variables
     @FXML
@@ -79,13 +84,25 @@ public class RegisterScreenController implements Initializable
     private TextField userEmailConfirmTextField;
 
     @FXML
-    private TextField userAddressTextField;
+    private TextField userCityTextField;
+
+    @FXML
+    private TextField userStreetTextField;
+
+    @FXML
+    private ComboBox<United_States_Of_America> userStateComboBox;
+
+    @FXML
+    private ComboBox<CountryList> userCountryComboBox;
 
     @FXML
     private TextField userPhoneNumberTextField;
 
     @FXML
     private TextField userMobileNumberTextField;
+
+    @FXML
+    private TextField userApartmentTextField;
 
     @FXML
     private TextField userNoteTextField;
@@ -124,7 +141,21 @@ public class RegisterScreenController implements Initializable
 
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+
+        userCountryComboBox.getItems().addAll(CountryList.values());
+
+        userCountryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CountryList> observable, CountryList oldValue, CountryList newValue) ->
+        {
+            if (newValue.equals(CountryList.United_States_Of_Americe))
+                {
+                    log.log(Level.INFO, "United states of America selected");
+                    userStateComboBox.getItems().addAll(United_States_Of_America.values());
+                }
+            else
+                {
+                    userStateComboBox.getItems().removeAll(United_States_Of_America.values());
+                }
+        });
     }
 
 
@@ -136,14 +167,14 @@ public class RegisterScreenController implements Initializable
     {
         loadLoginScene(event);
     }
-    
-        private boolean loadLoginScene(ActionEvent event)
+
+    private boolean loadLoginScene(ActionEvent event)
     {
         boolean loadScreen = false;
         try
         {
-            Stage currentStage =((Stage) ((Node)event.getSource()).getScene().getWindow());
-            
+            Stage currentStage = ((Stage) ((Node) event.getSource()).getScene().getWindow());
+
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL location = HomePageController.class.getResource(LOGIN_SCENE_FXML);
             fxmlLoader.setLocation(location);
@@ -181,20 +212,22 @@ public class RegisterScreenController implements Initializable
 
         if (isUserFormValid())
         {
-            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userAddressTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
+            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userCityTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
             boolean userAdded = DBUsersConnect.addUser(newUser);
             if (userAdded)
             {
                 registerStatusLabel.setText(USER_ADDED);
                 backToLoginScreen(event);
                 log.log(Level.INFO, "registerNewUser method started");
-            }
-            else
+            } else
             {
                 registerStatusLabel.setText(USER_NOT_ADDED);
-                log.log (Level.SEVERE, "User not added for some reason. user input: {0} {1} {2} {3} {4} {5} {6} {7} {8}", new Object[]{userFirstNameTextField.getText(), userLastNameTextField.getText(), userAddressTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText(), userNoteTextField.getText(), userPasswordField.getText()});
+                log.log(Level.SEVERE, "User not added for some reason. user input: {0} {1} {2} {3} {4} {5} {6} {7} {8}", new Object[]
+                {
+                    userFirstNameTextField.getText(), userLastNameTextField.getText(), userCityTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText(), userNoteTextField.getText(), userPasswordField.getText()
+                });
             }
-            
+
         }
 
     }
@@ -221,8 +254,7 @@ public class RegisterScreenController implements Initializable
             log.log(Level.INFO, "user with same email already exits");
             registerStatusLabel.setText("User with same Email already exits");
             isValid = false;
-        }
-        else if (!(isUserNameValid()))
+        } else if (!(isUserNameValid()))
         {
             isValid = false;
         } else if (!(isUserEmailValid()))
@@ -230,8 +262,7 @@ public class RegisterScreenController implements Initializable
             log.log(Level.INFO, "email is not valid");
 
             isValid = false;
-        }
-        else if (!(isPasswordValid()))
+        } else if (!(isPasswordValid()))
         {
             log.log(Level.INFO, "Password is not valid");
 
@@ -240,10 +271,10 @@ public class RegisterScreenController implements Initializable
 
         return isValid;
     }
-    
+
     /*
-    method to verify user first & last name are valid (i.e not empty)
-    */
+     method to verify user first & last name are valid (i.e not empty)
+     */
     private boolean isUserNameValid()
     {
         boolean isValid = true;
@@ -297,25 +328,23 @@ public class RegisterScreenController implements Initializable
         }
         return isValid;
     }
-    
+
     private boolean isPasswordValid()
     {
         boolean isValid = true;
         registerStatusLabel.setText("");
-        if (userPasswordField.getText() == null || (userPasswordField.getText().trim().isEmpty()) || (userPasswordField.getText().length()<8))
+        if (userPasswordField.getText() == null || (userPasswordField.getText().trim().isEmpty()) || (userPasswordField.getText().length() < 8))
         {
             isValid = false;
             registerStatusLabel.setText(PASSWORD_INVALID);
             log.log(Level.INFO, "Password fields is empty");
-        }
-        
-        else if (!(userPasswordField.getText().equals(userPasswordConfirmField.getText())))
+        } else if (!(userPasswordField.getText().equals(userPasswordConfirmField.getText())))
         {
             isValid = false;
             registerStatusLabel.setText(PASSWORD_FIELDS_DIFF);
             log.log(Level.INFO, "Password fields not the same");
         }
-        
+
         return isValid;
     }
 }
