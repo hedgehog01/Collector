@@ -112,11 +112,12 @@ public final class DBUsersConnect extends DBConnect
                 prepstmt.setString(9, phoneNumber);
                 prepstmt.setString(10, mobileNumber);
                 prepstmt.setString(11, userEmail);
-                prepstmt.setString(12, userNote);
-                prepstmt.setString(13, userUUID.toString());
-                prepstmt.setBytes(14, userPassword);
-                prepstmt.setBytes(15, userSalt);
-                prepstmt.setTimestamp(16, userRegTime);
+                prepstmt.setString(12, userEmail);
+                prepstmt.setString(13, userNote);
+                prepstmt.setString(14, userUUID.toString());
+                prepstmt.setBytes(15, userPassword);
+                prepstmt.setBytes(16, userSalt);
+                prepstmt.setTimestamp(17, userRegTime);
                 updateCount = prepstmt.executeUpdate();
                 log.log(Level.INFO, "Add user update count is: {0}", updateCount);
             }
