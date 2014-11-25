@@ -218,7 +218,7 @@ public final class RegisterScreenController implements Initializable
             {
                 registerStatusLabel.setText(USER_ADDED);
                 backToLoginScreen(event);
-                log.log(Level.INFO, "registerNewUser method started");
+                log.log(Level.INFO, "registerNewUser OK");
             } else
             {
                 registerStatusLabel.setText(USER_NOT_ADDED);

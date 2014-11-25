@@ -97,7 +97,7 @@ public final class DBUsersConnect extends DBConnect
         {
             log.log(Level.INFO, "Table name: {0}", TABLE_NAME);
             log.log(Level.INFO, "User time stamp: {0}", userRegTime);
-            String sqlStatement = "INSERT INTO " + TABLE_NAME + " (FIRST_NAME,LAST_NAME,COUNTRY,STATE,CITY,STREET,APARTMENT,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT,USER_REGISTRATION_TIME) VALUES (?,?,?,?,?,?,?,?,?,?,?,??,?,?,?)";
+            String sqlStatement = "INSERT INTO " + TABLE_NAME + " (FIRST_NAME,LAST_NAME,COUNTRY,STATE,CITY,STREET,APARTMENT,POSTAL_CODE,PHONE_NUM,MOBILE_NUM,MAIN_EMAIL,USER_NOTE,USER_UUID,USER_PASSWORD,USER_SALT,USER_REGISTRATION_TIME) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             int updateCount;
             try (PreparedStatement prepstmt = conn.prepareStatement(sqlStatement))
             {
