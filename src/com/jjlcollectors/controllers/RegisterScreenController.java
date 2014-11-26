@@ -68,6 +68,8 @@ public final class RegisterScreenController implements Initializable
     private final String PASSWORD_FIELDS_DIFF = "Passwords don't match";
     private final String PASSWORD_INVALID = "Password must be at least\n8 characters long";
     private final String USER_NOT_ADDED = "Could not create a new user.\nContact Program creator.";
+    private final String COUNTRY_NOT_SELECTED = "Country must be selected";
+    private final String STATE_NOT_SELECTED = "State must be selected";
     private final String USER_ADDED = "New user created successfully";
 
     //FXML linked variables
@@ -147,14 +149,13 @@ public final class RegisterScreenController implements Initializable
         userCountryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CountryList> observable, CountryList oldValue, CountryList newValue) ->
         {
             if (newValue.equals(CountryList.United_States_Of_Americe))
-                {
-                    log.log(Level.INFO, "United states of America selected");
-                    userStateComboBox.getItems().addAll(United_States_Of_America.values());
-                }
-            else
-                {
-                    userStateComboBox.getItems().removeAll(United_States_Of_America.values());
-                }
+            {
+                log.log(Level.INFO, "United states of America selected");
+                userStateComboBox.getItems().addAll(United_States_Of_America.values());
+            } else
+            {
+                userStateComboBox.getItems().removeAll(United_States_Of_America.values());
+            }
         });
     }
 
@@ -212,7 +213,7 @@ public final class RegisterScreenController implements Initializable
 
         if (isUserFormValid())
         {
-            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(),userCountryComboBox.getValue().toString(),userCountryComboBox.getValue().toString(), userCityTextField.getText(),userStreetTextField.getText(),userApartmentTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
+            User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userCountryComboBox.getValue().toString(), userCountryComboBox.getValue().toString(), userCityTextField.getText(), userStreetTextField.getText(), userApartmentTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
             boolean userAdded = DBUsersConnect.addUser(newUser);
             if (userAdded)
             {
@@ -265,6 +266,16 @@ public final class RegisterScreenController implements Initializable
         } else if (!(isPasswordValid()))
         {
             log.log(Level.INFO, "Password is not valid");
+
+            isValid = false;
+        } else if (!(isCountrySelected()))
+        {
+            log.log(Level.INFO, "No Country is selected");
+
+            isValid = false;
+        } else if (!(isStateSelected()))
+        {
+            log.log(Level.INFO, "No State is selected");
 
             isValid = false;
         }
@@ -345,6 +356,41 @@ public final class RegisterScreenController implements Initializable
             log.log(Level.INFO, "Password fields not the same");
         }
 
+        return isValid;
+    }
+
+    private boolean isCountrySelected()
+    {
+        boolean isValid = true;
+        registerStatusLabel.setText("");
+        if (userCountryComboBox.getValue() == null)
+        {
+            isValid = false;
+            registerStatusLabel.setText(COUNTRY_NOT_SELECTED);
+            log.log(Level.INFO, "No country selected");
+        }
+        return isValid;
+
+    }
+
+    /*
+     * method to check if state selected. 
+     * State can be not selected if country with no states selected.
+     * id country with states selected then state must be selected.
+     */
+    private boolean isStateSelected()
+    {
+        boolean isValid = true;
+        registerStatusLabel.setText("");
+        if (userCountryComboBox.getValue().toString().equals(CountryList.United_States_Of_Americe.toString()))
+        {
+            if (userStateComboBox.getValue() == null)
+            {
+                isValid = false;
+                registerStatusLabel.setText(STATE_NOT_SELECTED);
+                log.log(Level.INFO, "USA selected country but no State selected");
+            }
+        }
         return isValid;
     }
 }
