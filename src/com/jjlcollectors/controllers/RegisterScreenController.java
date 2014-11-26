@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import com.jjlcollectors.util.service.CountryList;
 import com.jjlcollectors.util.service.United_States_Of_America;
+import com.jjlcollectors.util.service.VerifyString;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ResourceBundle;
@@ -71,6 +72,9 @@ public final class RegisterScreenController implements Initializable
     private final String COUNTRY_NOT_SELECTED = "Country must be selected";
     private final String STATE_NOT_SELECTED = "State must be selected";
     private final String USER_ADDED = "New user created successfully";
+    private final String PHONE_NON_NUMERIC = "Phone Number must be numeric";
+    private final String MOBILE_NON_NUMERIC = "Mobile Number must be numeric";
+    private final String POSTAL_NON_NUMERIC = "Postal Code Number must be numeric";
 
     //FXML linked variables
     @FXML
@@ -214,15 +218,14 @@ public final class RegisterScreenController implements Initializable
         if (isUserFormValid())
         {
             String state = "";
-            if(userStateComboBox.getValue() == null)
+            if (userStateComboBox.getValue() == null)
             {
                 log.log(Level.INFO, "State null");
-                
-            }
-            else
+
+            } else
             {
                 state = userStateComboBox.getValue().toString();
-                log.log(Level.INFO, "State is: {0}",userStateComboBox.getValue().toString());
+                log.log(Level.INFO, "State is: {0}", userStateComboBox.getValue().toString());
             }
             User newUser = new User(userFirstNameTextField.getText(), userLastNameTextField.getText(), userCountryComboBox.getValue().toString(), state, userCityTextField.getText(), userStreetTextField.getText(), userApartmentTextField.getText(), userPostalCodeTextField.getText(), userPhoneNumberTextField.getText(), userMobileNumberTextField.getText(), userEmailTextField.getText().toLowerCase(), userNoteTextField.getText(), userPasswordField.getText().toCharArray());
             boolean userAdded = DBUsersConnect.addUser(newUser);
@@ -272,6 +275,21 @@ public final class RegisterScreenController implements Initializable
         } else if (!(isUserEmailValid()))
         {
             log.log(Level.INFO, "email is not valid");
+
+            isValid = false;
+        } else if (!(isPhoneNumeric()))
+        {
+            log.log(Level.INFO, "Phone non numeric");
+
+            isValid = false;
+        } else if (!(isMobileNumeric()))
+        {
+            log.log(Level.INFO, "Mobile non numeric");
+
+            isValid = false;
+        } else if (!(isPostalCodeNumeric()))
+        {
+            log.log(Level.INFO, "Postal non numeric");
 
             isValid = false;
         } else if (!(isPasswordValid()))
@@ -382,6 +400,46 @@ public final class RegisterScreenController implements Initializable
         }
         return isValid;
 
+    }
+
+    private boolean isPhoneNumeric()
+    {
+        boolean isValid = true;
+        registerStatusLabel.setText("");
+        if (!(VerifyString.isNumeric(userPhoneNumberTextField.getText())))
+        {
+            isValid = false;
+            registerStatusLabel.setText(PHONE_NON_NUMERIC);
+            log.log(Level.INFO, "Phone NON-Numeric");
+        }
+
+        return isValid;
+    }
+
+    private boolean isMobileNumeric()
+    {
+        boolean isValid = true;
+        registerStatusLabel.setText("");
+        if (!(VerifyString.isNumeric(userMobileNumberTextField.getText())))
+        {
+            isValid = false;
+            registerStatusLabel.setText(MOBILE_NON_NUMERIC);
+            log.log(Level.INFO, "Phone NON-Numeric");
+        }
+        return isValid;
+    }
+
+    private boolean isPostalCodeNumeric()
+    {
+        boolean isValid = true;
+        registerStatusLabel.setText("");
+        if (!(VerifyString.isNumeric(userPostalCodeTextField.getText())))
+        {
+            isValid = false;
+            registerStatusLabel.setText(POSTAL_NON_NUMERIC);
+            log.log(Level.INFO, "Phone NON-Numeric");
+        }
+        return isValid;
     }
 
     /*
