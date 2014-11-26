@@ -29,6 +29,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -66,6 +67,9 @@ public class HomePageController implements Initializable
     private Button createNewCollectionBtn;
     
     @FXML
+    private Button getUserCollectionBtn;
+    
+    @FXML
     private TableView<CollectionProperty> collectionTableView;
     
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
@@ -79,9 +83,13 @@ public class HomePageController implements Initializable
         //ObservableList<CollectionProperty> data = collectionTableView.getItems();
         //ObservableList<CollectionProperty> newData = FXCollections.observableArrayList();
         //data.addAll(DBCollectionConnect.getUserCollections(userUUID, data));
-        collectionComboListData.add(new CollectionProperty("test Collection",CollectionType.COIN.name(), "collection note", "collectionUUID"));
-        collectionComboBox.setItems(collectionComboListData);
-        
+        //collectionComboListData.add(new CollectionProperty("test Collection",CollectionType.COIN.name(), "collection note", "collectionUUID"));
+        //collectionComboBox.setItems(collectionComboListData);
+         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
+                 {
+                     
+                 }
+         );
     }    
     
     @FXML
