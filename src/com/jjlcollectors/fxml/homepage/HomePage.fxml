@@ -70,7 +70,7 @@
                                     <columns>
                                         <TableColumn prefWidth="107.0" text="Name">
                                             <cellValueFactory>
-                                                <PropertyValueFactory property="coinName" />
+                                                <PropertyValueFactory property="collectionName" />
                                             </cellValueFactory>
                                         </TableColumn>
                                         <TableColumn prefWidth="102.0" text="Category">

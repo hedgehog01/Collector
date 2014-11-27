@@ -69,6 +69,8 @@ public class AddCollectionController implements Initializable
     {
         collectionTypeComboList.addAll(CollectionType.values());
         collectionTypeComboBox.getItems().addAll(collectionTypeComboList);
+        
+
     }
 
     protected void setUserData(UUID userUUID)

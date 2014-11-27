@@ -88,7 +88,7 @@ public class HomePageController implements Initializable
         //collectionComboBox.setItems(collectionComboListData);
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
-
+            
         }
         );
     }
