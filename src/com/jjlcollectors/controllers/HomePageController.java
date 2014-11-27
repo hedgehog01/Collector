@@ -17,10 +17,10 @@
  */
 package com.jjlcollectors.controllers;
 
-
 import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.CollectionType;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
+import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
 import java.io.IOException;
 import java.net.URL;
@@ -50,30 +50,31 @@ import javafx.stage.Stage;
  */
 public class HomePageController implements Initializable
 {
+
     private String userEmail = "";
     private UUID userUUID;
     private static final Logger log = Logger.getLogger(HomePageController.class.getName());
-    
+
     @FXML
-    private ComboBox <CollectionProperty> collectionComboBox;
+    private ComboBox<CollectionProperty> collectionComboBox;
 
     @FXML
     private Button previewCollectionBtn;
-    
+
     @FXML
     private Button openCollectionBtn;
-    
+
     @FXML
     private Button createNewCollectionBtn;
-    
+
     @FXML
     private Button getUserCollectionBtn;
-    
+
     @FXML
     private TableView<CollectionProperty> collectionTableView;
-    
+
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
-    
+
     /**
      * Initializes the controller class.
      */
@@ -85,13 +86,13 @@ public class HomePageController implements Initializable
         //data.addAll(DBCollectionConnect.getUserCollections(userUUID, data));
         //collectionComboListData.add(new CollectionProperty("test Collection",CollectionType.COIN.name(), "collection note", "collectionUUID"));
         //collectionComboBox.setItems(collectionComboListData);
-         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
-                 {
-                     
-                 }
-         );
-    }    
-    
+        collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
+        {
+
+        }
+        );
+    }
+
     @FXML
     private boolean goToCollectionView()
     {
@@ -108,27 +109,25 @@ public class HomePageController implements Initializable
             Parent root = fxmlLoader.load(location.openStream());
             AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
             addCoinController.setUserData(userUUID);
-            
+
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage stage = new Stage();
-            Scene scene = new Scene (root);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-            
-            loadScreen = true;           
+
+            loadScreen = true;
         } catch (IOException ex)
         {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return loadScreen;
     }
-    
-    
-        /*
+
+    /*
      * method to set user data.
      After validating data is valid, initialize the data according to user data.
      */
-
     protected final void setUserData(String userEmail, String userPass)
     {
         checkLoginStatus(userEmail, userPass);
@@ -204,6 +203,7 @@ public class HomePageController implements Initializable
     {
         this.userEmail = userEmail;
     }
+
     private void setUserUUID()
     {
         if (DBUsersConnect.getUserUUID(userEmail) != null)
@@ -214,9 +214,8 @@ public class HomePageController implements Initializable
             log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
         }
     }
-    
-    
-        private boolean loadNextScene(String userEmail, String userAttemptedPassword)
+
+    private boolean loadNextScene(String userEmail, String userAttemptedPassword)
     {
         boolean loadScreen = false;
         try
@@ -231,24 +230,74 @@ public class HomePageController implements Initializable
             Parent root = fxmlLoader.load(location.openStream());
             CollectionViewController cvController = (CollectionViewController) fxmlLoader.getController();
             cvController.setUserData(userEmail, userAttemptedPassword);
-            
+
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage stage = new Stage();
-            Scene scene = new Scene (root);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.sizeToScene();
             stage.setResizable(false);
             stage.setTitle("Collector - Collection Viewer");
             stage.show();
-            
-            loadScreen = true;           
+
+            loadScreen = true;
         } catch (IOException ex)
         {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return loadScreen;
     }
-    
+
+    @FXML
+    private void getUserCollection()
+    {
+        if (DBConnect.isDBConnectable())
+        {
+            log.log(Level.INFO, "Getting user collections and adding to collection data");
+            collectionComboListData.addAll(DBCollectionConnect.getUserCollections(userUUID));
+            log.log(Level.INFO, "Adding data to collection combobox");
+            collectionComboBox.getItems().addAll(collectionComboListData);
+        } else //connection not available
+        {
+            log.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
+        }
+    }
+
+    @FXML
+    private boolean startNewCollection()
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage = (Stage) collectionComboBox.getScene().getWindow();
+            //currentStage.hide();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            String filePath = "/com/jjlcollectors/fxml/addcollection/AddCollection.fxml";
+            URL location = AddCollectionController.class.getResource(filePath);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            AddCollectionController addCollectionController = (AddCollectionController) fxmlLoader.getController();
+            addCollectionController.setUserData(userUUID);
+
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.sizeToScene();
+            stage.setResizable(false);
+            stage.setTitle("Collector - Collection Viewer");
+            stage.show();
+
+            loadScreen = true;
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
+
+    }
+
     /**
      * method to exit the program.
      */

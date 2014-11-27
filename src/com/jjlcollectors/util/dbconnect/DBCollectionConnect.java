@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -132,9 +133,10 @@ public final class DBCollectionConnect extends DBConnect
 
     }
     
-    public static ObservableList<CollectionProperty> getUserCollections (UUID userUUID, ObservableList<CollectionProperty> data)
+    public static ObservableList<CollectionProperty> getUserCollections (UUID userUUID)
     {
-        log.log(Level.INFO, "Attempting to get collections by user");
+        log.log(Level.INFO, "Attempting to get collections by userUUID");
+        ObservableList<CollectionProperty> userCollectionData = FXCollections.observableArrayList();
         DBConnect.createDBConnection();
         try (PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " WHERE USER_UUID = ?"))
         {
@@ -149,7 +151,7 @@ public final class DBCollectionConnect extends DBConnect
                 String collectionUUID = rs.getString("COLLECTION_UUID");
                 
                 CollectionProperty collectionProperty = new CollectionProperty(collectionName, collectionType, collectionNote, collectionUUID);
-                data.add(collectionProperty);
+                userCollectionData.add(collectionProperty);
             }
             rs.close();
         } catch (SQLException ex)
@@ -159,8 +161,9 @@ public final class DBCollectionConnect extends DBConnect
 
         DBConnect.closeDBConnection();
 
-        return data;
+        return userCollectionData;
     }
+
 
 
 }

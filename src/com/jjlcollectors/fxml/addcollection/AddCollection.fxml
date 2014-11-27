@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,16 +9,38 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="401.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.jjlcollectors.controllers.AddCollectionController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="401.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.AddCollectionController">
     <stylesheets>
         <URL value="@addcollection.css" />
     </stylesheets>
    <children>
+      <MenuBar layoutX="-6.0" layoutY="2.0" prefHeight="25.0" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="File">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#doExit" text="Quit">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
       <Text layoutX="144.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new collection" />
-      <ComboBox layoutX="126.0" layoutY="71.0" prefWidth="150.0" promptText="Collection Type" />
+      <ComboBox fx:id="collectionTypeComboBox" layoutX="126.0" layoutY="71.0" prefWidth="150.0" promptText="Collection Type" />
       <TextField layoutX="126.0" layoutY="110.0" promptText="Name" />
-      <TextField layoutX="126.0" layoutY="164.0" prefHeight="111.0" prefWidth="149.0" promptText="More Info" />
-      <Button layoutX="224.0" layoutY="296.0" mnemonicParsing="false" text="Create" />
-      <Button layoutX="126.0" layoutY="296.0" mnemonicParsing="false" text="Cancel" />
+      <TextField fx:id="collectionInfo" layoutX="126.0" layoutY="164.0" prefHeight="111.0" prefWidth="149.0" promptText="More Info" />
+      <Button layoutX="224.0" layoutY="349.0" mnemonicParsing="false" onAction="#createNewCollection" text="Create" />
+      <Button layoutX="126.0" layoutY="349.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
+      <Label layoutX="24.0" layoutY="75.0" text="Collection Type:" />
+      <Label layoutX="23.0" layoutY="114.0" text="Collection Name:" />
+      <Label layoutX="24.0" layoutY="211.0" text="More info:" />
+      <Label fx:id="addCollectionStatusLabel" layoutX="130.0" layoutY="291.0" prefHeight="53.0" prefWidth="149.0" />
    </children>
 </AnchorPane>

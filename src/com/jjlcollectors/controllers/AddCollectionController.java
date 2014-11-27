@@ -17,13 +17,21 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.CollectionType;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -32,11 +40,22 @@ import javafx.scene.control.ComboBox;
  */
 public class AddCollectionController implements Initializable
 {
-    
-    private static final Logger log = Logger.getLogger(AddCollectionController.class.getName());
-    
-    
 
+    private UUID _userUUID = null;
+    private static final Logger log = Logger.getLogger(AddCollectionController.class.getName());
+    private ObservableList<CollectionType> collectionTypeComboList = FXCollections.observableArrayList();
+
+    @FXML
+    private ComboBox<CollectionType> collectionTypeComboBox;
+
+    @FXML
+    private TextField collectionName;
+
+    @FXML
+    private TextField collectionInfo;
+
+    @FXML
+    private Label addCollectionStatusLabel;
 
     /**
      * Initializes the controller class.
@@ -44,7 +63,37 @@ public class AddCollectionController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
-    }    
-    
+        collectionTypeComboList.addAll(CollectionType.values());
+        collectionTypeComboBox.getItems().addAll(collectionTypeComboList);
+    }
+
+    protected void setUserData(UUID userUUID)
+    {
+        _userUUID = userUUID;
+    }
+
+    @FXML
+    private void createNewCollection()
+    {
+        log.log(Level.INFO, "Attempting save of new Collection");
+        
+    }
+
+    @FXML
+    private void closeWindow()
+    {
+        Stage currentStage = (Stage) collectionTypeComboBox.getScene().getWindow();
+        currentStage.hide();
+    }
+
+    /**
+     * method to exit the program.
+     */
+    @FXML
+    public void doExit()
+    {
+
+        Platform.exit();
+    }
+
 }
