@@ -34,8 +34,8 @@
       </MenuBar>
       <Text layoutX="144.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new collection" />
       <ComboBox fx:id="collectionTypeComboBox" layoutX="126.0" layoutY="71.0" prefWidth="150.0" promptText="Collection Type" />
-      <TextField layoutX="126.0" layoutY="110.0" promptText="Name" />
-      <TextField fx:id="collectionInfo" layoutX="126.0" layoutY="164.0" prefHeight="111.0" prefWidth="149.0" promptText="More Info" />
+      <TextField fx:id="collectionNameTextField" layoutX="126.0" layoutY="110.0" promptText="Name" />
+      <TextField fx:id="collectionInfoTextField" layoutX="126.0" layoutY="164.0" prefHeight="111.0" prefWidth="149.0" promptText="More Info" />
       <Button layoutX="224.0" layoutY="349.0" mnemonicParsing="false" onAction="#createNewCollection" text="Create" />
       <Button layoutX="126.0" layoutY="349.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
       <Label layoutX="24.0" layoutY="75.0" text="Collection Type:" />

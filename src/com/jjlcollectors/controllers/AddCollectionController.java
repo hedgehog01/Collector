@@ -17,7 +17,9 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.Collection;
 import com.jjlcollectors.collectables.CollectionType;
+import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -41,6 +43,8 @@ import javafx.stage.Stage;
 public class AddCollectionController implements Initializable
 {
 
+    private final String COLLECTION_TYPE_NOT_SELECTED = "Collection type \nmust be selected.";
+    private final String COLLECTION_NAME_EMPTY = "Enter collection name.";
     private UUID _userUUID = null;
     private static final Logger log = Logger.getLogger(AddCollectionController.class.getName());
     private ObservableList<CollectionType> collectionTypeComboList = FXCollections.observableArrayList();
@@ -49,10 +53,10 @@ public class AddCollectionController implements Initializable
     private ComboBox<CollectionType> collectionTypeComboBox;
 
     @FXML
-    private TextField collectionName;
+    private TextField collectionNameTextField;
 
     @FXML
-    private TextField collectionInfo;
+    private TextField collectionInfoTextField;
 
     @FXML
     private Label addCollectionStatusLabel;
@@ -77,6 +81,23 @@ public class AddCollectionController implements Initializable
     {
         log.log(Level.INFO, "Attempting save of new Collection");
         
+        if (isCollectionValid())
+        {
+            String collectionInfo = "";
+            if (!(collectionInfoTextField.getText().trim().isEmpty()))
+            {
+                collectionInfo = collectionInfoTextField.getText();
+            }
+            
+            
+            Collection collection = new Collection (_userUUID,collectionNameTextField.getText(),collectionTypeComboBox.getValue(),collectionInfo);
+            log.log(Level.INFO, "New Collection item created, attempt to add to DB");
+            DBCollectionConnect.addCollection(collection);
+            
+            //addCollectionStatusLabel.setText("Collection added successfully");
+            closeWindow();
+        }
+        
     }
 
     @FXML
@@ -94,6 +115,25 @@ public class AddCollectionController implements Initializable
     {
 
         Platform.exit();
+    }
+    
+    private boolean isCollectionValid()
+    {
+        boolean isValid = true;
+        addCollectionStatusLabel.setText("");
+        if (collectionTypeComboBox.getValue() == null)
+        {
+            addCollectionStatusLabel.setText (COLLECTION_TYPE_NOT_SELECTED);
+            isValid = false;
+        }
+        else if (collectionNameTextField.getText() == null || collectionNameTextField.getText().trim().isEmpty())
+        {
+            addCollectionStatusLabel.setText (COLLECTION_NAME_EMPTY);
+            isValid = false;
+        }
+        
+                
+        return isValid;    
     }
 
 }

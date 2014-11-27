@@ -198,9 +198,6 @@ public final class CollectionViewController implements Initializable
         Platform.exit();
     }
 
-
-    
-    
     @FXML
     private boolean addNewCoin()
     {
