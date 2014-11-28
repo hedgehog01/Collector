@@ -40,8 +40,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -88,9 +90,52 @@ public class HomePageController implements Initializable
         //collectionComboBox.setItems(collectionComboListData);
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
-            
+
         }
         );
+
+        // Define rendering of the list of values in ComboBox drop down. 
+        collectionComboBox.setCellFactory((comboBox) ->
+        {
+            return new ListCell<CollectionProperty>()
+            {
+                @Override
+                protected void updateItem(CollectionProperty item, boolean empty)
+                {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty)
+                    {
+                        setText(null);
+                    } else
+                    {
+                        setText(item.getCollectionName());
+                    }
+                }
+            };
+        });
+
+        // Define rendering of selected value shown in ComboBox.
+        collectionComboBox.setConverter(new StringConverter<CollectionProperty>()
+        {
+            @Override
+            public String toString(CollectionProperty collection)
+            {
+                if (collection == null)
+                {
+                    return null;
+                } else
+                {
+                    return collection.getCollectionName();
+                }
+            }
+
+            @Override
+            public CollectionProperty fromString(String personString)
+            {
+                return null; // No conversion fromString needed.
+            }
+        });
     }
 
     @FXML
