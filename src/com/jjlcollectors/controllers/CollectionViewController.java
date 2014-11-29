@@ -54,6 +54,7 @@ public final class CollectionViewController implements Initializable
     private static final Logger log = Logger.getLogger(CollectionViewController.class.getName());
     private String userEmail = "";
     private UUID userUUID;
+    private UUID collectionUUID;
 
     @FXML
     private VBox vBoxMain;
@@ -106,6 +107,16 @@ public final class CollectionViewController implements Initializable
     protected final void setUserData(String userEmail, String userPass)
     {
         checkLoginStatus(userEmail, userPass);
+    }
+     
+    /*
+     * method to set user data.
+     After validating data is valid, initialize the data according to user data.
+     */
+    protected final void setCollectionData (UUID userUUID, UUID collectionUUID)
+    {
+        this.userUUID = userUUID;
+        this.collectionUUID = collectionUUID;
     }
 
     /*
@@ -213,7 +224,7 @@ public final class CollectionViewController implements Initializable
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
-            addCoinController.setUserData(userUUID);
+            addCoinController.setUserData(userUUID,collectionUUID);
             
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage stage = new Stage();

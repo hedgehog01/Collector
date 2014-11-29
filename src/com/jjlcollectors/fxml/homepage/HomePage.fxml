@@ -61,7 +61,7 @@
                                 <Button fx:id="previewCollectionBtn" layoutX="19.0" layoutY="176.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Preview Collection" AnchorPane.leftAnchor="19.0" />
                                 <Button fx:id="openCollectionBtn" layoutX="19.0" layoutY="217.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Open Collection" />
                                 <Button fx:id="createNewCollectionBtn" layoutX="23.0" layoutY="337.0" mnemonicParsing="false" onAction="#startNewCollection" prefHeight="25.0" prefWidth="150.0" text="New Collection" />
-                        <Button fx:id="getUserCollectionBtn" layoutX="21.0" layoutY="41.0" mnemonicParsing="false" onAction="#getUserCollection" prefHeight="25.0" prefWidth="150.0" text="Get Collections" />
+                        <Button fx:id="getUserCollectionBtn" layoutX="21.0" layoutY="41.0" mnemonicParsing="false" onAction="#getUserCollection" prefHeight="25.0" prefWidth="150.0" text="Update Collections" />
                             </children>
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="376.0" prefWidth="576.0">

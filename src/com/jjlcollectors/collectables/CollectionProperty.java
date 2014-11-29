@@ -135,5 +135,11 @@ public final class CollectionProperty
         return collectionName;
     }
     
+    @Override
+    public String toString ()
+    {
+        return getCollectionName();
+    }
+    
     
 }

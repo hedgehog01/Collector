@@ -54,7 +54,8 @@ public class HomePageController implements Initializable
 {
 
     private String userEmail = "";
-    private UUID userUUID;
+    private UUID userUUID = null;
+    private UUID collectionUUID = null;
     private static final Logger log = Logger.getLogger(HomePageController.class.getName());
 
     @FXML
@@ -136,35 +137,50 @@ public class HomePageController implements Initializable
                 return null; // No conversion fromString needed.
             }
         });
+
+        // Handle ComboBox event.
+        collectionComboBox.setOnAction((event) ->
+        {
+            CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+            log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+            collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+        });
     }
 
     @FXML
     private boolean goToCollectionView()
     {
         boolean loadScreen = false;
-        try
+        if (userUUID != null && collectionUUID != null)
         {
-            Stage currentStage = (Stage) previewCollectionBtn.getScene().getWindow();
-            //currentStage.hide();
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            String filePath = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
-            URL location = AddCoinController.class.getResource(filePath);
-            fxmlLoader.setLocation(location);
-            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
-            Parent root = fxmlLoader.load(location.openStream());
-            AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
-            addCoinController.setUserData(userUUID);
+            try
+            {
+                Stage currentStage = (Stage) previewCollectionBtn.getScene().getWindow();
+                //currentStage.hide();
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                String filePath = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
+                URL location = AddCoinController.class.getResource(filePath);
+                fxmlLoader.setLocation(location);
+                fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+                Parent root = fxmlLoader.load(location.openStream());
+                CollectionViewController cvController = (CollectionViewController) fxmlLoader.getController();
+                cvController.setCollectionData(userUUID, collectionUUID);
 
-            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
-            Stage stage = new Stage();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+                //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
 
-            loadScreen = true;
-        } catch (IOException ex)
+                loadScreen = true;
+            } catch (IOException ex)
+            {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else
         {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+            log.log(Level.WARNING, "could not load collection view, check userUUID or collectionUUID");
         }
         return loadScreen;
     }
@@ -260,6 +276,17 @@ public class HomePageController implements Initializable
         }
     }
 
+    private void setCollectionUUID(UUID userUUID)
+    {
+        if (collectionUUID != null && DBUsersConnect.getUserUUID(userEmail) != null)
+        {
+            userUUID = DBUsersConnect.getUserUUID(userEmail);
+        } else
+        {
+            log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
+        }
+    }
+
     private boolean loadNextScene(String userEmail, String userAttemptedPassword)
     {
         boolean loadScreen = false;
@@ -298,10 +325,10 @@ public class HomePageController implements Initializable
     {
         if (DBConnect.isDBConnectable())
         {
-            log.log(Level.INFO, "Getting user collections and adding to collection data");
-            collectionComboListData.addAll(DBCollectionConnect.getUserCollections(userUUID));
-            log.log(Level.INFO, "Adding data to collection combobox");
-            collectionComboBox.getItems().addAll(collectionComboListData);
+            log.log(Level.INFO, "Adding data to collectionComboListData");
+            collectionComboListData.setAll(DBCollectionConnect.getUserCollections(userUUID));
+            log.log(Level.INFO, "Adding data to collectionComboBox");
+            collectionComboBox.getItems().setAll(collectionComboListData);
         } else //connection not available
         {
             log.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
@@ -331,7 +358,7 @@ public class HomePageController implements Initializable
             stage.setScene(scene);
             stage.sizeToScene();
             stage.setResizable(false);
-            stage.setTitle("Collector - Collection Viewer");
+            stage.setTitle("Collector - Create a new collection");
             stage.show();
 
             loadScreen = true;

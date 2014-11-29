@@ -56,7 +56,8 @@ public final class AddCoinController implements Initializable
     private final String Mint_YEAR_NONNUMERIC = "Mint Year must be numeric.\n";
     private final String COLLECTION_NAME_EXISTS = "Name already exists.\n";
 
-    UUID userUUID;
+    UUID userUUID = null;
+    UUID collectionUUID = null;
     //public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
     
     @FXML
@@ -130,7 +131,13 @@ public final class AddCoinController implements Initializable
             currentStage.close();
     }
 
-    void setUserData(UUID userUUID)
+    protected void setUserData(UUID userUUID, UUID collectionUUID)
+    {
+        this.userUUID = userUUID;
+        this.collectionUUID = collectionUUID;
+    }
+    
+    protected void setUserData(UUID userUUID)
     {
         this.userUUID = userUUID;
     }
