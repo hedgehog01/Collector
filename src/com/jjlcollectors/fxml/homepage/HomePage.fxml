@@ -61,31 +61,36 @@
                                 <Button fx:id="previewCollectionBtn" layoutX="19.0" layoutY="176.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Preview Collection" AnchorPane.leftAnchor="19.0" />
                                 <Button fx:id="openCollectionBtn" layoutX="19.0" layoutY="217.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Open Collection" />
                                 <Button fx:id="createNewCollectionBtn" layoutX="23.0" layoutY="337.0" mnemonicParsing="false" onAction="#startNewCollection" prefHeight="25.0" prefWidth="150.0" text="New Collection" />
-                        <Button fx:id="getUserCollectionBtn" layoutX="21.0" layoutY="41.0" mnemonicParsing="false" onAction="#getUserCollection" prefHeight="25.0" prefWidth="150.0" text="Update Collections" />
+                                <Button fx:id="getUserCollectionBtn" layoutX="21.0" layoutY="41.0" mnemonicParsing="false" onAction="#getUserCollection" prefHeight="25.0" prefWidth="150.0" text="Update Collections" />
                             </children>
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="376.0" prefWidth="576.0">
                             <children>
-                                <TableView fx:id="collectionTableView" layoutX="3.0" prefHeight="376.0" prefWidth="540.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="0.0">
+                                <TableView fx:id="collectionTableView" layoutX="3.0" prefHeight="376.0" prefWidth="547.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <columns>
-                                        <TableColumn prefWidth="107.0" text="Name">
+                                        <TableColumn editable="false" prefWidth="107.0" resizable="false" text="Name">
                                             <cellValueFactory>
-                                                <PropertyValueFactory property="collectionName" />
+                                                <PropertyValueFactory property="coinName" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn prefWidth="102.0" text="Category">
+                                        <TableColumn editable="false" prefWidth="102.0" resizable="false" text="Face Value">
                                             <cellValueFactory>
-                                                <PropertyValueFactory property="collectionType" />
+                                                <PropertyValueFactory property="coinFaceValue" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn prefWidth="111.0" text="Number of Items">
+                                        <TableColumn editable="false" prefWidth="97.0" resizable="false" text="Currency">
                                             <cellValueFactory>
-                                                <PropertyValueFactory property="collectionNumberOfItems" />
+                                                <PropertyValueFactory property="coinCurrency" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn prefWidth="228.0" text="More Info">
+                                        <TableColumn editable="false" prefWidth="95.0" resizable="false" text="Mint Year">
                                             <cellValueFactory>
-                                                <PropertyValueFactory property="collectionNote" />
+                                                <PropertyValueFactory property="coinYear" />
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn editable="false" prefWidth="145.0" resizable="false" text="Collection">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="coinCollection" />
                                             </cellValueFactory>
                                         </TableColumn>
                                     </columns>

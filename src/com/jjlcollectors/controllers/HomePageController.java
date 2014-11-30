@@ -19,6 +19,7 @@ package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.CollectionType;
+import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
@@ -74,7 +75,7 @@ public class HomePageController implements Initializable
     private Button getUserCollectionBtn;
 
     @FXML
-    private TableView<CollectionProperty> collectionTableView;
+    private TableView<CoinProperty> collectionTableView;
 
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
 

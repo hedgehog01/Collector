@@ -45,6 +45,7 @@ public final class CoinProperty
     private final StringProperty coinMintMark = new SimpleStringProperty("");
     private final IntegerProperty coinYear = new SimpleIntegerProperty(-1);
     private final StringProperty coinCollectionName = new SimpleStringProperty("");
+    private final StringProperty coinCollection = new SimpleStringProperty("");
     
 
     public CoinProperty()
