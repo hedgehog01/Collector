@@ -18,7 +18,7 @@
 package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.collectables.CollectionProperty;
-import com.jjlcollectors.collectables.CollectionType;
+import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
@@ -75,7 +75,7 @@ public class HomePageController implements Initializable
     private Button getUserCollectionBtn;
 
     @FXML
-    private TableView<CoinProperty> collectionTableView;
+    private TableView<CoinProperty> coinPreviewTableView;
 
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
 
@@ -85,17 +85,12 @@ public class HomePageController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        //ObservableList<CollectionProperty> data = collectionTableView.getItems();
-        //ObservableList<CollectionProperty> newData = FXCollections.observableArrayList();
-        //data.addAll(DBCollectionConnect.getUserCollections(userUUID, data));
-        //collectionComboListData.add(new CollectionProperty("test Collection",CollectionType.COIN.name(), "collection note", "collectionUUID"));
-        //collectionComboBox.setItems(collectionComboListData);
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
 
         }
         );
-
+        
         // Define rendering of the list of values in ComboBox drop down. 
         collectionComboBox.setCellFactory((comboBox) ->
         {
@@ -146,6 +141,11 @@ public class HomePageController implements Initializable
             log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
+        
+        ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
+        ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
+
+        data.setAll(CoinCreator.getCoinProperties(newData));
     }
 
     @FXML
@@ -322,7 +322,7 @@ public class HomePageController implements Initializable
     }
 
     @FXML
-    private void getUserCollection()
+    private void getUserData()
     {
         if (DBConnect.isDBConnectable())
         {

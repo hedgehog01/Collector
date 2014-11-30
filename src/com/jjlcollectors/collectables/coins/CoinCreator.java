@@ -28,12 +28,13 @@ public class CoinCreator
      public static ObservableList<CoinProperty> getCoinProperties(ObservableList<CoinProperty> data)
     {
         int year = 1982;
-        CoinProperty a = new CoinProperty("name1", "lastname1", "email1","name1", "lastname1", "email1","name1", "lastname1", "email1","name1", year, "email1");
+        CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1","name1", "lastname1", "email1","name1", "lastname1", "email1","name1", year, "email1");
+        CoinProperty a2 = new CoinProperty("tame1", "yastname1", "lmail1","kame1", "hastname1", "lmail1","kame1", "jastname1", "hmail1","hame1", year, "gmail1");        
         //CoinProperty b = new CoinProperty("name2", "lastname2", "email2");
         //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
         
-        data.add(a);
-        //data.add(b);
+        data.add(a1);
+        data.add(a2);
         //data.add(c);
         
         return data;

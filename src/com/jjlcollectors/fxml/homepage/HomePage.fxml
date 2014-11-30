@@ -57,16 +57,15 @@
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="392.0" prefWidth="138.0">
                             <children>
-                                <ComboBox fx:id="collectionComboBox" layoutX="21.0" layoutY="76.0" prefWidth="150.0" promptText="Select Collection" AnchorPane.leftAnchor="21.0" />
-                                <Button fx:id="previewCollectionBtn" layoutX="19.0" layoutY="176.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Preview Collection" AnchorPane.leftAnchor="19.0" />
-                                <Button fx:id="openCollectionBtn" layoutX="19.0" layoutY="217.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Open Collection" />
+                                <ComboBox fx:id="collectionComboBox" layoutX="19.0" layoutY="176.0" prefWidth="150.0" promptText="Select Collection" AnchorPane.leftAnchor="19.0" />
+                                <Button fx:id="openCollectionBtn" layoutX="19.0" layoutY="217.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="View Collection" />
                                 <Button fx:id="createNewCollectionBtn" layoutX="23.0" layoutY="337.0" mnemonicParsing="false" onAction="#startNewCollection" prefHeight="25.0" prefWidth="150.0" text="New Collection" />
-                                <Button fx:id="getUserCollectionBtn" layoutX="21.0" layoutY="41.0" mnemonicParsing="false" onAction="#getUserCollection" prefHeight="25.0" prefWidth="150.0" text="Update Collections" />
+                                <Button fx:id="getUserCollectionBtn" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onAction="#getUserData" prefHeight="54.0" prefWidth="150.0" text="Update Collections" />
                             </children>
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="376.0" prefWidth="576.0">
                             <children>
-                                <TableView fx:id="collectionTableView" layoutX="3.0" prefHeight="376.0" prefWidth="547.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <TableView fx:id="coinPreviewTableView" layoutX="3.0" prefHeight="376.0" prefWidth="547.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <columns>
                                         <TableColumn editable="false" prefWidth="107.0" resizable="false" text="Name">
                                             <cellValueFactory>
@@ -90,7 +89,7 @@
                                         </TableColumn>
                                         <TableColumn editable="false" prefWidth="145.0" resizable="false" text="Collection">
                                             <cellValueFactory>
-                                                <PropertyValueFactory property="coinCollection" />
+                                                <PropertyValueFactory property="coinCollectionName" />
                                             </cellValueFactory>
                                         </TableColumn>
                                     </columns>

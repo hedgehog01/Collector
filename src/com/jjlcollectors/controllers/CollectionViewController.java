@@ -83,7 +83,7 @@ public final class CollectionViewController implements Initializable
         ObservableList<CoinProperty> data = tableView.getItems();
         ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-        data.addAll(CoinCreator.getCoinProperties(newData));
+        data.setAll(CoinCreator.getCoinProperties(newData));
 
     }
 
