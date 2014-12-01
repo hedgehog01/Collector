@@ -76,10 +76,11 @@ public class HomePageController implements Initializable
     private Button getUserCollectionBtn;
 
     @FXML
-
+    private TableView<CoinProperty> coinPreviewTableView;
+    
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
-    private TableView<CoinProperty> coinPreviewTableView;
+    
 
     /**
      * Initializes the controller class.
@@ -144,8 +145,8 @@ public class HomePageController implements Initializable
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
 
-        //coinTableData = coinPreviewTableView.getItems();
-        //coinTableData.setAll(CoinCreator.getCoinProperties(userUUID));
+        coinTableData = coinPreviewTableView.getItems();
+        coinTableData.addAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
     }
 
     @FXML
@@ -377,43 +378,41 @@ public class HomePageController implements Initializable
      */
     private void loadCoinTable()
     {
-        
-                            
-                     ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
-                     ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-                     data.setAll(CoinCreator.getCoinProperties(userUUID));
-                     
+        ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
+        ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
+
+        data.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
+
         /*
-        if (userUUID != null)
-        {
-            if (collectionUUID != null)
-            {
-                log.log(Level.INFO, "Attempting to load coin data into table according to userUUID and collectionUUID");
-                System.out.println("UserUUID: " + userUUID + " CollectionUUID " + collectionUUID);
-                if ((CoinCreator.getCoinProperties(userUUID, collectionUUID) != null))
-                {
+         if (userUUID != null)
+         {
+         if (collectionUUID != null)
+         {
+         log.log(Level.INFO, "Attempting to load coin data into table according to userUUID and collectionUUID");
+         System.out.println("UserUUID: " + userUUID + " CollectionUUID " + collectionUUID);
+         if ((CoinCreator.getCoinProperties(userUUID, collectionUUID) != null))
+         {
                     
-                    ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID, collectionUUID, coinTableData);
-                    if (tempData == null)
-                    {
-                        System.out.println("tempdata is null");
-                    }
-                    coinTableData = coinPreviewTableView.getItems();
-                    coinTableData.setAll(tempData);
-                    coinPreviewTableView.setItems(coinTableData);
+         ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID, collectionUUID, coinTableData);
+         if (tempData == null)
+         {
+         System.out.println("tempdata is null");
+         }
+         coinTableData = coinPreviewTableView.getItems();
+         coinTableData.setAll(tempData);
+         coinPreviewTableView.setItems(coinTableData);
 
 
-                } else
-                {
-                    log.log(Level.INFO, "coinTableData is null");
-                }
+         } else
+         {
+         log.log(Level.INFO, "coinTableData is null");
+         }
 
-            }
+         }
 
-        }
-                     */
-
+         }
+         */
     }
 
     /**

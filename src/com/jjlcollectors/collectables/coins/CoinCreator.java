@@ -36,9 +36,9 @@ public class CoinCreator
      *
      * @return
      */
-    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID)
+    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID,ObservableList<CoinProperty> tableData)
     {
-        ObservableList<CoinProperty> data = FXCollections.observableArrayList();;
+        ObservableList<CoinProperty> data = FXCollections.observableArrayList();
         if (userUUID != null)
         {
 
@@ -52,8 +52,9 @@ public class CoinCreator
             data.add(a2);
             //data.add(c);
         }
+        tableData.addAll(data);
 
-        return data;
+        return tableData;
     }
 
     /**
