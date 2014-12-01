@@ -377,6 +377,14 @@ public class HomePageController implements Initializable
      */
     private void loadCoinTable()
     {
+        
+                            
+                     ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
+                     ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
+
+                     data.setAll(CoinCreator.getCoinProperties(userUUID));
+                     
+        /*
         if (userUUID != null)
         {
             if (collectionUUID != null)
@@ -395,19 +403,16 @@ public class HomePageController implements Initializable
                     coinTableData.setAll(tempData);
                     coinPreviewTableView.setItems(coinTableData);
 
-                    /*
-                     ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
-                     ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-                     data.setAll(CoinCreator.getCoinProperties(newData));
-                     */
                 } else
                 {
                     log.log(Level.INFO, "coinTableData is null");
                 }
 
             }
+
         }
+                     */
 
     }
 
