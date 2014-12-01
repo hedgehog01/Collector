@@ -20,6 +20,7 @@ package com.jjlcollectors.controllers;
 import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
+import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
@@ -75,9 +76,10 @@ public class HomePageController implements Initializable
     private Button getUserCollectionBtn;
 
     @FXML
-    private TableView<CoinProperty> coinPreviewTableView;
 
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
+    private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
+    private TableView<CoinProperty> coinPreviewTableView;
 
     /**
      * Initializes the controller class.
@@ -90,7 +92,7 @@ public class HomePageController implements Initializable
 
         }
         );
-        
+
         // Define rendering of the list of values in ComboBox drop down. 
         collectionComboBox.setCellFactory((comboBox) ->
         {
@@ -141,11 +143,9 @@ public class HomePageController implements Initializable
             log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
-        
-        ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
-        ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-        data.setAll(CoinCreator.getCoinProperties(newData));
+        //coinTableData = coinPreviewTableView.getItems();
+        //coinTableData.setAll(CoinCreator.getCoinProperties(userUUID));
     }
 
     @FXML
@@ -178,8 +178,7 @@ public class HomePageController implements Initializable
             {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else
+        } else
         {
             log.log(Level.WARNING, "could not load collection view, check userUUID or collectionUUID");
         }
@@ -322,7 +321,7 @@ public class HomePageController implements Initializable
     }
 
     @FXML
-    private void getUserData()
+    private void loadUserData()
     {
         if (DBConnect.isDBConnectable())
         {
@@ -330,6 +329,7 @@ public class HomePageController implements Initializable
             collectionComboListData.setAll(DBCollectionConnect.getUserCollections(userUUID));
             log.log(Level.INFO, "Adding data to collectionComboBox");
             collectionComboBox.getItems().setAll(collectionComboListData);
+            loadCoinTable();
         } else //connection not available
         {
             log.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
@@ -368,6 +368,46 @@ public class HomePageController implements Initializable
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return loadScreen;
+
+    }
+
+    /*
+     * populate the coin table
+     * if collection selected only coins from that collection visible
+     */
+    private void loadCoinTable()
+    {
+        if (userUUID != null)
+        {
+            if (collectionUUID != null)
+            {
+                log.log(Level.INFO, "Attempting to load coin data into table according to userUUID and collectionUUID");
+                System.out.println("UserUUID: " + userUUID + " CollectionUUID " + collectionUUID);
+                if ((CoinCreator.getCoinProperties(userUUID, collectionUUID) != null))
+                {
+                    
+                    ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID, collectionUUID, coinTableData);
+                    if (tempData == null)
+                    {
+                        System.out.println("tempdata is null");
+                    }
+                    coinTableData = coinPreviewTableView.getItems();
+                    coinTableData.setAll(tempData);
+                    coinPreviewTableView.setItems(coinTableData);
+
+                    /*
+                     ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
+                     ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
+
+                     data.setAll(CoinCreator.getCoinProperties(newData));
+                     */
+                } else
+                {
+                    log.log(Level.INFO, "coinTableData is null");
+                }
+
+            }
+        }
 
     }
 

@@ -83,7 +83,7 @@ public final class CollectionViewController implements Initializable
         ObservableList<CoinProperty> data = tableView.getItems();
         ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-        data.setAll(CoinCreator.getCoinProperties(newData));
+        data.setAll(CoinCreator.getCoinProperties(userUUID));
 
     }
 
@@ -91,11 +91,12 @@ public final class CollectionViewController implements Initializable
     @FXML
     protected void addCoin(ActionEvent event)
     {
+        
         ((Node) (event.getSource())).getScene().getWindow().sizeToScene();
         ObservableList<CoinProperty> data = tableView.getItems();
         ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-        data.addAll(CoinCreator.getCoinProperties(newData));
+        //
         //To Do
 
     }
