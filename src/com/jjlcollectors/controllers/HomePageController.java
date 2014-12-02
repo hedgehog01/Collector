@@ -145,7 +145,7 @@ public class HomePageController implements Initializable
         });
 
         coinTableData = coinPreviewTableView.getItems();
-        coinTableData.addAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
+        coinTableData.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
         
     }
 
@@ -379,12 +379,12 @@ public class HomePageController implements Initializable
     private void loadCoinTable()
     {
 
-        ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
-        ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
+        //ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
+        //ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-        data.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
+        //data.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
 
-        /*
+        
          if (userUUID != null)
          {
          if (collectionUUID != null)
@@ -412,7 +412,7 @@ public class HomePageController implements Initializable
          }
 
          }
-         */
+         
     }
 
     /**
