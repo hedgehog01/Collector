@@ -20,7 +20,6 @@ package com.jjlcollectors.controllers;
 import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
-import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
@@ -90,7 +89,7 @@ public class HomePageController implements Initializable
     {
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
-
+            
         }
         );
 
@@ -147,6 +146,7 @@ public class HomePageController implements Initializable
 
         coinTableData = coinPreviewTableView.getItems();
         coinTableData.addAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
+        
     }
 
     @FXML
