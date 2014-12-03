@@ -52,6 +52,10 @@ public class CoinCreator
             data.add(a2);
             //data.add(c);
         }
+        else 
+        {
+            LOG.log(Level.INFO, "userUUID is null");
+        }
         tableData.addAll(data);
 
         return tableData;
@@ -78,12 +82,12 @@ public class CoinCreator
             //CoinProperty b = new CoinProperty("name2", "lastname2", "email2");
             //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
 
-            boolean test = data.add(a1);
+            data.add(a1);
             
             
             data.add(a2);
             //data.add(c);
-            LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid: {0}",test);
+            LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid:");
         }
 
         return data;
