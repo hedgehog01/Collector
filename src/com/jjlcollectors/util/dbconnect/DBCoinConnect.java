@@ -6,6 +6,7 @@
 package com.jjlcollectors.util.dbconnect;
 
 import com.jjlcollectors.collectables.coins.Coin;
+import com.jjlcollectors.collectables.coins.CoinProperty;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
@@ -135,24 +138,22 @@ public final class DBCoinConnect extends DBConnect
     public static TableView buildData()
     {
         ObservableList<ObservableList> userObservableListData;
-        
 
         userObservableListData = FXCollections.observableArrayList();
         try
         {
-            
+
             DBConnect.createDBConnection();
             //SQL FOR SELECTING ALL OF CUSTOMER
             String SQL = "SELECT * from USERDB";
             //ResultSet
             ResultSet rs = conn.createStatement().executeQuery(SQL);
-            log.log(Level.INFO, "setting result set to query: {0}",SQL);
-            log.log(Level.INFO, "number of colomns in the table: {0}",rs.getMetaData().getColumnCount());
+            log.log(Level.INFO, "setting result set to query: {0}", SQL);
+            log.log(Level.INFO, "number of colomns in the table: {0}", rs.getMetaData().getColumnCount());
 
             /**
              * ********************************
-             * TABLE COLUMN ADDED DYNAMICALLY *
-             *********************************
+             * TABLE COLUMN ADDED DYNAMICALLY * ********************************
              */
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++)
             {
@@ -162,7 +163,7 @@ public final class DBCoinConnect extends DBConnect
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
                 col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>()
                 {
-                    
+
                     public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param)
                     {
                         log.log(Level.INFO, "Creating cell...");
@@ -176,8 +177,7 @@ public final class DBCoinConnect extends DBConnect
 
             /**
              * ******************************
-             * Data added to ObservableList *
-             *******************************
+             * Data added to ObservableList * ******************************
              */
             while (rs.next())
             {
@@ -272,6 +272,68 @@ public final class DBCoinConnect extends DBConnect
             e.printStackTrace();
         }
         DBConnect.closeDBConnection();
+    }
+
+    public static ArrayList<CoinProperty> getAllUserCoins(UUID userUUID)
+    {
+        ArrayList<CoinProperty> coinList = new ArrayList<>();
+        coinList = null;
+        if (userUUID != null)
+        {
+            
+            try
+            {
+                DBConnect.createDBConnection();
+
+                System.out.println("prepare statement starting");
+                PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " where USER_UUID = ?");
+                prepStmt.setString(1, userUUID.toString());
+                System.out.println("prepare statement done");
+                try (ResultSet results = prepStmt.executeQuery())
+                {
+                    ResultSetMetaData rsmd = results.getMetaData();
+                    int numberCols = rsmd.getColumnCount();
+                    for (int i = 1; i <= numberCols; i++)
+                    {
+                        //print Column Names
+                        System.out.print(rsmd.getColumnLabel(i) + "\t");
+                    }
+
+                    System.out.println("\n-------------------------------------------------");
+
+                    while (results.next())
+                    {
+                        
+                        int id = results.getInt(1);
+                        String coinUUID = results.getString(2);
+                        String name = results.getString(3);
+                        String grade = results.getString(4);
+                        String facevalue = results.getString(5);
+                        String currency = results.getString(6);
+                        String note = results.getString(7);
+                        Date coinBuyDate = results.getDate(8);
+                        String coinBuyPrice = results.getString(9);
+                        String coinValue = results.getString(10);
+                        String coinMintMark = results.getString(11);
+                        int coinYear = results.getInt(12);
+                        String collectionUUID = results.getString("COLLECTION_UUID");
+                        //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
+                        CoinProperty coin = new CoinProperty (coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, collectionUUID);
+                        coinList.add(coin);
+                        System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionUUID);
+                    }
+                }
+
+            } catch (SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            DBConnect.closeDBConnection();
+        }
+        return coinList;
     }
 
     private static int deleteCoinById(int id)
