@@ -13,20 +13,36 @@
         <URL value="@addcoin.css" />
     </stylesheets>
    <children>
-      <TextField fx:id="coinNameTxtField" layoutX="92.0" layoutY="63.0" promptText="Name" />
-      <ComboBox fx:id="currencyComboBox" layoutX="92.0" layoutY="99.0" prefWidth="150.0" promptText="Currency" />
-      <TextField fx:id="coinFaceValueTxtField" layoutX="92.0" layoutY="134.0" promptText="Face Value" />
-      <ComboBox fx:id="coinGradeComboBox" layoutX="92.0" layoutY="168.0" prefWidth="150.0" promptText="Grade" />
-      <TextField fx:id="coinMintYearTxtField" layoutX="92.0" layoutY="214.0" promptText="Mint year" />
-      <DatePicker fx:id="coinBuyDatePicker" layoutX="93.0" layoutY="255.0" prefHeight="25.0" prefWidth="149.0" promptText="Buy date" />
-      <TextField fx:id="coinValueTxtField" layoutX="92.0" layoutY="294.0" promptText="Estimated Value" />
-      <TextField fx:id="coinMintMarkTxtField" layoutX="376.0" layoutY="63.0" promptText="Mint mark" />
-      <TextField fx:id="coinBuyPriceTxtField" layoutX="376.0" layoutY="99.0" promptText="Buy Price" />
-      <ComboBox fx:id="collectionComboBox" layoutX="376.0" layoutY="134.0" prefWidth="150.0" promptText="Collection" />
-      <TextField fx:id="coinNoteTxtField" layoutX="376.0" layoutY="174.0" prefHeight="81.0" prefWidth="149.0" promptText="More info" />
-      <Button fx:id="addCoinBtn" layoutX="432.0" layoutY="418.0" mnemonicParsing="false" onAction="#addNewCoin" text="Add" />
-      <Button fx:id="cancelBtn" layoutX="141.0" layoutY="418.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
-      <Label fx:id="addCoinStatus" layoutX="377.0" layoutY="261.0" prefHeight="107.0" prefWidth="149.0" />
-      <TextArea fx:id="coinAddStatus" editable="false" layoutX="377.0" layoutY="278.0" prefHeight="107.0" prefWidth="150.0" wrapText="true" />
+      <TextField fx:id="coinNameTxtField" layoutX="104.0" layoutY="71.0" promptText="Name" />
+      <ComboBox fx:id="currencyComboBox" layoutX="104.0" layoutY="107.0" prefWidth="150.0" promptText="Currency" />
+      <TextField fx:id="coinFaceValueTxtField" layoutX="104.0" layoutY="142.0" promptText="Face Value" />
+      <ComboBox fx:id="coinGradeComboBox" layoutX="104.0" layoutY="176.0" prefWidth="150.0" promptText="Grade" />
+      <TextField fx:id="coinMintYearTxtField" layoutX="104.0" layoutY="222.0" promptText="Mint year" />
+      <DatePicker fx:id="coinBuyDatePicker" layoutX="105.0" layoutY="263.0" prefHeight="25.0" prefWidth="149.0" promptText="Buy date" />
+      <TextField fx:id="coinValueTxtField" layoutX="104.0" layoutY="302.0" promptText="Estimated Value" />
+      <TextField fx:id="coinMintMarkTxtField" layoutX="376.0" layoutY="71.0" promptText="Mint mark" />
+      <TextField fx:id="coinBuyPriceTxtField" layoutX="376.0" layoutY="107.0" promptText="Buy Price" />
+      <ComboBox fx:id="collectionComboBox" layoutX="376.0" layoutY="142.0" prefWidth="150.0" promptText="Collection" />
+      <TextField fx:id="coinNoteTxtField" layoutX="376.0" layoutY="182.0" prefHeight="81.0" prefWidth="149.0" promptText="More info" />
+      <Button fx:id="addCoinBtn" layoutX="432.0" layoutY="426.0" mnemonicParsing="false" onAction="#addNewCoin" text="Add" />
+      <Button fx:id="cancelBtn" layoutX="153.0" layoutY="426.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
+      <Label fx:id="addCoinStatus" layoutX="377.0" layoutY="269.0" prefHeight="107.0" prefWidth="149.0" />
+      <TextArea fx:id="coinAddStatus" editable="false" layoutX="377.0" layoutY="286.0" prefHeight="107.0" prefWidth="150.0" wrapText="true" />
+      <Label layoutX="33.0" layoutY="75.0" text="Name:" />
+      <Label layoutX="33.0" layoutY="111.0" text="Currency:" />
+      <Label layoutX="33.0" layoutY="146.0" text="Face Value:" />
+      <Label layoutX="33.0" layoutY="180.0" text="Grade:" />
+      <Label layoutX="33.0" layoutY="226.0" text="Mint Year:" />
+      <Label layoutX="33.0" layoutY="267.0" text="Buy Date:" />
+      <Label layoutX="33.0" layoutY="306.0" text="Value:" />
+      <Label layoutX="308.0" layoutY="75.0" text="Mint Mark" />
+      <Label layoutX="308.0" layoutY="111.0" text="Buy Price:" />
+      <Label layoutX="308.0" layoutY="146.0" text="Collection:" />
+      <Label layoutX="308.0" layoutY="214.0" text="More Info:" />
+      <Label layoutX="241.0" layoutY="14.0" text="Add new Coin">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
