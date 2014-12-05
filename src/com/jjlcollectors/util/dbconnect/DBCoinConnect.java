@@ -102,7 +102,7 @@ public final class DBCoinConnect extends DBConnect
     private static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, LocalDate date, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, UUID userUUID, UUID collectionUUID)
     {
         DBConnect.createDBConnection();
-        System.out.println("Attemp to add new coin...");
+        log.log(Level.INFO, "Attemp to add new coin...");
         try
         {
             long d = date.toEpochDay();

@@ -37,10 +37,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -52,12 +54,14 @@ public final class AddCoinController implements Initializable
     private static final Logger log = Logger.getLogger(AddCoinController.class.getName());
     private final String COLLECTION_TYPE_NOT_SELECTED = "Collection must be selected.\n";
     private final String CURRENCY_TYPE_NOT_SELECTED = "Currency must be selected.\n";
+    private final String GRADE_NOT_SELECTED = "Coin Grade must be selected.\n";
     private final String COLLECTION_NAME_EMPTY = "Enter colletion name.\n";
     private final String FACEVALUE_EMPTY = "Enter Face Value.\n";
     private final String FACEVALUE_NONNUMERIC = "Face Value must be numeric.\n";
     private final String Mint_YEAR_EMPTY = "Enter Mint Year.\n";
     private final String Mint_YEAR_NONNUMERIC = "Mint Year must be numeric.\n";
     private final String COLLECTION_NAME_EXISTS = "Name already exists.\n";
+    
 
     UUID userUUID = null;
     UUID collectionUUID = null;
@@ -100,13 +104,13 @@ public final class AddCoinController implements Initializable
     private ComboBox <CollectionProperty> collectionComboBox;
     
     @FXML
-    TextArea coinAddStatus;
+    private TextArea coinAddStatus;
     
     @FXML
-    Label addCoinStatus;
+    private Label addCoinStatus;
     
     @FXML
-    DatePicker coinBuyDatePicker;
+    private DatePicker coinBuyDatePicker;
     
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private final ObservableList<String> currencyList = FXCollections.observableArrayList();
@@ -124,6 +128,57 @@ public final class AddCoinController implements Initializable
         currencyComboBox.getItems().addAll(CoinCurrency.values());
         coinGradeComboBox.getItems().addAll(CoinGrade.values());
         coinAddStatus.setVisible(false);
+        
+                // Define rendering of the list of values in ComboBox drop down. 
+        collectionComboBox.setCellFactory((comboBox) ->
+        {
+            return new ListCell<CollectionProperty>()
+            {
+                @Override
+                protected void updateItem(CollectionProperty item, boolean empty)
+                {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty)
+                    {
+                        setText(null);
+                    } else
+                    {
+                        setText(item.getCollectionName());
+                    }
+                }
+            };
+        });
+
+        // Define rendering of selected value shown in ComboBox.
+        collectionComboBox.setConverter(new StringConverter<CollectionProperty>()
+        {
+            @Override
+            public String toString(CollectionProperty collection)
+            {
+                if (collection == null)
+                {
+                    return null;
+                } else
+                {
+                    return collection.getCollectionName();
+                }
+            }
+
+            @Override
+            public CollectionProperty fromString(String personString)
+            {
+                return null; // No conversion fromString needed.
+            }
+        });
+
+        // Handle ComboBox event.
+        collectionComboBox.setOnAction((event) ->
+        {
+            CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+            log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+            collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+        });
     }    
     
     
@@ -154,10 +209,14 @@ public final class AddCoinController implements Initializable
             coinAddStatus.setVisible(false);
             StringBuilder coinNote = new StringBuilder(coinNoteTxtField.getText());
             int coinYear = Integer.parseInt(coinMintYearTxtField.getText());
-            UUID collectionUuid = DBCollectionConnect.getCollectionUUID (collectionComboBox.getValue().getCollectionUUID());
+            
+            //UUID collectionUuid = DBCollectionConnect.getCollectionUUID (collectionComboBox.getValue().getCollectionUUID());
+            System.out.println ("collectionComboBox.getValue(): " + collectionComboBox.getValue());
+            System.out.println ("collection uuid is: " + collectionUUID);
             //public Coin           (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
-            Coin newCoin = new Coin (userUUID,coinNameTxtField.getText(),coinGradeComboBox.getValue() ,coinFaceValueTxtField.getText(),currencyComboBox.getValue(),coinNote, coinYear,coinMintMarkTxtField.getText(),coinBuyPriceTxtField.getText(),coinValueTxtField.getText(),collectionUuid);
+            Coin newCoin = new Coin (userUUID,coinNameTxtField.getText(),coinGradeComboBox.getValue() ,coinFaceValueTxtField.getText(),currencyComboBox.getValue(),coinNote, coinYear,coinMintMarkTxtField.getText(),coinBuyPriceTxtField.getText(),coinValueTxtField.getText(),collectionUUID);
             log.log(Level.INFO, "New Coin created, user uuid is {0}",userUUID.toString());
+            log.log(Level.INFO, "New Coin created, collection uuid is {0}",collectionUUID.toString());
             DBCoinConnect.addCoin(newCoin);
         }
     }
@@ -204,7 +263,7 @@ public final class AddCoinController implements Initializable
          {
              issues.append(CURRENCY_TYPE_NOT_SELECTED);
              coinValid = false;
-             log.log(Level.INFO, "Currency selected is: {0}",collectionComboBox.getValue());
+             log.log(Level.INFO, "Currency selected is: {0}",currencyComboBox.getValue());
          }
         
         //check facevalue
@@ -244,6 +303,14 @@ public final class AddCoinController implements Initializable
              issues.append(COLLECTION_TYPE_NOT_SELECTED);
              coinValid = false;
              log.log(Level.INFO, "collection selected is: {0}",collectionComboBox.getValue());
+         }
+        
+        //check grade combo box
+        if (coinGradeComboBox.getValue() == null)
+         {
+             issues.append(GRADE_NOT_SELECTED);
+             coinValid = false;
+             log.log(Level.INFO, "grade selected is: {0}",coinGradeComboBox.getValue());
          }
         if (!(coinValid))
         {
