@@ -22,7 +22,7 @@
       <TextField fx:id="coinValueTxtField" layoutX="104.0" layoutY="302.0" promptText="Estimated Value" />
       <TextField fx:id="coinMintMarkTxtField" layoutX="376.0" layoutY="71.0" promptText="Mint mark" />
       <TextField fx:id="coinBuyPriceTxtField" layoutX="376.0" layoutY="107.0" promptText="Buy Price" />
-      <ComboBox fx:id="collectionComboBox" layoutX="376.0" layoutY="142.0" prefWidth="150.0" promptText="Collection" />
+      <ComboBox fx:id="collectionComboBox" layoutX="376.0" layoutY="142.0" onMouseClicked="#loadUserData" prefWidth="150.0" promptText="Collection" />
       <TextField fx:id="coinNoteTxtField" layoutX="376.0" layoutY="182.0" prefHeight="81.0" prefWidth="149.0" promptText="More info" />
       <Button fx:id="addCoinBtn" layoutX="432.0" layoutY="426.0" mnemonicParsing="false" onAction="#addNewCoin" text="Add" />
       <Button fx:id="cancelBtn" layoutX="153.0" layoutY="426.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />

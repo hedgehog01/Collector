@@ -145,6 +145,8 @@ public class HomePageController implements Initializable
             log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
+        
+       
 
         //coinTableData = coinPreviewTableView.getItems();
         //coinTableData.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));

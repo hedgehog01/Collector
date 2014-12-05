@@ -205,7 +205,7 @@ public abstract class CollectableItem
      * method to return item collection UUID
      * @return UUID of collection item belongs to.
      */
-    protected UUID getItemCollectionUUID ()
+    public UUID getItemCollectionUUID ()
     {
         return _collectionUUID;
     }

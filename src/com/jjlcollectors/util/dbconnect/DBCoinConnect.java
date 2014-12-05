@@ -35,7 +35,7 @@ public final class DBCoinConnect extends DBConnect
 {
 
     //Class variables
-    private static final String TABLE_NAME = "COINS";
+    private static final String TABLE_NAME = "COINS_DB";
     private static final Logger log = Logger.getLogger(DBCoinConnect.class.getName());
     private static Date sqlDate;
     private static TableView tableView;
@@ -50,7 +50,7 @@ public final class DBCoinConnect extends DBConnect
 
         //insertCoin(uuid, name, grade, faceValue, currency, note);
         log.log(Level.INFO, "Call to addCoin method");
-        addCoin(coin.getItemId().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getItemBuyDate(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear());
+        addCoin(coin.getItemId().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getItemBuyDate(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(),coin.getItemCollectionUUID());
         //createDBConnection();
         log.log(Level.INFO, "Select * from coins...");
         selectAllCoins();
@@ -99,7 +99,7 @@ public final class DBCoinConnect extends DBConnect
     /*
      * method to insert a coin into the coin db
      */
-    private static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, LocalDate date, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear)
+    private static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, LocalDate date, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, UUID userUUID, UUID collectionUUID)
     {
         DBConnect.createDBConnection();
         System.out.println("Attemp to add new coin...");
@@ -107,7 +107,7 @@ public final class DBCoinConnect extends DBConnect
         {
             long d = date.toEpochDay();
             sqlDate = new Date(d);
-            String sql = ("INSERT INTO " + TABLE_NAME + " (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUY_DATE,COIN_BUY_PRICE,COIN_VALUE,COIN_MINT_MARK,COIN_YEAR) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            String sql = ("INSERT INTO " + TABLE_NAME + " (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_USER_UUID,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement prepStmt = conn.prepareStatement(sql);
 
             prepStmt.setString(1, uuid);
@@ -121,6 +121,9 @@ public final class DBCoinConnect extends DBConnect
             prepStmt.setString(9, coinValue);
             prepStmt.setString(10, coinMintMark);
             prepStmt.setInt(11, coinYear);
+            prepStmt.setString(12, userUUID.toString());
+            prepStmt.setString(13, collectionUUID.toString());
+            
 
             DBConnect.closeDBConnection();
         } catch (SQLException e)

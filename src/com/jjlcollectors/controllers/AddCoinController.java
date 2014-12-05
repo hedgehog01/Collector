@@ -17,10 +17,13 @@
  */
 package com.jjlcollectors.controllers;
 
+import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.coins.Coin;
 import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.collectables.coins.CoinGrade;
+import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
+import com.jjlcollectors.util.dbconnect.DBConnect;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -94,7 +97,7 @@ public final class AddCoinController implements Initializable
     private ComboBox <CoinCurrency> currencyComboBox;
     
     @FXML
-    private ComboBox <String> collectionComboBox;
+    private ComboBox <CollectionProperty> collectionComboBox;
     
     @FXML
     TextArea coinAddStatus;
@@ -105,7 +108,7 @@ public final class AddCoinController implements Initializable
     @FXML
     DatePicker coinBuyDatePicker;
     
-    
+    private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private final ObservableList<String> currencyList = FXCollections.observableArrayList();
     
     
@@ -151,10 +154,27 @@ public final class AddCoinController implements Initializable
             coinAddStatus.setVisible(false);
             StringBuilder coinNote = new StringBuilder(coinNoteTxtField.getText());
             int coinYear = Integer.parseInt(coinMintYearTxtField.getText());
-            UUID collectionUuid = DBCollectionConnect.getCollectionUUID (collectionComboBox.getValue());
+            UUID collectionUuid = DBCollectionConnect.getCollectionUUID (collectionComboBox.getValue().getCollectionUUID());
             //public Coin           (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
             Coin newCoin = new Coin (userUUID,coinNameTxtField.getText(),coinGradeComboBox.getValue() ,coinFaceValueTxtField.getText(),currencyComboBox.getValue(),coinNote, coinYear,coinMintMarkTxtField.getText(),coinBuyPriceTxtField.getText(),coinValueTxtField.getText(),collectionUuid);
             log.log(Level.INFO, "New Coin created, user uuid is {0}",userUUID.toString());
+            DBCoinConnect.addCoin(newCoin);
+        }
+    }
+    
+        @FXML
+    private void loadUserData()
+    {
+        if (DBConnect.isDBConnectable())
+        {
+            log.log(Level.INFO, "Adding data to collectionComboListData");
+            collectionComboListData.setAll(DBCollectionConnect.getUserCollections(userUUID));
+            log.log(Level.INFO, "Adding data to collectionComboBox");
+            collectionComboBox.getItems().setAll(collectionComboListData);
+            
+        } else //connection not available
+        {
+            log.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
         }
     }
 
