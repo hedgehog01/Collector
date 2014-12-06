@@ -17,7 +17,7 @@ public abstract class CollectableItem
     private final String DEFAULT_PRICE = "-1.0";
     private final String DEFAULT_VALUE = "-1.0";
     protected String _itemName; //item name
-    protected UUID _itemId;     //item unique uuid 
+    protected UUID _itemUUID;     //item unique uuid 
     protected StringBuilder _longNote; //item long note
     protected LocalDate _buyDate; //item purchase date
     protected String _buyPrice; //item purchase price
@@ -36,7 +36,7 @@ public abstract class CollectableItem
     protected CollectableItem (UUID userID)
     {
         setUserId(userID);
-        _itemId = UUID.randomUUID();
+        _itemUUID = UUID.randomUUID();
         _buyDate = LocalDate.now();
         setItemName(DEFAULT_NAME);
         setItemValue(DEFAULT_VALUE);
@@ -80,9 +80,9 @@ public abstract class CollectableItem
      * Method that returns item ID.
      * @return UUID representing item unique Id.
      */
-    public UUID getItemId ()
+    public UUID getItemUUID ()
     {
-        return _itemId;
+        return _itemUUID;
     } 
     
     /**
@@ -218,7 +218,7 @@ public abstract class CollectableItem
      */
     public String toString()
     {
-        return "Id: " + _itemId + "\nName: " + _itemName + "\nNote: " + _longNote;
+        return "Id: " + _itemUUID + "\nName: " + _itemName + "\nNote: " + _longNote;
     }
 
     /*

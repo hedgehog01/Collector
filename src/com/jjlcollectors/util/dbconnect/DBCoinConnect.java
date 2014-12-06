@@ -50,7 +50,7 @@ public final class DBCoinConnect extends DBConnect
 
         //insertCoin(uuid, name, grade, faceValue, currency, note);
         log.log(Level.INFO, "Call to addCoin method");
-        addCoin(coin.getItemId().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getItemBuyDate(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(),coin.getItemCollectionUUID());
+        addCoin(coin.getItemUUID().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getItemBuyDate(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(),coin.getItemCollectionUUID());
         //createDBConnection();
         log.log(Level.INFO, "Select * from coins...");
         selectAllCoins();
