@@ -54,6 +54,7 @@ public final class DBCoinConnect extends DBConnect
         //createDBConnection();
         log.log(Level.INFO, "Select * from coins...");
         selectAllCoins();
+        shutDownDBConnection();
         return coinAdded;
     }
 
@@ -93,6 +94,7 @@ public final class DBCoinConnect extends DBConnect
             System.err.println(sql);
         }
         DBConnect.closeDBConnection();
+        shutDownDBConnection();
 
         return removeCoinById(id);
     }
@@ -129,17 +131,18 @@ public final class DBCoinConnect extends DBConnect
             
             updateCount = prepStmt.executeUpdate();
                 
-            log.log(Level.INFO, "Add user update count is: {0}", updateCount);
-                        if (updateCount == 1)
+            log.log(Level.INFO, "Add coin update count is: {0}", updateCount);
+            if (updateCount == 1)
             {
                 log.log(Level.INFO, "User added and return value set to true");
                 userAdded = true;
-            } else
+            } else if (updateCount == 0)
             {
                 log.log(Level.SEVERE, "User NOT added and return value remains false");
             }
 
             DBConnect.closeDBConnection();
+            shutDownDBConnection();
         } 
         
         catch (SQLException e)
@@ -222,26 +225,7 @@ public final class DBCoinConnect extends DBConnect
         return tableView;
     }
 
-    /*
-     *private method that shuts down the Database
-     */
-    private static void shutdown()
-    {
-        try
-        {
-            if (conn != null)
-            {
-                System.out.println("Shutting down connection staatemnet...");
-                DriverManager.getConnection(DB_Client_URL + ";user=" + DB_USER_NAME + ";password=" + DB_PASS + SHUTDOWN_DB);
-                System.out.println("Closing connection statemnet...");
-                conn.close();
-            }
-        } catch (SQLException e)
-        {
-            System.err.println(e.getMessage());
-        }
 
-    }
 
     private static void selectAllCoins()
     {
@@ -295,6 +279,7 @@ public final class DBCoinConnect extends DBConnect
             e.printStackTrace();
         }
         DBConnect.closeDBConnection();
+        shutDownDBConnection();
     }
 
     public static ArrayList<CoinProperty> getAllUserCoins(UUID userUUID)
@@ -355,6 +340,7 @@ public final class DBCoinConnect extends DBConnect
                 e.printStackTrace();
             }
             DBConnect.closeDBConnection();
+            shutDownDBConnection();
         }
         return coinList;
     }
@@ -372,6 +358,7 @@ public final class DBCoinConnect extends DBConnect
             count = prepStmt.executeUpdate();
             log.log(Level.INFO, "Number of deleted rows: {0}", count);
             DBConnect.closeDBConnection();
+            shutDownDBConnection();
         } catch (SQLException e)
         {
             log.log(Level.SEVERE, "Failed to delete coin. SQL error: {0}", e);

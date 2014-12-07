@@ -78,6 +78,7 @@ public final class DBCollectionConnect extends DBConnect
                 log.log(Level.INFO, "Add collection update count is: {0}", updateCount);
             }
             DBConnect.closeDBConnection();
+            shutDownDBConnection();
 
             if (updateCount == 1)
             {
@@ -129,6 +130,7 @@ public final class DBCollectionConnect extends DBConnect
         }
 
         DBConnect.closeDBConnection();
+        shutDownDBConnection();
         return collectionUUID;
 
     }
@@ -160,6 +162,7 @@ public final class DBCollectionConnect extends DBConnect
         }
 
         DBConnect.closeDBConnection();
+        shutDownDBConnection();
 
         return userCollectionData;
     }

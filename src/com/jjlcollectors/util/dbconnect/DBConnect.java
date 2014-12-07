@@ -110,5 +110,26 @@ public abstract class DBConnect
         log.log(Level.INFO, "connection status: {0}",connect);
         return connect;
     }
+    
+        /*
+     *private method that shuts down the Database
+     */
+    protected static void shutDownDBConnection()
+    {
+        try
+        {
+            if (conn != null)
+            {
+                System.out.println("Shutting down connection staatemnet...");
+                DriverManager.getConnection(DB_Client_URL + ";user=" + DB_USER_NAME + ";password=" + DB_PASS + SHUTDOWN_DB);
+                System.out.println("Closing connection statemnet...");
+                conn.close();
+            }
+        } catch (SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+    }
 
 }
