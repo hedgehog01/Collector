@@ -45,15 +45,16 @@ public final class DBCoinConnect extends DBConnect
      *
      * @param coin the coin to be added
      */
-    public static void addCoin(Coin coin)
+    public static boolean addCoin(Coin coin)
     {
-
+        
         //insertCoin(uuid, name, grade, faceValue, currency, note);
         log.log(Level.INFO, "Call to addCoin method");
-        addCoin(coin.getItemUUID().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getItemBuyDate(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(),coin.getItemCollectionUUID());
+        boolean coinAdded = addCoin(coin.getItemUUID().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getItemBuyDate(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(),coin.getItemCollectionUUID());
         //createDBConnection();
         log.log(Level.INFO, "Select * from coins...");
         selectAllCoins();
+        return coinAdded;
     }
 
     /**
@@ -99,9 +100,11 @@ public final class DBCoinConnect extends DBConnect
     /*
      * method to insert a coin into the coin db
      */
-    private static void addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, LocalDate date, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, UUID userUUID, UUID collectionUUID)
+    private static boolean addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, LocalDate date, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, UUID userUUID, UUID collectionUUID)
     {
+        boolean userAdded = false;
         DBConnect.createDBConnection();
+        int updateCount = 0; //var that count num of updated rows
         log.log(Level.INFO, "Attemp to add new coin...");
         try
         {
@@ -124,13 +127,26 @@ public final class DBCoinConnect extends DBConnect
             prepStmt.setString(12, userUUID.toString());
             prepStmt.setString(13, collectionUUID.toString());
             
+            updateCount = prepStmt.executeUpdate();
+                
+            log.log(Level.INFO, "Add user update count is: {0}", updateCount);
+                        if (updateCount == 1)
+            {
+                log.log(Level.INFO, "User added and return value set to true");
+                userAdded = true;
+            } else
+            {
+                log.log(Level.SEVERE, "User NOT added and return value remains false");
+            }
 
             DBConnect.closeDBConnection();
-        } catch (SQLException e)
+        } 
+        
+        catch (SQLException e)
         {
             log.log(Level.SEVERE, "Exception while writing coin to DB. sql exception: {0}", e);
         }
-
+        return userAdded;
     }
 
     /**
@@ -245,7 +261,8 @@ public final class DBCoinConnect extends DBConnect
                     //print Column Names
                     System.out.print(rsmd.getColumnLabel(i) + "\t");
                 }
-
+                int updateCount = 0; //count how many rows added
+                
                 System.out.println("\n-------------------------------------------------");
 
                 while (results.next())
@@ -262,6 +279,9 @@ public final class DBCoinConnect extends DBConnect
                     String coinValue = results.getString(10);
                     String coinMintMark = results.getString(11);
                     int coinYear = results.getInt(12);
+                    
+                
+                    log.log(Level.INFO, "Add user update count is: {0}", updateCount);
 
                     System.out.println(id + "\t" + uuid + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear);
                 }
