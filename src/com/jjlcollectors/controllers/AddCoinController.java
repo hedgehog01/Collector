@@ -63,6 +63,10 @@ public final class AddCoinController implements Initializable
     private final String Mint_YEAR_NONNUMERIC = "Mint Year must be numeric.\n";
     private final String COLLECTION_NAME_EXISTS = "Name already exists.\n";
     private final String COIN_NOT_ADDED = "Coin was not added.\nPlease try again later.";
+    private final String BUY_PRICE_EMPTY = "Enter a buy price.";
+    private final String BUY_PRICE_NON_NUMERIC = "Buy price must be numeric";
+    
+    
 
     UUID userUUID = null;
     UUID collectionUUID = null;
@@ -295,6 +299,19 @@ public final class AddCoinController implements Initializable
             issues.append(Mint_YEAR_NONNUMERIC);
             coinValid = false;
             log.log(Level.INFO, "Face value is non-numeric: {0}", coinMintYearTxtField.getText());
+        }
+        
+        //check buy price
+        if (coinBuyPriceTxtField.getText() == null || coinBuyPriceTxtField.getText().trim().isEmpty())
+        {
+            issues.append(BUY_PRICE_EMPTY);
+            coinValid = false;
+            log.log(Level.INFO, "buy price is: {0}", coinBuyPriceTxtField.getText());
+        } else if (!(isNumeric(coinBuyPriceTxtField.getText())))
+        {
+            issues.append(BUY_PRICE_NON_NUMERIC);
+            coinValid = false;
+            log.log(Level.INFO, "coin buy price is non-numeric: {0}", coinBuyPriceTxtField.getText());
         }
 
         //check collection combo box
