@@ -33,10 +33,12 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -59,8 +61,11 @@ public class HomePageController implements Initializable
     private UUID collectionUUID = null;
     private final boolean ALWAYS_ON_TOP = true;
     private final boolean SET_RESIZABLE = false;
-    private final String ADD_STAGE_TITLE = "Collector - Add new Coin";
+    private final String LOGIN_FXML_PATH = "/com/jjlcollectors/fxml/login/Login.fxml";
+    private final String ADD_COIN_STAGE_TITLE = "Collector - Add new Coin";
+    private final String LOGIN_STAGE_TITLE = "Collector - Login";
     private static final Logger log = Logger.getLogger(HomePageController.class.getName());
+    private boolean isLoginValid = true;
 
     @FXML
     private ComboBox<CollectionProperty> collectionComboBox;
@@ -144,9 +149,19 @@ public class HomePageController implements Initializable
         // Handle ComboBox event.
         collectionComboBox.setOnAction((event) ->
         {
-            CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+            if (isLoginValid)
+                {
+                    log.log(Level.INFO, "Login valid, loading user data");
+                    CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
             log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+                }
+            else if (!(isLoginValid))
+                {
+                            log.log(Level.SEVERE, "Login is NOT valid");
+                            
+                }
+            
         });
         
        
@@ -196,15 +211,16 @@ public class HomePageController implements Initializable
      * method to set user data.
      After validating data is valid, initialize the data according to user data.
      */
-    protected final void setUserData(String userEmail, String userPass)
+    protected final void setUserData(String userEmail, String userPass, ActionEvent event)
     {
-        checkLoginStatus(userEmail, userPass);
+        
+        checkLoginStatus(userEmail, userPass,event);
     }
 
     /*
      * method to validate user credentials
      */
-    private void checkLoginStatus(String userEmail, String userPass)
+    private void checkLoginStatus(String userEmail, String userPass,ActionEvent event)
     {
 
         log.log(Level.INFO, "Verifying login details");
@@ -217,6 +233,8 @@ public class HomePageController implements Initializable
         } else
         {
             log.log(Level.INFO, "login is not valid");
+            isLoginValid = false;
+            //loadLoginScene(event);
         }
     }
 
@@ -260,6 +278,7 @@ public class HomePageController implements Initializable
         {
             log.log(Level.INFO, "User password Invalid!");
             passwordValid = false;
+            
         }
         return passwordValid;
     }
@@ -440,7 +459,7 @@ public class HomePageController implements Initializable
             addCoinStage.setScene(scene);
             addCoinStage.setAlwaysOnTop(ALWAYS_ON_TOP);
             addCoinStage.setResizable(SET_RESIZABLE);
-            addCoinStage.setTitle(ADD_STAGE_TITLE);
+            addCoinStage.setTitle(ADD_COIN_STAGE_TITLE);
             addCoinStage.initOwner(currentStage); //Make sure main stage is the parent of add coin stage so minimizing and maximizing the main will minimize the child
             addCoinStage.show();
 
@@ -451,7 +470,36 @@ public class HomePageController implements Initializable
         }
         return loadScreen;
     }
+    
 
+    private boolean loadLoginScene(ActionEvent event)
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage = ((Stage) ((Node) event.getSource()).getScene().getWindow());
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            URL location = LoginController.class.getResource(LOGIN_FXML_PATH);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            LoginController loginController = (LoginController) fxmlLoader.getController();
+            currentStage.hide();
+
+            Scene scene = new Scene(root);
+            currentStage.setScene(scene);
+            currentStage.sizeToScene();
+            currentStage.setResizable(false);
+            currentStage.setTitle(LOGIN_STAGE_TITLE);
+            currentStage.show();
+
+            loadScreen = true;
+        } catch (IOException ex)
+        {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
+    }
     /**
      * method to exit the program.
      */

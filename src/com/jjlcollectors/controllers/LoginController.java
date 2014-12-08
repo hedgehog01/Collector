@@ -199,9 +199,9 @@ public final class LoginController implements Initializable
             fxmlLoader.setLocation(location);
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
-            HomePageController cvController = (HomePageController) fxmlLoader.getController();
+            HomePageController hpController = (HomePageController) fxmlLoader.getController();
             currentStage.hide();
-            cvController.setUserData(userEmail, userAttemptedPassword);
+            hpController.setUserData(userEmail, userAttemptedPassword, event);
 
             Scene scene = new Scene(root);
             currentStage.setScene(scene);
