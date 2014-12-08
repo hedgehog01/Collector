@@ -59,6 +59,7 @@ public class HomePageController implements Initializable
     private UUID collectionUUID = null;
     private final boolean ALWAYS_ON_TOP = true;
     private final boolean SET_RESIZABLE = false;
+    private final String ADD_STAGE_TITLE = "Collector - Add new Coin";
     private static final Logger log = Logger.getLogger(HomePageController.class.getName());
 
     @FXML
@@ -434,12 +435,14 @@ public class HomePageController implements Initializable
             addCoinController.setUserData(userUUID, collectionUUID);
 
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
-            Stage stage = new Stage();
+            Stage addCoinStage = new Stage();
             Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setAlwaysOnTop(ALWAYS_ON_TOP);
-            stage.setResizable(SET_RESIZABLE);
-            stage.show();
+            addCoinStage.setScene(scene);
+            addCoinStage.setAlwaysOnTop(ALWAYS_ON_TOP);
+            addCoinStage.setResizable(SET_RESIZABLE);
+            addCoinStage.setTitle(ADD_STAGE_TITLE);
+            addCoinStage.initOwner(currentStage); //Make sure main stage is the parent of add coin stage so minimizing and maximizing the main will minimize the child
+            addCoinStage.show();
 
             loadScreen = true;
         } catch (IOException ex)
