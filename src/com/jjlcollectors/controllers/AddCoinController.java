@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -65,8 +66,6 @@ public final class AddCoinController implements Initializable
     private final String COIN_NOT_ADDED = "Coin was not added.\nPlease try again later.";
     private final String BUY_PRICE_EMPTY = "Enter a buy price.";
     private final String BUY_PRICE_NON_NUMERIC = "Buy price must be numeric";
-    
-    
 
     UUID userUUID = null;
     UUID collectionUUID = null;
@@ -180,6 +179,16 @@ public final class AddCoinController implements Initializable
             CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
             log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+        });
+
+        Platform.runLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                log.log(Level.INFO, "In initialize, in Platform.runLater");
+                
+            }
         });
     }
 
@@ -300,7 +309,7 @@ public final class AddCoinController implements Initializable
             coinValid = false;
             log.log(Level.INFO, "Face value is non-numeric: {0}", coinMintYearTxtField.getText());
         }
-        
+
         //check buy price
         if (coinBuyPriceTxtField.getText() == null || coinBuyPriceTxtField.getText().trim().isEmpty())
         {
