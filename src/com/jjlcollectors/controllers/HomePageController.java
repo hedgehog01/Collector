@@ -57,6 +57,8 @@ public class HomePageController implements Initializable
     private String userEmail = "";
     private UUID userUUID = null;
     private UUID collectionUUID = null;
+    private final boolean ALWAYS_ON_TOP = true;
+    private final boolean SET_RESIZABLE = false;
     private static final Logger log = Logger.getLogger(HomePageController.class.getName());
 
     @FXML
@@ -435,6 +437,8 @@ public class HomePageController implements Initializable
             Stage stage = new Stage();
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setAlwaysOnTop(ALWAYS_ON_TOP);
+            stage.setResizable(SET_RESIZABLE);
             stage.show();
 
             loadScreen = true;
