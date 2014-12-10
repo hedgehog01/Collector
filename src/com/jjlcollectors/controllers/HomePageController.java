@@ -174,9 +174,10 @@ public class HomePageController implements Initializable
                 if (isLoginValid)
                 {
                     log.log(Level.INFO, "Login valid, loading user data");
-                    CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
-                    log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
-                    collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+                    loadUserData();
+                    //CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+                    //log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+                    //collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
                 } else if (!(isLoginValid))
                 {
                     log.log(Level.SEVERE, "Login is NOT valid");
