@@ -84,7 +84,7 @@ public class HomePageController implements Initializable
 
     @FXML
     private TableView<CoinProperty> coinPreviewTableView;
-    
+
     @FXML
     private Button addNewCoinbtn;
 
@@ -146,25 +146,43 @@ public class HomePageController implements Initializable
             }
         });
 
+        /*
         // Handle ComboBox event.
         collectionComboBox.setOnAction((event) ->
         {
             if (isLoginValid)
+            {
+                log.log(Level.INFO, "Login valid, loading user data");
+                CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+                log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+                collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+            } else if (!(isLoginValid))
+            {
+                log.log(Level.SEVERE, "Login is NOT valid");
+
+            }
+
+        });
+        */
+
+        Platform.runLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                log.log(Level.INFO, "In initialize, in Platform.runLater");
+                if (isLoginValid)
                 {
                     log.log(Level.INFO, "Login valid, loading user data");
                     CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
-            log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
-            collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
-                }
-            else if (!(isLoginValid))
+                    log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+                    collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+                } else if (!(isLoginValid))
                 {
-                            log.log(Level.SEVERE, "Login is NOT valid");
-                            
+                    log.log(Level.SEVERE, "Login is NOT valid");
                 }
-            
+            }
         });
-        
-       
 
         //coinTableData = coinPreviewTableView.getItems();
         //coinTableData.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
@@ -213,14 +231,14 @@ public class HomePageController implements Initializable
      */
     protected final void setUserData(String userEmail, String userPass, ActionEvent event)
     {
-        
-        checkLoginStatus(userEmail, userPass,event);
+
+        checkLoginStatus(userEmail, userPass, event);
     }
 
     /*
      * method to validate user credentials
      */
-    private void checkLoginStatus(String userEmail, String userPass,ActionEvent event)
+    private void checkLoginStatus(String userEmail, String userPass, ActionEvent event)
     {
 
         log.log(Level.INFO, "Verifying login details");
@@ -278,7 +296,7 @@ public class HomePageController implements Initializable
         {
             log.log(Level.INFO, "User password Invalid!");
             passwordValid = false;
-            
+
         }
         return passwordValid;
     }
@@ -470,7 +488,6 @@ public class HomePageController implements Initializable
         }
         return loadScreen;
     }
-    
 
     private boolean loadLoginScene(ActionEvent event)
     {
@@ -500,6 +517,7 @@ public class HomePageController implements Initializable
         }
         return loadScreen;
     }
+
     /**
      * method to exit the program.
      */
