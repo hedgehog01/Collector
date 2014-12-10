@@ -17,6 +17,7 @@
  */
 package com.jjlcollectors.collectables.coins;
 
+import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,7 @@ import javafx.collections.ObservableList;
  */
 public class CoinCreator
 {
+
     private static final Logger LOG = Logger.getLogger(CoinCreator.class.getName());
 
     /**
@@ -36,7 +38,7 @@ public class CoinCreator
      *
      * @return
      */
-    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID,ObservableList<CoinProperty> tableData)
+    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID, ObservableList<CoinProperty> tableData)
     {
         ObservableList<CoinProperty> data = FXCollections.observableArrayList();
         if (userUUID != null)
@@ -51,8 +53,7 @@ public class CoinCreator
             data.add(a1);
             data.add(a2);
             //data.add(c);
-        }
-        else 
+        } else
         {
             LOG.log(Level.INFO, "userUUID is null");
         }
@@ -74,8 +75,8 @@ public class CoinCreator
 
         if (userUUID != null && collectionUUID != null)
         {
-            LOG.log(Level.INFO, "userUUID and collectionUUID not null");
-            
+            LOG.log(Level.INFO, "userUUID and collectionUUID not null, attempt to build coin list");
+
             int year = 1982;
             CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", year, "email1");
             CoinProperty a2 = new CoinProperty("5", "5", "66", "gh", "gh", "lmail1", "gh", "hj", "hmail1", "hame1", year, "jkg");
@@ -83,8 +84,7 @@ public class CoinCreator
             //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
 
             data.add(a1);
-            
-            
+
             data.add(a2);
             //data.add(c);
             LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid:");
@@ -92,15 +92,42 @@ public class CoinCreator
 
         return data;
     }
-    
-        public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID, UUID collectionUUID, ObservableList<CoinProperty> oldData)
+
+    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID)
+    {
+        ObservableList<CoinProperty> data = FXCollections.observableArrayList();
+
+        if (userUUID != null)
+        {
+            LOG.log(Level.INFO, "userUUID not null, attempt to build coin list");
+            /*
+             int year = 1982;
+             CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", year, "email1");
+             CoinProperty a2 = new CoinProperty("5", "5", "66", "gh", "gh", "lmail1", "gh", "hj", "hmail1", "hame1", year, "jkg");
+             //CoinProperty b = new CoinProperty("name2", "lastname2", "email2");
+             //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
+
+             data.add(a1);
+            
+            
+             data.add(a2);
+             //data.add(c);
+             */
+            data = DBCoinConnect.getAllUserCoins(userUUID);
+            LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid:");
+        }
+
+        return data;
+    }
+
+    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID, UUID collectionUUID, ObservableList<CoinProperty> oldData)
     {
         ObservableList<CoinProperty> data = FXCollections.observableArrayList();
         data.setAll(oldData);
         if (userUUID != null && collectionUUID != null)
         {
             LOG.log(Level.INFO, "userUUID and collectionUUID not null");
-            
+
             int year = 1982;
             CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", year, "email1");
             CoinProperty a2 = new CoinProperty("5", "5", "66", "gh", "gh", "lmail1", "gh", "hj", "hmail1", "hame1", year, "jkg");
@@ -114,6 +141,5 @@ public class CoinCreator
         }
         return data;
     }
-        
-        
+
 }

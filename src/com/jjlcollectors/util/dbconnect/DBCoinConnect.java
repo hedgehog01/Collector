@@ -282,10 +282,9 @@ public final class DBCoinConnect extends DBConnect
         shutDownDBConnection();
     }
 
-    public static ArrayList<CoinProperty> getAllUserCoins(UUID userUUID)
+    public static ObservableList<CoinProperty> getAllUserCoins(UUID userUUID)
     {
-        ArrayList<CoinProperty> coinList = new ArrayList<>();
-        coinList = null;
+        ObservableList<CoinProperty> coinList = FXCollections.observableArrayList();
         if (userUUID != null)
         {
             

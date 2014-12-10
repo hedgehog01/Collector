@@ -23,6 +23,7 @@ import com.jjlcollectors.collectables.coins.CoinGrade;
 import com.jjlcollectors.collectables.coins.CoinProperty;
 import java.util.ArrayList;
 import java.util.UUID;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -124,8 +125,8 @@ public class DBCoinConnectTest
     {
         System.out.println("getAllUserCoins");
         UUID userUUID = null;
-        ArrayList<CoinProperty> expResult = null;
-        ArrayList<CoinProperty> result = DBCoinConnect.getAllUserCoins(userUUID);
+        ObservableList<CoinProperty> expResult = null;
+        ObservableList<CoinProperty> result = DBCoinConnect.getAllUserCoins(userUUID);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

@@ -147,24 +147,23 @@ public class HomePageController implements Initializable
         });
 
         /*
-        // Handle ComboBox event.
-        collectionComboBox.setOnAction((event) ->
-        {
-            if (isLoginValid)
-            {
-                log.log(Level.INFO, "Login valid, loading user data");
-                CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
-                log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
-                collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
-            } else if (!(isLoginValid))
-            {
-                log.log(Level.SEVERE, "Login is NOT valid");
+         // Handle ComboBox event.
+         collectionComboBox.setOnAction((event) ->
+         {
+         if (isLoginValid)
+         {
+         log.log(Level.INFO, "Login valid, loading user data");
+         CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+         log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+         collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+         } else if (!(isLoginValid))
+         {
+         log.log(Level.SEVERE, "Login is NOT valid");
 
-            }
+         }
 
-        });
-        */
-
+         });
+         */
         Platform.runLater(new Runnable()
         {
             @Override
@@ -449,6 +448,22 @@ public class HomePageController implements Initializable
                     log.log(Level.INFO, "coinTableData is null");
                 }
 
+            } else if (collectionUUID == null)
+            {
+                log.log(Level.INFO, "Attempt to load all user coins");
+                ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID);
+                if (tempData != null)
+                {
+
+                    log.log(Level.INFO, "tempdata is NOT null");
+
+                    coinTableData = coinPreviewTableView.getItems();
+                    coinTableData.setAll(tempData);
+                    coinPreviewTableView.setItems(coinTableData);
+                } else
+                {
+                    log.log(Level.SEVERE, "tempdata is null");
+                }
             }
 
         }
