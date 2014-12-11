@@ -293,13 +293,14 @@ public final class DBCoinConnect extends DBConnect
                 DBConnect.createDBConnection();
 
                 System.out.println("prepare statement starting");
-                PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " where USER_UUID = ?");
+                PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " where COIN_USER_UUID = ?");
                 prepStmt.setString(1, userUUID.toString());
                 System.out.println("prepare statement done");
                 try (ResultSet results = prepStmt.executeQuery())
                 {
                     ResultSetMetaData rsmd = results.getMetaData();
                     int numberCols = rsmd.getColumnCount();
+                    log.log(Level.INFO, "Number of colomns: {0}", numberCols);
                     for (int i = 1; i <= numberCols; i++)
                     {
                         //print Column Names
@@ -307,9 +308,13 @@ public final class DBCoinConnect extends DBConnect
                     }
 
                     System.out.println("\n-------------------------------------------------");
-
+                    if (!(results.next()) )
+                    {
+                        log.log(Level.INFO, "No items in the DB?");
+                    }
                     while (results.next())
                     {
+                        
                         
                         int id = results.getInt(1);
                         String coinUUID = results.getString(2);
@@ -323,7 +328,7 @@ public final class DBCoinConnect extends DBConnect
                         String coinValue = results.getString(10);
                         String coinMintMark = results.getString(11);
                         int coinYear = results.getInt(12);
-                        String collectionUUID = results.getString("COLLECTION_UUID");
+                        String collectionUUID = results.getString("COIN_COLLECTION_UUID");
                         //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
                         CoinProperty coin = new CoinProperty (coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, collectionUUID);
                         coinList.add(coin);
