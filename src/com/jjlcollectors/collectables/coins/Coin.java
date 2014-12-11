@@ -98,7 +98,7 @@ public final class Coin extends CollectableItem {
         setCoinYear(coinYear);
         setCoinMintMark(coinMintMark);
         setItemBuyPrice(buyPrice);
-        setFaceValue(coinValue);
+        setItemValue(coinValue);
         
     }
 
