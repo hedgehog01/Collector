@@ -37,6 +37,9 @@ import org.junit.Ignore;
 public class DBCoinConnectTest
 {
     
+    private final UUID userUUID = UUID.randomUUID();
+    private final UUID collectionUUID = UUID.randomUUID();
+    
     public DBCoinConnectTest()
     {
     }
@@ -59,8 +62,6 @@ public class DBCoinConnectTest
     public void testAddCoin1()
     {
         System.out.println("addCoin");
-        UUID userUUID = UUID.randomUUID();
-        UUID collectionUUID = UUID.randomUUID();
         String coinName = "coin name";
         String faceValue = "100";
         CoinCurrency coinCurrency = CoinCurrency.EURO;
@@ -76,23 +77,20 @@ public class DBCoinConnectTest
         //fail("The test case is a prototype.");
     }
     
-    
-    
     /**
-     * Test of removeCoinById method, of class DBCoinConnect.
+     * Test of removeCoinByCoinUUID method, of class DBCoinConnect.
+     * Tests if random UUID is given no coins removed
      */
-    @Ignore
     @Test
-    public void testRemoveCoinById()
+    public void testRemoveCoinByCoinUUID1()
     {
-        System.out.println("removeCoinById");
-        int id = 0;
+        System.out.println("testRemoveCoinByCoinUUID1");
+
         int expResult = 0;
-        int result = DBCoinConnect.removeCoinById(id);
+        int result = DBCoinConnect.removeCoinByCoinUUID(UUID.randomUUID());
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
+    
 
     /**
      * Test of removeLastCoin method, of class DBCoinConnect.

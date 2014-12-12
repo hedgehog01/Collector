@@ -66,16 +66,16 @@ public final class DBCoinConnect extends DBConnect
      * @return int representing if coin removed or not. 0 = removed, 1 = coin
      * not found, 2 = not removed due to error.
      */
-    public static int removeCoinById(int id)
+    public static int removeCoinByCoinUUID(UUID coinUUID)
     {
 
-        int remove = deleteCoinById(id);
+        int remove = deleteCoinByUUID(coinUUID);
         return remove;
     }
 
-    public static int removeLastCoin()
+    protected static int removeLastCoin()
     {
-        int id = -1;
+        String coinUUID ="";
         DBConnect.createDBConnection();
         try
         {
@@ -86,8 +86,8 @@ public final class DBCoinConnect extends DBConnect
 
             while (rs.next())
             {
-                id = rs.getInt(1);
-                System.out.println(id);
+                coinUUID = rs.getString(1);
+                System.out.println(coinUUID);
 
             }
         } catch (SQLException sql)
@@ -97,7 +97,7 @@ public final class DBCoinConnect extends DBConnect
         DBConnect.closeDBConnection();
         shutDownDBConnection();
 
-        return removeCoinById(id);
+        return removeCoinByCoinUUID(UUID.fromString(coinUUID));
     }
 
     /*
@@ -357,15 +357,15 @@ public final class DBCoinConnect extends DBConnect
         return coinList;
     }
 
-    private static int deleteCoinById(int id)
+    private static int deleteCoinByUUID(UUID coinUUID)
     {
         int count = -1;
         try
         {
             DBConnect.createDBConnection();
             System.out.println("prepare delete statement starting...");
-            PreparedStatement prepStmt = conn.prepareStatement("DELETE from " + TABLE_NAME + " WHERE id = ?");
-            prepStmt.setInt(1, id);
+            PreparedStatement prepStmt = conn.prepareStatement("DELETE from " + TABLE_NAME + " WHERE COIN_UUID = ?");
+            prepStmt.setString(1, coinUUID.toString());
             log.log(Level.INFO, "prepare statement done...");
             count = prepStmt.executeUpdate();
             log.log(Level.INFO, "Number of deleted rows: {0}", count);
