@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 nathanr
+ * Copyright (C) 2014 Hedgehog01
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,6 @@ import com.jjlcollectors.collectables.coins.Coin;
 import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.collectables.coins.CoinGrade;
 import com.jjlcollectors.collectables.coins.CoinProperty;
-import java.util.ArrayList;
 import java.util.UUID;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
@@ -33,7 +32,7 @@ import org.junit.Ignore;
 
 /**
  *
- * @author nathanr
+ * @author Hedgehog01
  */
 public class DBCoinConnectTest
 {
@@ -54,22 +53,31 @@ public class DBCoinConnectTest
 
     /**
      * Test of addCoin method, of class DBCoinConnect.
+     * tests adding a coin with correct params - coin should be added to DB
      */
     @Test
-    public void testAddCoin()
+    public void testAddCoin1()
     {
         System.out.println("addCoin");
         UUID userUUID = UUID.randomUUID();
-        UUID collectionUUID = UUID.fromString("b22e37a3-6316-47a2-8a5c-0b21339e1faa");
-        StringBuilder sb = new StringBuilder("coin note");                                                                                     
-        Coin coin = new Coin(userUUID, "coin name", CoinGrade.P1, "face value", CoinCurrency.UNKNOWN, sb, 1982, "mint mark", "buy price", "coin value", collectionUUID);
+        UUID collectionUUID = UUID.randomUUID();
+        String coinName = "coin name";
+        String faceValue = "100";
+        CoinCurrency coinCurrency = CoinCurrency.EURO;
+        StringBuilder sb = new StringBuilder("coin note");
+        String coinMintMark = "NR";
+        String buyPrice = "90";
+        String coinValue = "110";
+        Coin coin = new Coin(userUUID, coinName, CoinGrade.VG8, faceValue, coinCurrency, sb, 1982, coinMintMark, buyPrice, coinValue, collectionUUID);
         boolean expResult = true;
         boolean result = DBCoinConnect.addCoin(coin);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
-
+    
+    
+    
     /**
      * Test of removeCoinById method, of class DBCoinConnect.
      */
