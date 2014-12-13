@@ -225,7 +225,8 @@ public final class CollectionViewController implements Initializable
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
-            addCoinController.setUserData(userUUID,collectionUUID);
+            //TODO - fix add coin set user data
+            //addCoinController.setUserData(userUUID,collectionUUID);
             
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage stage = new Stage();

@@ -485,7 +485,7 @@ public class HomePageController implements Initializable
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
-            addCoinController.setUserData(userUUID, collectionUUID);
+            addCoinController.setUserData(userUUID, collectionUUID,coinTableData);
 
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage addCoinStage = new Stage();

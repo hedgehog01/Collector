@@ -335,7 +335,7 @@ public final class DBCoinConnect extends DBConnect
                             int coinYear = results.getInt(12);
                             String collectionUUID = results.getString("COIN_COLLECTION_UUID");
                         //get collection name
-                            String collectionName = getCollectionName (collectionUUID,userCollectionData);
+                            String collectionName = DBCollectionConnect.getCollectionName(UUID.fromString(collectionUUID));
                             //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
                             CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, collectionName);
                             coinList.add(coin);
@@ -377,21 +377,5 @@ public final class DBCoinConnect extends DBConnect
         }
 
         return count;
-    }
-
-    
-    private static String getCollectionName(String collectionUUID, ObservableList<CollectionProperty> userCollectionData)
-    {
-        String collectionName = "";
-        for (CollectionProperty userCollectionData1 : userCollectionData)
-        {
-            if(userCollectionData1.collectionUUIDProperty().get().equals(collectionUUID))
-            {
-                collectionName = userCollectionData1.getCollectionName();
-            }
-        }
-        
-        
-        return collectionName;
     }
 }

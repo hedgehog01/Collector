@@ -68,6 +68,22 @@ public final class CoinProperty
         setCoinYear(coinYear);
         setCoinCollectionName(coinCollectionName);
     }
+    
+        public CoinProperty(Coin coin)
+    {
+        setCoinUUID(coin.getItemUUID().toString());
+        setCoinName(coin.getItemName());
+        setCoinGrade(coin.getCoinGrade().name());       
+        setCoinFaceValue(coin.getFaceValue());
+        setCoinCurrency(coin.getCoinCurrency().name());
+        setCoinNote(coin.getItemNote().toString());
+        setCoinBuyDate(coin.getItemBuyDate().toString());
+        setCoinBuyPrice(coin.getBuyPrice());
+        setCoinValue(coin.getItemValue());
+        setCoinMintMark(coin.getCoinMintMark());
+        setCoinYear(coin.getCoinYear());
+        setCoinCollectionName(coin.getItemCollectionName());
+    }
 
     public void setCoinName(String coinName)
     {

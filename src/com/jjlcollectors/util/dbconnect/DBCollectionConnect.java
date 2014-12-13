@@ -135,6 +135,34 @@ public final class DBCollectionConnect extends DBConnect
 
     }
     
+    public static String getCollectionName(UUID collectionUUID)
+    {
+
+        String collectionName = "";
+        log.log(Level.INFO, "Attemp to get collection name");
+        DBConnect.createDBConnection();
+        try (PreparedStatement prepStmt = conn.prepareStatement("SELECT COLLECTION_NAME from " + TABLE_NAME + " WHERE COLLECTION_UUID = ?"))
+        {
+            prepStmt.setString(1, collectionUUID.toString());
+            ResultSet rs = prepStmt.executeQuery();
+
+            if (rs.next())
+            {
+                collectionName = rs.getString("COLLECTION_NAME");
+                log.log(Level.INFO, "Got collection name");
+            }
+            rs.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBUsersConnect.class.getName()).log(Level.SEVERE, "Couldn't get collectionUUUID by collection Name\n ", ex);
+        }
+
+        DBConnect.closeDBConnection();
+        shutDownDBConnection();
+        return collectionName;
+
+    }
+    
     public static ObservableList<CollectionProperty> getUserCollections (UUID userUUID)
     {
         log.log(Level.INFO, "Attempting to get collections by userUUID");

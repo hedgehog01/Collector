@@ -1,5 +1,6 @@
 package com.jjlcollectors.collectables;
 
+import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -210,7 +211,10 @@ public abstract class CollectableItem
         return _collectionUUID;
     }
     
-    
+    public String getItemCollectionName()
+    {
+        return DBCollectionConnect.getCollectionName(_collectionUUID);
+    }
     
     /**
      * Method to print item details

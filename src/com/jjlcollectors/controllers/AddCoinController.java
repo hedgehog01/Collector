@@ -21,6 +21,7 @@ import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.coins.Coin;
 import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.collectables.coins.CoinGrade;
+import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
@@ -69,6 +70,7 @@ public final class AddCoinController implements Initializable
 
     UUID userUUID = null;
     UUID collectionUUID = null;
+    private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
     //public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
 
     @FXML
@@ -198,10 +200,11 @@ public final class AddCoinController implements Initializable
         currentStage.close();
     }
 
-    protected void setUserData(UUID userUUID, UUID collectionUUID)
+    protected void setUserData(UUID userUUID, UUID collectionUUID,ObservableList<CoinProperty> coinTableData)
     {
         this.userUUID = userUUID;
         this.collectionUUID = collectionUUID;
+        this.coinTableData = coinTableData;
     }
 
     protected void setUserData(UUID userUUID)
@@ -229,7 +232,9 @@ public final class AddCoinController implements Initializable
             log.log(Level.INFO, "New Coin created, collection uuid is {0}", collectionUUID.toString());
             if (DBCoinConnect.addCoin(newCoin))
             {
-                log.log(Level.INFO, "coin added successfully");
+                log.log(Level.INFO, "coin added successfully, attemp to add new coinproperty");
+                CoinProperty coinProperty = new CoinProperty(newCoin);
+                coinTableData.add(coinProperty);
                 closeWindow();
             } else
             {
