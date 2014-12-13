@@ -441,7 +441,7 @@ public class HomePageController implements Initializable
                     }
                     coinTableData = coinPreviewTableView.getItems();
                     coinTableData.setAll(tempData);
-                    coinPreviewTableView.setItems(coinTableData);
+                    //coinPreviewTableView.setItems(coinTableData);
 
                 } else
                 {
@@ -459,7 +459,7 @@ public class HomePageController implements Initializable
 
                     coinTableData = coinPreviewTableView.getItems();
                     coinTableData.setAll(tempData);
-                    coinPreviewTableView.setItems(coinTableData);
+                    //coinPreviewTableView.setItems(coinTableData);
                 } else
                 {
                     log.log(Level.SEVERE, "tempdata is null");
