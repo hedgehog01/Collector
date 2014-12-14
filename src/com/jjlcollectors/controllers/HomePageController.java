@@ -45,6 +45,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -87,6 +88,9 @@ public class HomePageController implements Initializable
 
     @FXML
     private Button addNewCoinbtn;
+    
+    @FXML
+    private TextField filterTextFiled;
 
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
