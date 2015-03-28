@@ -35,10 +35,13 @@ public abstract class DBConnect
 
     //instance variables
     protected static final String DB_Client_URL = "jdbc:derby://localhost:1527/CollectionDB";//create=true;DB_USER_NAME=Hedgehog01;password=Jade170213";
+    //protected static final String DB_Client_URL = "jdbc:derby:CollectionDB";//create=true;DB_USER_NAME=Hedgehog01;password=Jade170213";
+    
     protected static final String CREATE_DB = ";create=true";
     protected static final String SHUTDOWN_DB = ";shutdown=true";
     //private static final String driverEmbedded = "org.apache.derby.jdbc.EmbeddedDriver";
     protected static final String DRIVER_CLIENT = "org.apache.derby.jdbc.ClientDriver";
+    //protected static final String DRIVER_CLIENT = "org.apache.derby.jdbc.EmbeddedDriver";
     protected static final String DB_USER_NAME = "Hedgehog01";
     protected static final String DB_PASS = "Jade170213";
     protected static Connection conn = null;
