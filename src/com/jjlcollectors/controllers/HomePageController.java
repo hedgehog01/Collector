@@ -33,6 +33,8 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -88,9 +90,9 @@ public class HomePageController implements Initializable
 
     @FXML
     private Button addNewCoinbtn;
-    
+
     @FXML
-    private TextField filterTextFiled;
+    private TextField filteredCoinTableTextFiled;
 
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
@@ -438,15 +440,49 @@ public class HomePageController implements Initializable
                 if ((CoinCreator.getCoinProperties(userUUID, collectionUUID) != null))
                 {
                     //System.out.println("UserUUID: " + userUUID + " CollectionUUID " + collectionUUID);
-                    ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
-                    if (tempData == null)
-                    {
-                        System.out.println("tempdata is null");
-                    }
-                    coinTableData = coinPreviewTableView.getItems();
-                    coinTableData.setAll(tempData);
-                    //coinPreviewTableView.setItems(coinTableData);
+                    //ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
+                    coinTableData.clear();
+                    coinTableData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
+                    
+                    //====set up filtering of coin info===
+                    // Phone Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
+                    FilteredList<CoinProperty> coinFilteredList = new FilteredList<>(coinTableData, p -> true);
 
+                    // coin info filter - Set the filter Predicate whenever the filter changes.
+                    filteredCoinTableTextFiled.textProperty().addListener((observable, oldValue, newValue) ->
+                    {
+                        coinFilteredList.setPredicate(coinInfo ->
+                        {
+                            // If filter text is empty, display all coins.
+                            if (newValue == null || newValue.isEmpty())
+                            {
+                                return true;
+                            }
+
+                            // Compare coin info with filter text.
+                            String lowerCaseFilter = newValue.toLowerCase();
+
+                            return coinInfo.getCoinName().toLowerCase().indexOf(lowerCaseFilter) != -1;
+                        });
+                    });
+
+                    // Wrap the FilteredList in a SortedList. 
+                    SortedList<CoinProperty> sortedCoinInfoData = new SortedList<>(coinFilteredList);
+
+                    // Bind the SortedList comparator to the TableView comparator.
+                    sortedCoinInfoData.comparatorProperty().bind(coinPreviewTableView.comparatorProperty());
+
+                    //=======End of filtered phone name setup======  
+                    /*
+                     if (tempData == null)
+                     {
+                     System.out.println("tempdata is null");
+                     }
+                     */
+                    //coinTableData = coinPreviewTableView.getItems();
+                    //coinTableData.setAll(tempData);
+                    //coinPreviewTableView.setItems(coinTableData);
+                    coinPreviewTableView.setItems(sortedCoinInfoData);
                 } else
                 {
                     log.log(Level.INFO, "coinTableData is null");
@@ -455,15 +491,49 @@ public class HomePageController implements Initializable
             } else if (collectionUUID == null)
             {
                 log.log(Level.INFO, "Attempt to load all user coins");
-                ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID);
-                if (tempData != null)
+                //ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID);
+                coinTableData.clear();
+                coinTableData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
+                
+                if (coinTableData != null)
                 {
 
                     log.log(Level.INFO, "tempdata is NOT null");
 
-                    coinTableData = coinPreviewTableView.getItems();
-                    coinTableData.setAll(tempData);
+                    //coinTableData = coinPreviewTableView.getItems();
+                    //====set up filtering of coin info===
+                    // Phone Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
+                    FilteredList<CoinProperty> coinFilteredList = new FilteredList<>(coinTableData, p -> true);
+
+                    // coin info filter - Set the filter Predicate whenever the filter changes.
+                    filteredCoinTableTextFiled.textProperty().addListener((observable, oldValue, newValue) ->
+                    {
+                        coinFilteredList.setPredicate(coinInfo ->
+                        {
+                            // If filter text is empty, display all coins.
+                            if (newValue == null || newValue.isEmpty())
+                            {
+                                return true;
+                            }
+
+                            // Compare coin info with filter text.
+                            String lowerCaseFilter = newValue.toLowerCase();
+
+                            return coinInfo.getCoinName().toLowerCase().indexOf(lowerCaseFilter) != -1;
+                        });
+                    });
+
+                    // Wrap the FilteredList in a SortedList. 
+                    SortedList<CoinProperty> sortedCoinInfoData = new SortedList<>(coinFilteredList);
+
+                    // Bind the SortedList comparator to the TableView comparator.
+                    sortedCoinInfoData.comparatorProperty().bind(coinPreviewTableView.comparatorProperty());
+
+                    //=======End of filtered phone name setup======                    
+                    //coinTableData.setAll(tempData);
                     //coinPreviewTableView.setItems(coinTableData);
+                    coinPreviewTableView.setItems(sortedCoinInfoData);
+
                 } else
                 {
                     log.log(Level.SEVERE, "tempdata is null");
@@ -489,7 +559,7 @@ public class HomePageController implements Initializable
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             AddCoinController addCoinController = (AddCoinController) fxmlLoader.getController();
-            addCoinController.setUserData(userUUID, collectionUUID,coinTableData);
+            addCoinController.setUserData(userUUID, collectionUUID, coinTableData);
 
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage addCoinStage = new Stage();
