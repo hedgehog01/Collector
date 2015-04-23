@@ -25,6 +25,10 @@ import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
+import com.jjlcollectors.util.prefrences.PrefrencesHandler;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -33,6 +37,9 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -42,9 +49,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import javax.imageio.ImageIO;
 
 /**
  * FXML Controller class
@@ -67,11 +81,21 @@ public final class AddCoinController implements Initializable
     private final String COIN_NOT_ADDED = "Coin was not added.\nPlease try again later.";
     private final String BUY_PRICE_EMPTY = "Enter a buy price.";
     private final String BUY_PRICE_NON_NUMERIC = "Buy price must be numeric";
+    private final String FOLDER_CHOOSER_TITLE = "Add Coin Image";
 
     UUID userUUID = null;
     UUID collectionUUID = null;
     private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
     //public Coin (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
+
+    @FXML
+    private Button addCoinImageBtn1;
+    
+        @FXML
+    private Button addCoinImageBtn2;
+
+    @FXML
+    private AnchorPane addCoinAnchorPane;
 
     @FXML
     private TextField coinNameTxtField;
@@ -118,6 +142,12 @@ public final class AddCoinController implements Initializable
     @FXML
     private DatePicker coinBuyDatePicker;
 
+    @FXML
+    private ImageView coinImageView1;
+
+    @FXML
+    private ImageView coinImageView2;
+
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private final ObservableList<String> currencyList = FXCollections.observableArrayList();
 
@@ -151,6 +181,24 @@ public final class AddCoinController implements Initializable
                 }
             };
         });
+
+        //setup add image button listeners
+        addCoinImageBtn1.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                loadImageButtonAction(1);
+            }
+        });
+        addCoinImageBtn2.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                loadImageButtonAction(2);
+            }
+        });        
 
         // Define rendering of selected value shown in ComboBox.
         collectionComboBox.setConverter(new StringConverter<CollectionProperty>()
@@ -188,7 +236,7 @@ public final class AddCoinController implements Initializable
             public void run()
             {
                 log.log(Level.INFO, "In initialize, in Platform.runLater");
-                
+
             }
         });
     }
@@ -200,7 +248,7 @@ public final class AddCoinController implements Initializable
         currentStage.close();
     }
 
-    protected void setUserData(UUID userUUID, UUID collectionUUID,ObservableList<CoinProperty> coinTableData)
+    protected void setUserData(UUID userUUID, UUID collectionUUID, ObservableList<CoinProperty> coinTableData)
     {
         this.userUUID = userUUID;
         this.collectionUUID = collectionUUID;
@@ -257,6 +305,42 @@ public final class AddCoinController implements Initializable
         } else //connection not available
         {
             log.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
+        }
+    }
+
+    /*
+     * method to get the user selected folder
+     */
+    
+    private void loadImageButtonAction(int buttonPressed)
+    {
+        Stage currentStage = (Stage) addCoinAnchorPane.getScene().getWindow();
+        FileChooser fileChoose = new FileChooser();
+        fileChoose.getExtensionFilters().addAll(
+                //new FileChooser.ExtensionFilter("All Images", "*.*"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+                new FileChooser.ExtensionFilter("GIF", "*.gif"),
+                //new FileChooser.ExtensionFilter("BMP", "*.bmp"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+        //attempt to get saved folder location from prefrences
+        File lastFolderSelected = PrefrencesHandler.getFolderPath();
+        log.log(Level.INFO, "Saved file path retrieved: {0}", lastFolderSelected);
+
+        if (lastFolderSelected != null)
+        {
+            final File initialDir = new File(lastFolderSelected.getPath());
+            fileChoose.setInitialDirectory(initialDir);
+        }
+
+        fileChoose.setTitle(FOLDER_CHOOSER_TITLE);
+
+        //open Dialog
+        File coinImageFile = fileChoose.showOpenDialog(currentStage);
+        if (coinImageFile != null)
+        {
+
+            handleImageLoading(coinImageFile,buttonPressed);
         }
     }
 
@@ -366,6 +450,50 @@ public final class AddCoinController implements Initializable
             return false;
         }
         return true;
+
+    }
+
+    /*
+     * method to handle loading of coin image including save of last folder preference
+     */
+    private void handleImageLoading(File coinImageFile,int buttonPressed)
+    {
+        //save folder path to prefrences
+        BufferedImage bufferedImage = null;
+        try
+        {
+            bufferedImage = ImageIO.read(coinImageFile);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AddCoinController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+        
+        String tempPath = coinImageFile.getPath();
+        String stringFolderPath = tempPath.substring(0, tempPath.lastIndexOf("\\"));
+        File folderPath = new File(stringFolderPath);
+        log.log(Level.INFO, "attempting to save folder path to prefrences");
+        PrefrencesHandler.setFolderPath(folderPath);
+
+        String filePathStr = coinImageFile.getPath();
+
+        log.log(Level.INFO, "Folder path selected is: {0}", folderPath);
+        
+        switch (buttonPressed)
+        {
+                case 1: 
+                {
+                    coinImageView1.setImage(image);
+                    break;
+                }
+                case 2:
+                {
+                    coinImageView2.setImage(image);
+                    break;
+                }
+        }
+            
+                    
 
     }
 
