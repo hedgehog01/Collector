@@ -119,6 +119,7 @@ public abstract class DBConnect
      */
     protected static void shutDownDBConnection()
     {
+
         try
         {
             if (conn != null)

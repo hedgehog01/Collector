@@ -34,36 +34,7 @@ public class CoinCreator
     private static final Logger LOG = Logger.getLogger(CoinCreator.class.getName());
 
     /**
-     * Returns all coins of a user
-     *
-     * @return
-     */
-    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID, ObservableList<CoinProperty> tableData)
-    {
-        ObservableList<CoinProperty> data = FXCollections.observableArrayList();
-        if (userUUID != null)
-        {
-
-            int year = 1982;
-            CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", year, "email1");
-            CoinProperty a2 = new CoinProperty("tame1", "yastname1", "lmail1", "kame1", "hastname1", "lmail1", "kame1", "jastname1", "hmail1", "hame1", year, "gmail1");
-            //CoinProperty b = new CoinProperty("name2", "lastname2", "email2");
-            //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
-
-            data.add(a1);
-            data.add(a2);
-            //data.add(c);
-        } else
-        {
-            LOG.log(Level.INFO, "userUUID is null");
-        }
-        tableData.addAll(data);
-
-        return tableData;
-    }
-
-    /**
-     * method to return all user coins in a specific colelction
+     * method to return all user coins in a specific collection
      *
      * @param userUUID the user UUID
      * @param collectionUUID the collection UUID
@@ -77,17 +48,9 @@ public class CoinCreator
         {
             LOG.log(Level.INFO, "userUUID and collectionUUID not null, attempt to build coin list");
 
-            int year = 1982;
-            CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", year, "email1");
-            CoinProperty a2 = new CoinProperty("5", "5", "66", "gh", "gh", "lmail1", "gh", "hj", "hmail1", "hame1", year, "jkg");
-            //CoinProperty b = new CoinProperty("name2", "lastname2", "email2");
-            //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
+            data = DBCoinConnect.getAllUserCoinsByCollection(userUUID,collectionUUID);
 
-            data.add(a1);
-
-            data.add(a2);
-            //data.add(c);
-            LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid:");
+            LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid: {0} , {1}",new Object[] {userUUID.toString(),collectionUUID.toString()});
         }
 
         return data;
@@ -119,27 +82,4 @@ public class CoinCreator
 
         return data;
     }
-
-    public static ObservableList<CoinProperty> getCoinProperties(UUID userUUID, UUID collectionUUID, ObservableList<CoinProperty> oldData)
-    {
-        ObservableList<CoinProperty> data = FXCollections.observableArrayList();
-        data.setAll(oldData);
-        if (userUUID != null && collectionUUID != null)
-        {
-            LOG.log(Level.INFO, "userUUID and collectionUUID not null");
-
-            int year = 1982;
-            CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", year, "email1");
-            CoinProperty a2 = new CoinProperty("5", "5", "66", "gh", "gh", "lmail1", "gh", "hj", "hmail1", "hame1", year, "jkg");
-            //CoinProperty b = new CoinProperty("name2", "lastname2", "email2");
-            //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
-
-            data.add(a1);
-            //data.add(a2);
-            //data.add(c);
-            LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid");
-        }
-        return data;
-    }
-
 }

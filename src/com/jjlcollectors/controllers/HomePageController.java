@@ -67,7 +67,7 @@ public class HomePageController implements Initializable
     private final String LOGIN_FXML_PATH = "/com/jjlcollectors/fxml/login/Login.fxml";
     private final String ADD_COIN_STAGE_TITLE = "Collector - Add new Coin";
     private final String LOGIN_STAGE_TITLE = "Collector - Login";
-    private static final Logger log = Logger.getLogger(HomePageController.class.getName());
+    private static final Logger LOG = Logger.getLogger(HomePageController.class.getName());
     private boolean isLoginValid = true;
 
     @FXML
@@ -105,7 +105,9 @@ public class HomePageController implements Initializable
     {
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
-
+            collectionUUID = UUID.fromString(newValue.collectionUUIDProperty().get());
+            LOG.log(Level.INFO, "got collection UUID: {0}", collectionUUID.toString());
+            loadCoinTable();
         }
         );
 
@@ -175,17 +177,17 @@ public class HomePageController implements Initializable
             @Override
             public void run()
             {
-                log.log(Level.INFO, "In initialize, in Platform.runLater");
+                LOG.log(Level.INFO, "In initialize, in Platform.runLater");
                 if (isLoginValid)
                 {
-                    log.log(Level.INFO, "Login valid, loading user data");
+                    LOG.log(Level.INFO, "Login valid, loading user data");
                     loadUserData();
                     //CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
                     //log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
                     //collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
                 } else if (!(isLoginValid))
                 {
-                    log.log(Level.SEVERE, "Login is NOT valid");
+                    LOG.log(Level.SEVERE, "Login is NOT valid");
                 }
             }
         });
@@ -226,7 +228,7 @@ public class HomePageController implements Initializable
             }
         } else
         {
-            log.log(Level.WARNING, "could not load collection view, check userUUID or collectionUUID");
+            LOG.log(Level.WARNING, "could not load collection view, check userUUID or collectionUUID");
         }
         return loadScreen;
     }
@@ -247,16 +249,16 @@ public class HomePageController implements Initializable
     private void checkLoginStatus(String userEmail, String userPass, ActionEvent event)
     {
 
-        log.log(Level.INFO, "Verifying login details");
+        LOG.log(Level.INFO, "Verifying login details");
         if (isLoginValid(userEmail, userPass))
         {
-            log.log(Level.INFO, "login is valid set user email");
+            LOG.log(Level.INFO, "login is valid set user email");
             setUserEmail(userEmail);
             setUserUUID();
 
         } else
         {
-            log.log(Level.INFO, "login is not valid");
+            LOG.log(Level.INFO, "login is not valid");
             isLoginValid = false;
             //loadLoginScene(event);
         }
@@ -272,12 +274,12 @@ public class HomePageController implements Initializable
         //verify user with this email exists
         if (!(DBUsersConnect.findUserByEmail(userEmail)))
         {
-            log.log(Level.INFO, "User doesn't exist");
+            LOG.log(Level.INFO, "User doesn't exist");
             loginValid = false;
         } //verify password with this email is valid
         else if (!(isPasswordValid(userEmail, userPass)))
         {
-            log.log(Level.INFO, "User password incorrect");
+            LOG.log(Level.INFO, "User password incorrect");
 
             loginValid = false;
         }
@@ -295,12 +297,12 @@ public class HomePageController implements Initializable
         //verify password not empty
         if ((userPass == null) || (userPass.trim().isEmpty()))
         {
-            log.log(Level.INFO, "User password Empty or null");
+            LOG.log(Level.INFO, "User password Empty or null");
             passwordValid = false;
         } //Check password is NOT valid with this email and update boolean var
         else if (!(DBUsersConnect.isUserPasswordValid(userEmail, userPass.toCharArray())))
         {
-            log.log(Level.INFO, "User password Invalid!");
+            LOG.log(Level.INFO, "User password Invalid!");
             passwordValid = false;
 
         }
@@ -322,7 +324,7 @@ public class HomePageController implements Initializable
             userUUID = DBUsersConnect.getUserUUID(userEmail);
         } else
         {
-            log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
+            LOG.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
         }
     }
 
@@ -333,7 +335,7 @@ public class HomePageController implements Initializable
             userUUID = DBUsersConnect.getUserUUID(userEmail);
         } else
         {
-            log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
+            LOG.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
         }
     }
 
@@ -375,14 +377,14 @@ public class HomePageController implements Initializable
     {
         if (DBConnect.isDBConnectable())
         {
-            log.log(Level.INFO, "Adding data to collectionComboListData");
+            LOG.log(Level.INFO, "Adding data to collectionComboListData");
             collectionComboListData.setAll(DBCollectionConnect.getUserCollections(userUUID));
-            log.log(Level.INFO, "Adding data to collectionComboBox");
+            LOG.log(Level.INFO, "Adding data to collectionComboBox");
             collectionComboBox.getItems().setAll(collectionComboListData);
             loadCoinTable();
         } else //connection not available
         {
-            log.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
+            LOG.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
         }
     }
 
@@ -435,7 +437,7 @@ public class HomePageController implements Initializable
         {
             if (collectionUUID != null)
             {
-                log.log(Level.INFO, "Attempting to load coin data into table according to userUUID and collectionUUID");
+                LOG.log(Level.INFO, "Attempting to load coin data into table according to userUUID and collectionUUID");
 
                 if ((CoinCreator.getCoinProperties(userUUID, collectionUUID) != null))
                 {
@@ -443,7 +445,7 @@ public class HomePageController implements Initializable
                     //ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
                     coinTableData.clear();
                     coinTableData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
-                    
+
                     //====set up filtering of coin info===
                     // Phone Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
                     FilteredList<CoinProperty> coinFilteredList = new FilteredList<>(coinTableData, p -> true);
@@ -485,20 +487,20 @@ public class HomePageController implements Initializable
                     coinPreviewTableView.setItems(sortedCoinInfoData);
                 } else
                 {
-                    log.log(Level.INFO, "coinTableData is null");
+                    LOG.log(Level.INFO, "coinTableData is null");
                 }
 
             } else if (collectionUUID == null)
             {
-                log.log(Level.INFO, "Attempt to load all user coins");
+                LOG.log(Level.INFO, "Attempt to load all user coins");
                 //ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID);
                 coinTableData.clear();
-                coinTableData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
-                
+                coinTableData = CoinCreator.getCoinProperties(userUUID);
+
                 if (coinTableData != null)
                 {
 
-                    log.log(Level.INFO, "tempdata is NOT null");
+                    LOG.log(Level.INFO, "tempdata is NOT null");
 
                     //coinTableData = coinPreviewTableView.getItems();
                     //====set up filtering of coin info===
@@ -536,7 +538,7 @@ public class HomePageController implements Initializable
 
                 } else
                 {
-                    log.log(Level.SEVERE, "tempdata is null");
+                    LOG.log(Level.SEVERE, "tempdata is null");
                 }
             }
 

@@ -78,9 +78,11 @@ public final class AddCoinController implements Initializable
     private final String Mint_YEAR_EMPTY = "Enter Mint Year.\n";
     private final String Mint_YEAR_NONNUMERIC = "Mint Year must be numeric.\n";
     private final String COLLECTION_NAME_EXISTS = "Name already exists.\n";
-    private final String COIN_NOT_ADDED = "Coin was not added.\nPlease try again later.";
-    private final String BUY_PRICE_EMPTY = "Enter a buy price.";
-    private final String BUY_PRICE_NON_NUMERIC = "Buy price must be numeric";
+    private final String COIN_NOT_ADDED = "Coin was not added.\nPlease try again later\n.";
+    private final String BUY_PRICE_EMPTY = "Enter a buy price.\n";
+    private final String BUY_PRICE_NON_NUMERIC = "Buy price must be numeric\n";
+    private final String MINT_YEARS_INVALID = "Coin mint year must be between:\n-2700 and 2700\n";
+    
     private final String FOLDER_CHOOSER_TITLE = "Add Coin Image";
 
     UUID userUUID = null;
@@ -90,8 +92,8 @@ public final class AddCoinController implements Initializable
 
     @FXML
     private Button addCoinImageBtn1;
-    
-        @FXML
+
+    @FXML
     private Button addCoinImageBtn2;
 
     @FXML
@@ -198,7 +200,7 @@ public final class AddCoinController implements Initializable
             {
                 loadImageButtonAction(2);
             }
-        });        
+        });
 
         // Define rendering of selected value shown in ComboBox.
         collectionComboBox.setConverter(new StringConverter<CollectionProperty>()
@@ -275,7 +277,7 @@ public final class AddCoinController implements Initializable
             System.out.println("collectionComboBox.getValue(): " + collectionComboBox.getValue());
             System.out.println("collection uuid is: " + collectionUUID);
             //public Coin           (UUID userUUID,String name, CoinGrade grade, String facevalue, CoinCurrency currency, StringBuilder note, int coinYear, String coinMintMark, String buyPrice, String coinValue)
-            Coin newCoin = new Coin(userUUID, coinNameTxtField.getText(), coinGradeComboBox.getValue(), coinFaceValueTxtField.getText(), currencyComboBox.getValue(), coinNote, coinYear, coinMintMarkTxtField.getText(), coinBuyPriceTxtField.getText(), coinValueTxtField.getText(), collectionUUID);
+            Coin newCoin = new Coin(userUUID, coinNameTxtField.getText(), coinGradeComboBox.getValue(), coinFaceValueTxtField.getText(), currencyComboBox.getValue(), coinNote, coinYear, coinMintMarkTxtField.getText(), coinBuyPriceTxtField.getText(), coinValueTxtField.getText(),coinBuyDatePicker.getValue() ,collectionUUID);
             log.log(Level.INFO, "New Coin created, user uuid is {0}", userUUID.toString());
             log.log(Level.INFO, "New Coin created, collection uuid is {0}", collectionUUID.toString());
             if (DBCoinConnect.addCoin(newCoin))
@@ -311,7 +313,6 @@ public final class AddCoinController implements Initializable
     /*
      * method to get the user selected folder
      */
-    
     private void loadImageButtonAction(int buttonPressed)
     {
         Stage currentStage = (Stage) addCoinAnchorPane.getScene().getWindow();
@@ -340,7 +341,7 @@ public final class AddCoinController implements Initializable
         if (coinImageFile != null)
         {
 
-            handleImageLoading(coinImageFile,buttonPressed);
+            handleImageLoading(coinImageFile, buttonPressed);
         }
     }
 
@@ -378,7 +379,7 @@ public final class AddCoinController implements Initializable
             issues.append(FACEVALUE_EMPTY);
             coinValid = false;
             log.log(Level.INFO, "Face value is: {0}", coinFaceValueTxtField.getText());
-        } else if (!(isNumeric(coinFaceValueTxtField.getText())))
+        } else if (!(isDouble(coinFaceValueTxtField.getText())))
         {
             issues.append(FACEVALUE_NONNUMERIC);
             coinValid = false;
@@ -391,11 +392,16 @@ public final class AddCoinController implements Initializable
             issues.append(Mint_YEAR_EMPTY);
             coinValid = false;
             log.log(Level.INFO, "Face value is: {0}", coinMintYearTxtField.getText());
-        } else if (!(isNumeric(coinMintYearTxtField.getText())))
+        } else if (!(isInteger(coinMintYearTxtField.getText())))
         {
             issues.append(Mint_YEAR_NONNUMERIC);
             coinValid = false;
             log.log(Level.INFO, "Face value is non-numeric: {0}", coinMintYearTxtField.getText());
+        } else if (!(Integer.parseInt(coinMintYearTxtField.getText())>= -2700 && Integer.parseInt(coinMintYearTxtField.getText())<= 2700))
+        {
+            issues.append(MINT_YEARS_INVALID);
+            coinValid = false;
+            log.log(Level.INFO, "Coin Year not between -2700 and 2077: {0}", coinMintYearTxtField.getText());
         }
 
         //check buy price
@@ -404,7 +410,7 @@ public final class AddCoinController implements Initializable
             issues.append(BUY_PRICE_EMPTY);
             coinValid = false;
             log.log(Level.INFO, "buy price is: {0}", coinBuyPriceTxtField.getText());
-        } else if (!(isNumeric(coinBuyPriceTxtField.getText())))
+        } else if (!(isDouble(coinBuyPriceTxtField.getText())))
         {
             issues.append(BUY_PRICE_NON_NUMERIC);
             coinValid = false;
@@ -437,13 +443,30 @@ public final class AddCoinController implements Initializable
     }
 
     /*
-     * method to check if string contains numeric value
+     * method to check if string contains integer numeric value
      */
-    private boolean isNumeric(String str)
+    private boolean isInteger(String str)
     {
         try
         {
-            double d = Double.parseDouble(str);
+            int i = Integer.parseInt(str);
+        } catch (NumberFormatException nfe)
+        {
+            log.log(Level.INFO, "Non numeric value. Value was: {0}", str);
+            return false;
+        }
+        return true;
+
+    }
+    
+    /*
+     * method to check if string contains integer numeric value
+     */
+    private boolean isDouble(String str)
+    {
+        try
+        {
+            double i = Double.parseDouble(str);
         } catch (NumberFormatException nfe)
         {
             log.log(Level.INFO, "Non numeric value. Value was: {0}", str);
@@ -456,7 +479,7 @@ public final class AddCoinController implements Initializable
     /*
      * method to handle loading of coin image including save of last folder preference
      */
-    private void handleImageLoading(File coinImageFile,int buttonPressed)
+    private void handleImageLoading(File coinImageFile, int buttonPressed)
     {
         //save folder path to prefrences
         BufferedImage bufferedImage = null;
@@ -468,7 +491,7 @@ public final class AddCoinController implements Initializable
             Logger.getLogger(AddCoinController.class.getName()).log(Level.SEVERE, null, ex);
         }
         Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-        
+
         String tempPath = coinImageFile.getPath();
         String stringFolderPath = tempPath.substring(0, tempPath.lastIndexOf("\\"));
         File folderPath = new File(stringFolderPath);
@@ -478,22 +501,20 @@ public final class AddCoinController implements Initializable
         String filePathStr = coinImageFile.getPath();
 
         log.log(Level.INFO, "Folder path selected is: {0}", folderPath);
-        
+
         switch (buttonPressed)
         {
-                case 1: 
-                {
-                    coinImageView1.setImage(image);
-                    break;
-                }
-                case 2:
-                {
-                    coinImageView2.setImage(image);
-                    break;
-                }
+            case 1:
+            {
+                coinImageView1.setImage(image);
+                break;
+            }
+            case 2:
+            {
+                coinImageView2.setImage(image);
+                break;
+            }
         }
-            
-                    
 
     }
 
