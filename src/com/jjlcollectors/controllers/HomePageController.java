@@ -436,7 +436,8 @@ public class HomePageController implements Initializable
         Thread loadCoinThread = new Thread(loadCoinsWorker);
         loadCoinThread.setDaemon(true);
         loadCoinThread.start();
-     
+        /*     
+        
         try
         {
             loadCoinThread.join();
@@ -444,6 +445,7 @@ public class HomePageController implements Initializable
         {
             LOG.log(Level.SEVERE, "load coin thread join failed:\n{0}", ex);
         }      
+        */
     }
     
     /*
