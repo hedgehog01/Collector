@@ -36,7 +36,7 @@ public abstract class DBConnect
     //instance variables
     protected static final String DB_Client_URL = "jdbc:derby://localhost:1527/CollectionDB";//create=true;DB_USER_NAME=Hedgehog01;password=Jade170213";
     //protected static final String DB_Client_URL = "jdbc:derby:CollectionDB";//create=true;DB_USER_NAME=Hedgehog01;password=Jade170213";
-    
+
     protected static final String CREATE_DB = ";create=true";
     protected static final String SHUTDOWN_DB = ";shutdown=true";
     //private static final String driverEmbedded = "org.apache.derby.jdbc.EmbeddedDriver";
@@ -84,9 +84,10 @@ public abstract class DBConnect
             log.log(Level.SEVERE, "Exception while creating connection: {0}", e);
         }
     }
-    
+
     /**
      * Checks if DB can be reached
+     *
      * @return true if DB can be reached
      */
     public static boolean isDBConnectable()
@@ -110,30 +111,29 @@ public abstract class DBConnect
             connect = false;
             log.log(Level.SEVERE, "Exception while creating connection: {0}", e);
         }
-        log.log(Level.INFO, "connection status: {0}",connect);
+        log.log(Level.INFO, "connection status: {0}", connect);
         return connect;
     }
-    
-        /*
+
+    /*
      *private method that shuts down the Database
      */
     protected static void shutDownDBConnection()
     {
 
-        try
-        {
-            if (conn != null)
-            {
-                System.out.println("Shutting down connection staatemnet...");
-                DriverManager.getConnection(DB_Client_URL + ";user=" + DB_USER_NAME + ";password=" + DB_PASS + SHUTDOWN_DB);
-                System.out.println("Closing connection statemnet...");
-                conn.close();
-            }
-        } catch (SQLException e)
-        {
-            System.err.println(e.getMessage());
-        }
-
+         try
+         {
+         if (conn != null)
+         {
+         System.out.println("Shutting down connection staatemnet...");
+         DriverManager.getConnection(DB_Client_URL + ";user=" + DB_USER_NAME + ";password=" + DB_PASS + SHUTDOWN_DB);
+         System.out.println("Closing connection statemnet...");
+         conn.close();
+         }
+         } catch (SQLException e)
+         {
+         System.err.println(e.getMessage());
+         }
     }
 
 }

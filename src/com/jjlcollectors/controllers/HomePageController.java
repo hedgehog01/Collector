@@ -35,6 +35,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,6 +70,7 @@ public class HomePageController implements Initializable
     private final String LOGIN_STAGE_TITLE = "Collector - Login";
     private static final Logger LOG = Logger.getLogger(HomePageController.class.getName());
     private boolean isLoginValid = true;
+    private Task loadCoinsWorker;
 
     @FXML
     private ComboBox<CollectionProperty> collectionComboBox;
@@ -107,7 +109,8 @@ public class HomePageController implements Initializable
         {
             collectionUUID = UUID.fromString(newValue.collectionUUIDProperty().get());
             LOG.log(Level.INFO, "got collection UUID: {0}", collectionUUID.toString());
-            loadCoinTable();
+            cancelLoadCoinsThread();
+            startLoadCoinsThread();
         }
         );
 
@@ -381,7 +384,7 @@ public class HomePageController implements Initializable
             collectionComboListData.setAll(DBCollectionConnect.getUserCollections(userUUID));
             LOG.log(Level.INFO, "Adding data to collectionComboBox");
             collectionComboBox.getItems().setAll(collectionComboListData);
-            loadCoinTable();
+            startLoadCoinsThread();
         } else //connection not available
         {
             LOG.log(Level.WARNING, "Connection to DB unavailable. Can't get user collection");
@@ -424,15 +427,65 @@ public class HomePageController implements Initializable
     }
 
     /*
+    * method to start the Thread that runs the load coins Task
+    */
+    private void startLoadCoinsThread()
+    {
+        LOG.log(Level.INFO, "Starting load coins Thread");
+        loadCoinsWorker = loadCoinsTask();
+        Thread loadCoinThread = new Thread(loadCoinsWorker);
+        loadCoinThread.setDaemon(true);
+        loadCoinThread.start();
+     
+        try
+        {
+            loadCoinThread.join();
+        } catch (InterruptedException ex)
+        {
+            LOG.log(Level.SEVERE, "load coin thread join failed:\n{0}", ex);
+        }      
+    }
+    
+    /*
+    * method to cancel the Thread that runs the load coins Task
+    */
+    private void cancelLoadCoinsThread()
+    {
+        LOG.log(Level.INFO, "Cancelling load coins Thread");
+        loadCoinsWorker.cancel();
+    }
+            
+    
+    /*
+    * task that run the load coin table method
+    */
+    private Task loadCoinsTask()
+    {
+        return new Task()
+        {
+
+            @Override
+            protected Object call() throws Exception
+            {
+                LOG.log(Level.INFO, "Starting load coins Task");
+                while (isCancelled())
+                {
+                    LOG.log(Level.INFO, "load coins Task canceled");
+                    break;
+                }
+                loadCoinTable();
+                return null;
+            }
+            
+        };
+    }
+    /*
      * populate the coin table
      * if collection selected only coins from that collection visible
+     * Should be called by Task.
      */
     private void loadCoinTable()
     {
-
-        //ObservableList<CoinProperty> data = coinPreviewTableView.getItems();
-        //ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
-        //data.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
         if (userUUID != null)
         {
             if (collectionUUID != null)
@@ -441,8 +494,6 @@ public class HomePageController implements Initializable
 
                 if ((CoinCreator.getCoinProperties(userUUID, collectionUUID) != null))
                 {
-                    //System.out.println("UserUUID: " + userUUID + " CollectionUUID " + collectionUUID);
-                    //ObservableList<CoinProperty> tempData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
                     coinTableData.clear();
                     coinTableData = CoinCreator.getCoinProperties(userUUID, collectionUUID);
 
@@ -475,15 +526,7 @@ public class HomePageController implements Initializable
                     sortedCoinInfoData.comparatorProperty().bind(coinPreviewTableView.comparatorProperty());
 
                     //=======End of filtered phone name setup======  
-                    /*
-                     if (tempData == null)
-                     {
-                     System.out.println("tempdata is null");
-                     }
-                     */
-                    //coinTableData = coinPreviewTableView.getItems();
-                    //coinTableData.setAll(tempData);
-                    //coinPreviewTableView.setItems(coinTableData);
+
                     coinPreviewTableView.setItems(sortedCoinInfoData);
                 } else
                 {
@@ -532,8 +575,6 @@ public class HomePageController implements Initializable
                     sortedCoinInfoData.comparatorProperty().bind(coinPreviewTableView.comparatorProperty());
 
                     //=======End of filtered phone name setup======                    
-                    //coinTableData.setAll(tempData);
-                    //coinPreviewTableView.setItems(coinTableData);
                     coinPreviewTableView.setItems(sortedCoinInfoData);
 
                 } else

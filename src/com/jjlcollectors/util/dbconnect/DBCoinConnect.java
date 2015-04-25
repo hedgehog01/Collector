@@ -56,7 +56,8 @@ public final class DBCoinConnect extends DBConnect
         //createDBConnection();
         LOG.log(Level.INFO, "Select * from coins...");
         selectAllCoins();
-        shutDownDBConnection();
+        closeDBConnection();
+        //shutDownDBConnection();
         return coinAdded;
     }
 
@@ -96,7 +97,7 @@ public final class DBCoinConnect extends DBConnect
             System.err.println(sql);
         }
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
 
         return removeCoinByCoinUUID(UUID.fromString(coinUUID));
     }
@@ -145,7 +146,7 @@ public final class DBCoinConnect extends DBConnect
             }
 
             DBConnect.closeDBConnection();
-            shutDownDBConnection();
+            //shutDownDBConnection();
         } catch (SQLException e)
         {
             LOG.log(Level.SEVERE, "Exception while writing coin to DB. sql exception: {0}", e);
@@ -277,7 +278,7 @@ public final class DBCoinConnect extends DBConnect
             e.printStackTrace();
         }
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
     }
 
     /**
@@ -359,7 +360,7 @@ public final class DBCoinConnect extends DBConnect
                 e.printStackTrace();
             }
             DBConnect.closeDBConnection();
-            shutDownDBConnection();
+            //shutDownDBConnection();
         }
         return coinList;
     }
@@ -445,7 +446,7 @@ public final class DBCoinConnect extends DBConnect
                 e.printStackTrace();
             }
             DBConnect.closeDBConnection();
-            shutDownDBConnection();
+            //shutDownDBConnection();
         }
         return coinList;
     }
@@ -464,7 +465,7 @@ public final class DBCoinConnect extends DBConnect
             count = prepStmt.executeUpdate();
             LOG.log(Level.INFO, "Number of deleted rows: {0}", count);
             DBConnect.closeDBConnection();
-            shutDownDBConnection();
+            //shutDownDBConnection();
         } catch (SQLException e)
         {
             LOG.log(Level.SEVERE, "Failed to delete coin. SQL error: {0}", e);

@@ -21,6 +21,7 @@ import com.jjlcollectors.collectables.coins.Coin;
 import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.collectables.coins.CoinGrade;
 import com.jjlcollectors.collectables.coins.CoinProperty;
+import java.time.LocalDate;
 import java.util.UUID;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
@@ -69,7 +70,8 @@ public class DBCoinConnectTest
         String coinMintMark = "NR";
         String buyPrice = "90";
         String coinValue = "110";
-        Coin coin = new Coin(userUUID, coinName, CoinGrade.VG8, faceValue, coinCurrency, sb, 1982, coinMintMark, buyPrice, coinValue, collectionUUID);
+        LocalDate date = LocalDate.now();
+        Coin coin = new Coin(userUUID, coinName, CoinGrade.VG8, faceValue, coinCurrency, sb, 1982, coinMintMark, buyPrice, coinValue,date, collectionUUID);
         boolean expResult = true;
         boolean result = DBCoinConnect.addCoin(coin);
         assertEquals(expResult, result);
