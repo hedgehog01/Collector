@@ -46,8 +46,10 @@
          </font>
       </Label>
       <Button fx:id="addCoinImageBtn1" layoutX="29.0" layoutY="400.0" mnemonicParsing="false" text="Add image" />
-      <ImageView fx:id="coinImageView1" fitHeight="121.0" fitWidth="136.0" layoutX="118.0" layoutY="352.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="coinImageView1" fitHeight="121.0" fitWidth="136.0" layoutX="118.0" layoutY="368.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="coinImageView2" fitHeight="121.0" fitWidth="136.0" layoutX="118.0" layoutY="504.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="addCoinImageBtn2" layoutX="29.0" layoutY="552.0" mnemonicParsing="false" text="Add image" />
+      <Button fx:id="removeCoinImageBtn1" layoutX="29.0" layoutY="427.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Remove" />
+      <Button fx:id="removeCoinImageBtn2" layoutX="29.0" layoutY="580.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Remove" />
    </children>
 </AnchorPane>

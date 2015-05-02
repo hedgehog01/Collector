@@ -80,6 +80,7 @@ public final class AddCoinController implements Initializable
     private final String BUY_PRICE_EMPTY = "Enter a buy price.\n";
     private final String BUY_PRICE_NON_NUMERIC = "Buy price must be numeric\n";
     private final String MINT_YEARS_INVALID = "Coin mint year must be between:\n-2700 and 2700\n";
+    private final String BUY_DATE_EMPTY = "Coin buy date must be selected";
     public final String USER_DIR = "user.dir";
     public final String IMAGE_DIRECTORY = "images";
     public final String IMAGE_OUTPUT_EXTENSION = "jpg";
@@ -99,6 +100,12 @@ public final class AddCoinController implements Initializable
 
     @FXML
     private Button addCoinImageBtn2;
+    
+    @FXML
+    private Button removeCoinImageBtn1;
+    
+    @FXML
+    private Button removeCoinImageBtn2;
 
     @FXML
     private AnchorPane addCoinAnchorPane;
@@ -205,7 +212,24 @@ public final class AddCoinController implements Initializable
                 loadImageButtonAction(2);
             }
         });
+        removeCoinImageBtn1.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                removeImageButtonAction(1);
+            }
+        });
+        removeCoinImageBtn2.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                removeImageButtonAction(2);
+            }
+        });
 
+        
         // Define rendering of selected value shown in ComboBox.
         collectionComboBox.setConverter(new StringConverter<CollectionProperty>()
         {
@@ -352,6 +376,29 @@ public final class AddCoinController implements Initializable
             handleImageLoading(coinImageFile, buttonPressed);
         }
     }
+    
+    @SuppressWarnings("fallthrough")
+    private void removeImageButtonAction (int imgNum)
+    {
+        switch (imgNum)
+        {
+            case 1:
+            {
+                MyLogger.log(Level.INFO, "Removing image {0}", imgNum);
+                bufferedImage1 = null;
+                coinImageView1.setImage(null);
+                break;
+            }
+            case 2:
+            {
+                MyLogger.log(Level.INFO, "Removing image {0}", imgNum);
+                bufferedImage2 = null;
+                coinImageView2.setImage(null);
+                break;
+            }
+        }
+        
+    }
 
     private void saveCoinImages()
     {
@@ -457,6 +504,12 @@ public final class AddCoinController implements Initializable
             issues.append(GRADE_NOT_SELECTED);
             coinValid = false;
             MyLogger.log(Level.INFO, "grade selected is: {0}", coinGradeComboBox.getValue());
+        }
+        if (coinBuyDatePicker.getValue() == null)
+        {
+            issues.append(BUY_DATE_EMPTY);
+            coinValid = false;
+            MyLogger.log(Level.INFO, "coin buy date not selected, value is: {0}", coinBuyDatePicker.getValue());
         }
         if (!(coinValid))
         {
