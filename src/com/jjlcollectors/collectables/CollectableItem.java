@@ -37,7 +37,6 @@ public abstract class CollectableItem
     protected CollectableItem (UUID userID)
     {
         setUserId(userID);
-        _itemUUID = UUID.randomUUID();
         _buyDate = LocalDate.now();
         setItemName(DEFAULT_NAME);
         setItemValue(DEFAULT_VALUE);
@@ -48,12 +47,15 @@ public abstract class CollectableItem
      * Constructor that excepts String for object name and also sets object UUID.
      * @param userID the user ID.
      * @param name the user name.
+     * @param collectionUUID the collection UUID
+     * @param itemUUID the user UUID
      */
-    protected CollectableItem (UUID userID,String name,UUID collectionUUID)
+    protected CollectableItem (UUID userID,String name,UUID collectionUUID,UUID itemUUID)
     {
         this(userID);
         setItemName(name);
         setItemCollectionUUID(collectionUUID);
+        setItemUUID(itemUUID);
     }
 
     //========================================================================================//
@@ -86,6 +88,14 @@ public abstract class CollectableItem
         return _itemUUID;
     } 
     
+    /**
+     * method to set item UUID
+     * @param itemUUID the item UUID
+     */
+    public void setItemUUID(UUID itemUUID)
+    {
+        _itemUUID = itemUUID;
+    }
     /**
      * Method to return item note
      * @return String item note

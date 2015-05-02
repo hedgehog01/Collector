@@ -40,6 +40,7 @@ public class DBCoinConnectTest
     
     private final UUID userUUID = UUID.randomUUID();
     private final UUID collectionUUID = UUID.randomUUID();
+    private final UUID coinUUID = UUID.randomUUID();
     
     public DBCoinConnectTest()
     {
@@ -71,7 +72,7 @@ public class DBCoinConnectTest
         String buyPrice = "90";
         String coinValue = "110";
         LocalDate date = LocalDate.now();
-        Coin coin = new Coin(userUUID, coinName, CoinGrade.VG8, faceValue, coinCurrency, sb, 1982, coinMintMark, buyPrice, coinValue,date, collectionUUID);
+        Coin coin = new Coin(userUUID, coinName, CoinGrade.VG8, faceValue, coinCurrency, sb, 1982, coinMintMark, buyPrice, coinValue,date, collectionUUID,coinUUID);
         boolean expResult = true;
         boolean result = DBCoinConnect.addCoin(coin);
         assertEquals(expResult, result);
