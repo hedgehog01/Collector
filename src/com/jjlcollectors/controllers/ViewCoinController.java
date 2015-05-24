@@ -21,6 +21,7 @@ import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.collectables.coins.CoinGrade;
 import com.jjlcollectors.collectables.coins.CoinProperty;
+import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.log.MyLogger;
@@ -68,8 +69,13 @@ public final class ViewCoinController implements Initializable
     private final String CONFIMATION_COIN_UPDATE_BODY = "To update coin select \"OK\"";
     private final String INFORMATION_COIN_UPDATE_TITLE = "Coin update info";
     private final String INFORMATION_COIN_UPDATE_OK_BODY = "Coin updated successfully.";
-    private final String ERROR_COIN_UPDATE_FAIL_BODY = "Coin updat was unsuccessful!\nPlease try again later.";
+    private final String ERROR_COIN_UPDATE_FAIL_BODY = "Coin update was unsuccessful!\nPlease try again later.";
     private final String LOG_CLASS_NAME = "ViewCoinController: ";
+    private final String CONFIMATION_COIN_DELETE_TITLE = "Delete coin";
+    private final String INFORMATION_COIN_DELETE_OK_BODY = "Coin deleted successfully.";
+    private final String CONFIMATION_COIN_DELETE_BODY = "Are you sure you would like to delete the coin?";
+    private final String ERROR_COIN_DELETE_FAIL_TITLE = "Error - Delete coin failed";
+    private final String ERROR_COIN_DELETE_FAIL_BODY = "Coin delete was unsuccessful!\nPlease try again later.";
 
     @FXML
     private AnchorPane viewCoinAnchorPane;
@@ -127,6 +133,9 @@ public final class ViewCoinController implements Initializable
 
     @FXML
     private Button removeCoinImageBtn2;
+    
+    @FXML
+    private Button deleteCoinBtn;
 
     @FXML
     private ImageView coinImageView1;
@@ -278,12 +287,12 @@ public final class ViewCoinController implements Initializable
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == buttonTypeOK)
         {
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed update coin");
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed coin action");
             return true;
         }
         else if (result.isPresent() && result.get() == buttonTypeCancel)
         {
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User canceled update coin");
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User canceled coin Action");
             return false;
         }
         return false;
@@ -326,7 +335,7 @@ public final class ViewCoinController implements Initializable
             }
             else 
             {
-                MyLogger.log(Level.INFO, "Coin failed");
+                MyLogger.log(Level.INFO, "Coin update failed");
                 showErrorMessage(INFORMATION_COIN_UPDATE_TITLE,ERROR_COIN_UPDATE_FAIL_BODY);
             }
         }
@@ -342,6 +351,46 @@ public final class ViewCoinController implements Initializable
         
         
         return updateCoinSuccess;
+    }
+    
+    @FXML
+    private void initiateDeleteCoin()
+    {
+        if (showConfermationMessage(CONFIMATION_COIN_DELETE_TITLE,CONFIMATION_COIN_DELETE_BODY ))
+        {
+            if (deleteCoin())
+            {
+                MyLogger.log(Level.INFO, "Coin: {0} deleted successful",coinNameTextField.getText());
+                showInfoMessage(CONFIMATION_COIN_DELETE_TITLE,INFORMATION_COIN_DELETE_OK_BODY);
+            }
+            else 
+            {
+                MyLogger.log(Level.INFO, "Coin: {0} delete failed",coinNameTextField.getText());
+                showErrorMessage(ERROR_COIN_DELETE_FAIL_TITLE,ERROR_COIN_DELETE_FAIL_BODY);
+            }
+        }
+    }
+    
+    private boolean deleteCoin()
+    {
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Deleting coin");
+        boolean deleteCoinSuccess = false;
+        if (coinProperty != null)
+        {
+            int deleteCoinResult = DBCoinConnect.removeCoinByCoinUUID(UUID.fromString(coinProperty.getCoinUUID()));
+            if (deleteCoinResult == 1)
+            {
+                MyLogger.log(Level.INFO, "Coin delete successfull, coin UUID: {0}",coinProperty.getCoinUUID());
+                deleteCoinSuccess = true;
+            }
+            else
+            {
+                MyLogger.log(Level.SEVERE, "Coin delete NOT successfull, coin UUID: {0}",coinProperty.getCoinUUID());
+            }
+        }
+        
+        
+        return deleteCoinSuccess;
     }
 
 }

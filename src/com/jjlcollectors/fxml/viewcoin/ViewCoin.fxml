@@ -37,8 +37,13 @@
       <Label layoutX="43.0" layoutY="121.0" text="Currency:" />
       <Label layoutX="43.0" layoutY="85.0" text="Name:" />
       <TextArea fx:id="coinAddStatus" editable="false" layoutX="387.0" layoutY="296.0" prefHeight="107.0" prefWidth="150.0" wrapText="true" />
-      <Button fx:id="cancelEditCoinBtn" layoutX="386.0" layoutY="590.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="25.0" prefWidth="66.0" text="Close" />
-      <Button fx:id="modifyCoinBtn" layoutX="454.0" layoutY="590.0" mnemonicParsing="false" onAction="#initiateUpdateCoin" text="Modify Coin" />
+      <HBox layoutX="293.0" layoutY="590.0" spacing="2.0">
+         <children>
+            <Button fx:id="cancelEditCoinBtn" layoutX="293.0" layoutY="590.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="25.0" prefWidth="81.0" text="Close" />
+            <Button fx:id="deleteCoinBtn" layoutX="374.0" layoutY="590.0" mnemonicParsing="false" onAction="#initiateDeleteCoin" prefHeight="25.0" prefWidth="81.0" text="Delete Coin" />
+            <Button fx:id="modifyCoinBtn" layoutX="454.0" layoutY="590.0" mnemonicParsing="false" onAction="#initiateUpdateCoin" text="Modify Coin" />
+         </children>
+      </HBox>
       <TextField fx:id="coinNoteTxtField" layoutX="386.0" layoutY="192.0" prefHeight="81.0" prefWidth="149.0" promptText="More info" />
       <TextField fx:id="coinBuyPriceTextField" layoutX="386.0" layoutY="117.0" promptText="Buy Price" />
       <TextField fx:id="coinMintMarkTextField" layoutX="386.0" layoutY="81.0" promptText="Mint mark" />

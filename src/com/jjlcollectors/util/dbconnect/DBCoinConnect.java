@@ -8,6 +8,7 @@ package com.jjlcollectors.util.dbconnect;
 import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.coins.Coin;
 import com.jjlcollectors.collectables.coins.CoinProperty;
+import com.jjlcollectors.util.log.MyLogger;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +36,7 @@ public final class DBCoinConnect extends DBConnect
     
     //Class variables
     private static final String TABLE_NAME = "COINS_DB";
-    private static final Logger LOG = Logger.getLogger(DBCoinConnect.class.getName());
+    
     private static Date sqlDate;
     private static TableView tableView;
 
@@ -49,10 +50,10 @@ public final class DBCoinConnect extends DBConnect
     {
 
         //insertCoin(uuid, name, grade, faceValue, currency, note);
-        LOG.log(Level.INFO, "Call to addCoin method");
+        MyLogger.log(Level.INFO, "Call to addCoin method");
         boolean coinAdded = addCoin(coin.getItemUUID().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(), coin.getItemBuyDate(), coin.getItemCollectionUUID());
         //createDBConnection();
-        LOG.log(Level.INFO, "Select * from coins...");
+        MyLogger.log(Level.INFO, "Select * from coins...");
         selectAllCoins();
         closeDBConnection();
         //shutDownDBConnection();
@@ -108,12 +109,12 @@ public final class DBCoinConnect extends DBConnect
         boolean userAdded = false;
         DBConnect.createDBConnection();
         int updateCount = 0; //var that count num of updated rows
-        LOG.log(Level.INFO, "Attemp to add new coin...");
+        MyLogger.log(Level.INFO, "Attemp to add new coin...");
         try
         {
           //date conversion blog: https://weblogs.java.net/blog/montanajava/archive/2014/06/17/using-java-8-datetime-classes-jpa
             sqlDate = java.sql.Date.valueOf(coinBuyDate); 
-            LOG.log(Level.INFO, "Coin sql buy date: {0}", sqlDate);
+            MyLogger.log(Level.INFO, "Coin sql buy date: {0}", sqlDate);
             String sql = ("INSERT INTO " + TABLE_NAME + " (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_USER_UUID,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement prepStmt = conn.prepareStatement(sql);
 
@@ -133,21 +134,21 @@ public final class DBCoinConnect extends DBConnect
 
             updateCount = prepStmt.executeUpdate();
 
-            LOG.log(Level.INFO, "Add coin update count is: {0}", updateCount);
+            MyLogger.log(Level.INFO, "Add coin update count is: {0}", updateCount);
             if (updateCount == 1)
             {
-                LOG.log(Level.INFO, "User added and return value set to true");
+                MyLogger.log(Level.INFO, "User added and return value set to true");
                 userAdded = true;
             } else if (updateCount == 0)
             {
-                LOG.log(Level.SEVERE, "User NOT added and return value remains false");
+                MyLogger.log(Level.SEVERE, "User NOT added and return value remains false");
             }
 
             DBConnect.closeDBConnection();
             //shutDownDBConnection();
         } catch (SQLException e)
         {
-            LOG.log(Level.SEVERE, "Exception while writing coin to DB. sql exception: {0}", e);
+            MyLogger.log(Level.SEVERE, "Exception while writing coin to DB. sql exception: {0}", e);
         }
         return userAdded;
     }
@@ -170,8 +171,8 @@ public final class DBCoinConnect extends DBConnect
             String SQL = "SELECT * from USERDB";
             //ResultSet
             ResultSet rs = conn.createStatement().executeQuery(SQL);
-            LOG.log(Level.INFO, "setting result set to query: {0}", SQL);
-            LOG.log(Level.INFO, "number of colomns in the table: {0}", rs.getMetaData().getColumnCount());
+            MyLogger.log(Level.INFO, "setting result set to query: {0}", SQL);
+            MyLogger.log(Level.INFO, "number of colomns in the table: {0}", rs.getMetaData().getColumnCount());
 
             /**
              * ********************************
@@ -179,7 +180,7 @@ public final class DBCoinConnect extends DBConnect
              */
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++)
             {
-                LOG.log(Level.INFO, "in the for loop of coolumn get data. col num: {0}", i);
+                MyLogger.log(Level.INFO, "in the for loop of coolumn get data. col num: {0}", i);
                 //We are using non property style for making dynamic table
                 final int j = i;
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
@@ -188,7 +189,7 @@ public final class DBCoinConnect extends DBConnect
 
                     public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param)
                     {
-                        LOG.log(Level.INFO, "Creating cell...");
+                        MyLogger.log(Level.INFO, "Creating cell...");
                         return new SimpleStringProperty(param.getValue().get(j).toString());
                     }
                 });
@@ -262,7 +263,7 @@ public final class DBCoinConnect extends DBConnect
                     String coinMintMark = results.getString(11);
                     int coinYear = results.getInt(12);
 
-                    LOG.log(Level.INFO, "Add user update count is: {0}", updateCount);
+                    MyLogger.log(Level.INFO, "Add user update count is: {0}", updateCount);
 
                     System.out.println(id + "\t" + uuid + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear);
                 }
@@ -302,7 +303,7 @@ public final class DBCoinConnect extends DBConnect
                 {
                     ResultSetMetaData rsmd = results.getMetaData();
                     int numberCols = rsmd.getColumnCount();
-                    LOG.log(Level.INFO, "Number of colomns: {0}", numberCols);
+                    MyLogger.log(Level.INFO, "Number of colomns: {0}", numberCols);
                     for (int i = 1; i <= numberCols; i++)
                     {
                         //print Column Names
@@ -312,15 +313,15 @@ public final class DBCoinConnect extends DBConnect
                     System.out.println("\n-------------------------------------------------");
                     if (!(results.next()))
                     {
-                        LOG.log(Level.INFO, "No items in the DB?");
+                        MyLogger.log(Level.INFO, "No items in the DB?");
                     }
                     //get all user collections
-                    LOG.log(Level.INFO, "Get list of user collections");
+                    MyLogger.log(Level.INFO, "Get list of user collections");
                     ObservableList<CollectionProperty> userCollectionData;
                     userCollectionData = DBCollectionConnect.getUserCollections(userUUID);
                     if (userCollectionData == null || userCollectionData.isEmpty())
                     {
-                        LOG.log(Level.SEVERE, "list of user collections is null or empty");
+                        MyLogger.log(Level.SEVERE, "list of user collections is null or empty");
                     } else
                     {
 
@@ -379,16 +380,16 @@ public final class DBCoinConnect extends DBConnect
             try
             {
                 DBConnect.createDBConnection();
-                LOG.log(Level.INFO, "Starting quesry for user {0} coins by collection {1}", new Object [] {userUUID.toString(),collectionUUID.toString()});
+                MyLogger.log(Level.INFO, "Starting quesry for user {0} coins by collection {1}", new Object [] {userUUID.toString(),collectionUUID.toString()});
                 PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " where COIN_USER_UUID = ? AND COIN_COLLECTION_UUID = ?");
                 prepStmt.setString(1, userUUID.toString());
                 prepStmt.setString(2, collectionUUID.toString());
-                LOG.log(Level.INFO, "Prepare statement for user coins by collection done");
+                MyLogger.log(Level.INFO, "Prepare statement for user coins by collection done");
                 try (ResultSet results = prepStmt.executeQuery())
                 {
                     ResultSetMetaData rsmd = results.getMetaData();
                     int numberCols = rsmd.getColumnCount();
-                    LOG.log(Level.INFO, "Number of colomns: {0}", numberCols);
+                    MyLogger.log(Level.INFO, "Number of colomns: {0}", numberCols);
                     for (int i = 1; i <= numberCols; i++)
                     {
                         //print Column Names
@@ -398,15 +399,15 @@ public final class DBCoinConnect extends DBConnect
                     System.out.println("\n-------------------------------------------------");
                     if (!(results.next()))
                     {
-                        LOG.log(Level.INFO, "No items in the DB?");
+                        MyLogger.log(Level.INFO, "No items in the DB?");
                     }
                     //get all user collections
-                    LOG.log(Level.INFO, "Get list of user collections");
+                    MyLogger.log(Level.INFO, "Get list of user collections");
                     ObservableList<CollectionProperty> userCollectionData;
                     userCollectionData = DBCollectionConnect.getUserCollections(userUUID);
                     if (userCollectionData == null || userCollectionData.isEmpty())
                     {
-                        LOG.log(Level.SEVERE, "list of user collections is null or empty");
+                        MyLogger.log(Level.SEVERE, "list of user collections is null or empty");
                     } else
                     {
 
@@ -459,14 +460,14 @@ public final class DBCoinConnect extends DBConnect
             System.out.println("prepare delete statement starting...");
             PreparedStatement prepStmt = conn.prepareStatement("DELETE from " + TABLE_NAME + " WHERE COIN_UUID = ?");
             prepStmt.setString(1, coinUUID.toString());
-            LOG.log(Level.INFO, "prepare statement done...");
+            MyLogger.log(Level.INFO, "prepare statement done...");
             count = prepStmt.executeUpdate();
-            LOG.log(Level.INFO, "Number of deleted rows: {0}", count);
+            MyLogger.log(Level.INFO, "Number of deleted rows: {0}", count);
             DBConnect.closeDBConnection();
             //shutDownDBConnection();
         } catch (SQLException e)
         {
-            LOG.log(Level.SEVERE, "Failed to delete coin. SQL error: {0}", e);
+            MyLogger.log(Level.SEVERE, "Failed to delete coin. SQL error: {0}", e.toString());
         }
 
         return count;
