@@ -63,19 +63,6 @@ public class CoinCreator
         if (userUUID != null)
         {
             LOG.log(Level.INFO, "userUUID not null, attempt to build coin list");
-            /*
-             int year = 1982;
-             CoinProperty a1 = new CoinProperty("name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", "lastname1", "email1", "name1", year, "email1");
-             CoinProperty a2 = new CoinProperty("5", "5", "66", "gh", "gh", "lmail1", "gh", "hj", "hmail1", "hame1", year, "jkg");
-             //CoinProperty b = new CoinProperty("name2", "lastname2", "email2");
-             //CoinProperty c = new CoinProperty("name3", "lastname3", "email3");
-
-             data.add(a1);
-            
-            
-             data.add(a2);
-             //data.add(c);
-             */
             data = DBCoinConnect.getAllUserCoins(userUUID);
             LOG.log(Level.INFO, "Adding coins by useruuid and collectionuuid:");
         }

@@ -124,7 +124,7 @@ public final class LoginController implements Initializable
                 PrefrencesHandler.setLastUsedUserEmail(userEmailTextField.getText().toLowerCase());
             }
             log.log(Level.INFO, "login is valid moving to next scene");
-            loadHomePageScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText(), event);
+            loadHomePageScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText().toCharArray(), event);
 
         } else
         {
@@ -197,7 +197,7 @@ public final class LoginController implements Initializable
     /*
      * method to load next scene after user login was validated.
      */
-    private boolean loadHomePageScene(String userEmail, String userAttemptedPassword, ActionEvent event)
+    private boolean loadHomePageScene(String userEmail, char[] userAttemptedPassword, ActionEvent event)
     {
         boolean loadScreen = false;
         try

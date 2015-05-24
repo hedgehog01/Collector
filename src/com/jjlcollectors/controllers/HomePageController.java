@@ -23,6 +23,7 @@ import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+import com.jjlcollectors.util.log.MyLogger;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,6 +38,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -44,11 +46,13 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -66,8 +70,13 @@ public class HomePageController implements Initializable
     private final boolean ALWAYS_ON_TOP = true;
     private final boolean SET_RESIZABLE = false;
     private final String LOGIN_FXML_PATH = "/com/jjlcollectors/fxml/login/Login.fxml";
+    private final String COLLECTIONVIEW_FXML_PATH = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
     private final String ADD_COIN_STAGE_TITLE = "Collector - Add new Coin";
+    private final String VIEW_COIN_STAGE_TITLE = "Collector - View/Edit Coin";
     private final String LOGIN_STAGE_TITLE = "Collector - Login";
+    private final String INFO_MESSAGE_NO_COIN_SELECTED_TITLE = "No Coin Selected";
+    private final String INFO_MESSAGE_NO_COIN_SELECTED_BODY = "No Coin Selected.\nPlease select a coin and try again.";
+    private final String LOG_CLASS_NAME = "HomePageController: ";
     private static final Logger LOG = Logger.getLogger(HomePageController.class.getName());
     private boolean isLoginValid = true;
     private Task loadCoinsWorker;
@@ -80,6 +89,9 @@ public class HomePageController implements Initializable
 
     @FXML
     private Button openCollectionBtn;
+
+    @FXML
+    private Button editCoinBtn;
 
     @FXML
     private Button createNewCollectionBtn;
@@ -107,8 +119,16 @@ public class HomePageController implements Initializable
     {
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
-            collectionUUID = UUID.fromString(newValue.collectionUUIDProperty().get());
-            LOG.log(Level.INFO, "got collection UUID: {0}", collectionUUID.toString());
+            if (!(newValue.collectionUUIDProperty().get() == null))
+            {
+                collectionUUID = UUID.fromString(newValue.collectionUUIDProperty().get());
+                LOG.log(Level.INFO, "got collection UUID: {0}", collectionUUID.toString());
+            } else
+            {
+                collectionUUID = null;
+                MyLogger.log(Level.INFO, "Collection null selected - should load all user coins");
+            }
+
             cancelLoadCoinsThread();
             startLoadCoinsThread();
         }
@@ -157,24 +177,6 @@ public class HomePageController implements Initializable
             }
         });
 
-        /*
-         // Handle ComboBox event.
-         collectionComboBox.setOnAction((event) ->
-         {
-         if (isLoginValid)
-         {
-         log.log(Level.INFO, "Login valid, loading user data");
-         CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
-         log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
-         collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
-         } else if (!(isLoginValid))
-         {
-         log.log(Level.SEVERE, "Login is NOT valid");
-
-         }
-
-         });
-         */
         Platform.runLater(new Runnable()
         {
             @Override
@@ -185,9 +187,6 @@ public class HomePageController implements Initializable
                 {
                     LOG.log(Level.INFO, "Login valid, loading user data");
                     loadUserData();
-                    //CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
-                    //log.log(Level.INFO, "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
-                    //collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
                 } else if (!(isLoginValid))
                 {
                     LOG.log(Level.SEVERE, "Login is NOT valid");
@@ -195,8 +194,22 @@ public class HomePageController implements Initializable
             }
         });
 
-        //coinTableData = coinPreviewTableView.getItems();
-        //coinTableData.setAll(CoinCreator.getCoinProperties(userUUID,coinTableData));
+        //XML file list double click listener
+        coinPreviewTableView.setOnMousePressed(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2)
+                {
+                    MyLogger.log(Level.INFO, "Coin {0} double clicked", coinPreviewTableView.getSelectionModel().getSelectedItem().getCoinName());
+                    CoinProperty coinProperty = coinPreviewTableView.getSelectionModel().getSelectedItem();
+                    MyLogger.log(Level.INFO, "Selected coin Name: {0}", coinProperty.getCoinName());
+                    MyLogger.log(Level.INFO, "Selected coin vollection UUID: {0}", coinProperty.getCoinCollectionUUID());
+                    loadEditCoinWindow (coinProperty);
+                }
+            }
+        });
     }
 
     @FXML
@@ -240,7 +253,7 @@ public class HomePageController implements Initializable
      * method to set user data.
      After validating data is valid, initialize the data according to user data.
      */
-    protected final void setUserData(String userEmail, String userPass, ActionEvent event)
+    protected final void setUserData(String userEmail, char[] userPass, ActionEvent event)
     {
 
         checkLoginStatus(userEmail, userPass, event);
@@ -249,7 +262,7 @@ public class HomePageController implements Initializable
     /*
      * method to validate user credentials
      */
-    private void checkLoginStatus(String userEmail, String userPass, ActionEvent event)
+    private void checkLoginStatus(String userEmail, char[] userPass, ActionEvent event)
     {
 
         LOG.log(Level.INFO, "Verifying login details");
@@ -271,7 +284,7 @@ public class HomePageController implements Initializable
      * method to check if login credentials are valid.
      * returns true if the are.
      */
-    private boolean isLoginValid(String userEmail, String userPass)
+    private boolean isLoginValid(String userEmail, char[] userPass)
     {
         boolean loginValid = true;
         //verify user with this email exists
@@ -294,16 +307,16 @@ public class HomePageController implements Initializable
      * method to verify if user password is correct
      * returns true if it is.
      */
-    private boolean isPasswordValid(String userEmail, String userPass)
+    private boolean isPasswordValid(String userEmail, char[] userPass)
     {
         boolean passwordValid = true;
         //verify password not empty
-        if ((userPass == null) || (userPass.trim().isEmpty()))
+        if ((userPass == null) || (userPass.length == 0))
         {
             LOG.log(Level.INFO, "User password Empty or null");
             passwordValid = false;
         } //Check password is NOT valid with this email and update boolean var
-        else if (!(DBUsersConnect.isUserPasswordValid(userEmail, userPass.toCharArray())))
+        else if (!(DBUsersConnect.isUserPasswordValid(userEmail, userPass)))
         {
             LOG.log(Level.INFO, "User password Invalid!");
             passwordValid = false;
@@ -342,7 +355,7 @@ public class HomePageController implements Initializable
         }
     }
 
-    private boolean loadNextScene(String userEmail, String userAttemptedPassword)
+    private boolean loadCollectionView(String userEmail, String userAttemptedPassword)
     {
         boolean loadScreen = false;
         try
@@ -350,13 +363,13 @@ public class HomePageController implements Initializable
             Stage currentStage = (Stage) collectionComboBox.getScene().getWindow();
             currentStage.hide();
             FXMLLoader fxmlLoader = new FXMLLoader();
-            String filePath = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
+            String filePath = COLLECTIONVIEW_FXML_PATH;
             URL location = CollectionViewController.class.getResource(filePath);
             fxmlLoader.setLocation(location);
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             CollectionViewController cvController = (CollectionViewController) fxmlLoader.getController();
-            cvController.setUserData(userEmail, userAttemptedPassword);
+            cvController.setCollectionData(userUUID, collectionUUID);
 
             //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage stage = new Stage();
@@ -382,6 +395,8 @@ public class HomePageController implements Initializable
         {
             LOG.log(Level.INFO, "Adding data to collectionComboListData");
             collectionComboListData.setAll(DBCollectionConnect.getUserCollections(userUUID));
+            CollectionProperty allData = new CollectionProperty("All Coins", "All", "All", null);
+            collectionComboListData.add(0, allData);
             LOG.log(Level.INFO, "Adding data to collectionComboBox");
             collectionComboBox.getItems().setAll(collectionComboListData);
             startLoadCoinsThread();
@@ -427,8 +442,8 @@ public class HomePageController implements Initializable
     }
 
     /*
-    * method to start the Thread that runs the load coins Task
-    */
+     * method to start the Thread that runs the load coins Task
+     */
     private void startLoadCoinsThread()
     {
         LOG.log(Level.INFO, "Starting load coins Thread");
@@ -438,29 +453,28 @@ public class HomePageController implements Initializable
         loadCoinThread.start();
         /*     
         
-        try
-        {
-            loadCoinThread.join();
-        } catch (InterruptedException ex)
-        {
-            LOG.log(Level.SEVERE, "load coin thread join failed:\n{0}", ex);
-        }      
-        */
+         try
+         {
+         loadCoinThread.join();
+         } catch (InterruptedException ex)
+         {
+         LOG.log(Level.SEVERE, "load coin thread join failed:\n{0}", ex);
+         }      
+         */
     }
-    
+
     /*
-    * method to cancel the Thread that runs the load coins Task
-    */
+     * method to cancel the Thread that runs the load coins Task
+     */
     private void cancelLoadCoinsThread()
     {
         LOG.log(Level.INFO, "Cancelling load coins Thread");
         loadCoinsWorker.cancel();
     }
-            
-    
+
     /*
-    * task that run the load coin table method
-    */
+     * task that run the load coin table method
+     */
     private Task loadCoinsTask()
     {
         return new Task()
@@ -478,7 +492,7 @@ public class HomePageController implements Initializable
                 loadCoinTable();
                 return null;
             }
-            
+
         };
     }
     /*
@@ -486,6 +500,7 @@ public class HomePageController implements Initializable
      * if collection selected only coins from that collection visible
      * Should be called by Task.
      */
+
     private void loadCoinTable()
     {
         if (userUUID != null)
@@ -528,7 +543,6 @@ public class HomePageController implements Initializable
                     sortedCoinInfoData.comparatorProperty().bind(coinPreviewTableView.comparatorProperty());
 
                     //=======End of filtered phone name setup======  
-
                     coinPreviewTableView.setItems(sortedCoinInfoData);
                 } else
                 {
@@ -619,7 +633,7 @@ public class HomePageController implements Initializable
             loadScreen = true;
         } catch (IOException ex)
         {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+            MyLogger.log(Level.SEVERE, "Add coin screen failed to load: {0}", ex);
         }
         return loadScreen;
     }
@@ -653,6 +667,47 @@ public class HomePageController implements Initializable
         return loadScreen;
     }
 
+    private void loadEditCoinWindow(CoinProperty coinProperty)
+    {
+        //if (coinProperty != null)
+        //{
+            MyLogger.log(Level.INFO, "Attemptting to load View/Edit coin window");
+            UUID coinUUID = UUID.fromString(coinProperty.getCoinUUID());
+            try
+            {
+                Stage currentStage = (Stage) coinPreviewTableView.getScene().getWindow();
+                //currentStage.hide();
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                String filePath = "/com/jjlcollectors/fxml/viewcoin/ViewCoin.fxml";
+                URL location = AddCoinController.class.getResource(filePath);
+                fxmlLoader.setLocation(location);
+                fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+                Parent root = fxmlLoader.load(location.openStream());
+                ViewCoinController viewCoinController = (ViewCoinController) fxmlLoader.getController();
+                viewCoinController.setCoinData(coinProperty, userUUID);
+                //addCoinController.setUserData(userUUID, collectionUUID, coinTableData);
+
+                //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+                Stage viewCoinStage = new Stage();
+                Scene scene = new Scene(root);
+                viewCoinStage.setScene(scene);
+                viewCoinStage.setAlwaysOnTop(ALWAYS_ON_TOP);
+                viewCoinStage.setResizable(SET_RESIZABLE);
+                viewCoinStage.setTitle(VIEW_COIN_STAGE_TITLE);
+                viewCoinStage.initOwner(currentStage); //Make sure main stage is the parent of add coin stage so minimizing and maximizing the main will minimize the child
+                viewCoinStage.show();
+            } catch (IOException ex) 
+        {
+            Logger.getLogger(HomePageController.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+
+        //} else if (coinProperty == null)
+        //{
+            //showInfoMessage(INFO_MESSAGE_NO_COIN_SELECTED_TITLE, INFO_MESSAGE_NO_COIN_SELECTED_BODY);
+       // }
+    }
+    
+
     /**
      * method to exit the program.
      */
@@ -661,5 +716,31 @@ public class HomePageController implements Initializable
     {
 
         Platform.exit();
+    }
+
+    /*
+     * method to show error messages
+     */
+    private void showErrorMessage(String title, String body)
+    {
+        MyLogger.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(body);
+        alert.showAndWait();
+    }
+
+    /*
+     * method to show information messages
+     */
+    private void showInfoMessage(String title, String body)
+    {
+        MyLogger.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(body);
+        alert.showAndWait();
     }
 }
