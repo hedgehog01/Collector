@@ -26,6 +26,7 @@ import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.log.MyLogger;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -35,6 +36,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
@@ -54,13 +57,18 @@ public final class ViewCoinController implements Initializable
 {
 
     private CoinProperty coinProperty;
-    
+
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private UUID userUUID;
     private UUID collectionUUID;
-    
+
     private final String ERROR_COIN_CANT_BE_LOADED_TITLE = "Error - Coin info can't be loaded";
     private final String ERROR_COIN_CANT_BE_LOADED_BODY = "An Error has prevented coin info from being loaded.\nPlease try again.";
+    private final String CONFIMATION_COIN_UPDATE_TITLE = "Update coin";
+    private final String CONFIMATION_COIN_UPDATE_BODY = "To update coin select \"OK\"";
+    private final String INFORMATION_COIN_UPDATE_TITLE = "Coin update info";
+    private final String INFORMATION_COIN_UPDATE_OK_BODY = "Coin updated successfully.";
+    private final String ERROR_COIN_UPDATE_FAIL_BODY = "Coin updat was unsuccessful!\nPlease try again later.";
     private final String LOG_CLASS_NAME = "ViewCoinController: ";
 
     @FXML
@@ -135,7 +143,7 @@ public final class ViewCoinController implements Initializable
         //setup combo boxes
         coinCurrencyComboBox.getItems().addAll(CoinCurrency.values());
         coinGradeComboBox.getItems().addAll(CoinGrade.values());
-        
+
         // Define rendering of selected value shown in ComboBox.
         collectionComboBox.setConverter(new StringConverter<CollectionProperty>()
         {
@@ -157,7 +165,7 @@ public final class ViewCoinController implements Initializable
                 return null; // No conversion fromString needed.
             }
         });
-                // Define rendering of the list of values in ComboBox drop down. 
+        // Define rendering of the list of values in ComboBox drop down. 
         collectionComboBox.setCellFactory((comboBox) ->
         {
             return new ListCell<CollectionProperty>()
@@ -177,11 +185,10 @@ public final class ViewCoinController implements Initializable
                 }
             };
         });
-        
 
     }
 
-    protected void setCoinData(CoinProperty coinProperty,UUID userUUID)
+    protected void setCoinData(CoinProperty coinProperty, UUID userUUID)
     {
         this.coinProperty = coinProperty;
         this.userUUID = userUUID;
@@ -199,29 +206,28 @@ public final class ViewCoinController implements Initializable
             coinMintMarkTextField.setText(coinProperty.getCoinMintMark());
             coinNoteTxtField.setText(coinProperty.getCoinNote());
             coinBuyDatePicker.setValue(LocalDate.parse(coinProperty.getCoinBuyDate()));
-            
 
             //setup collection ComboBox
             String coinCollectionUUID = coinProperty.getCoinCollectionUUID();
-            
+
             CollectionProperty collection = DBCollectionConnect.getCollectionProperty(UUID.fromString(coinCollectionUUID));
             collectionComboBox.setValue(collection);
-            
+
         } else if (coinProperty == null)
         {
             MyLogger.log(Level.SEVERE, LOG_CLASS_NAME + "CoinProperty object is null, can't load info");
             showErrorMessage(ERROR_COIN_CANT_BE_LOADED_TITLE, ERROR_COIN_CANT_BE_LOADED_BODY);
             closeWindow();
         }
-        
-                // Handle ComboBox event.
+
+        // Handle ComboBox event.
         collectionComboBox.setOnAction((event) ->
         {
             CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME+"Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
-        
+
     }
 
     /*
@@ -231,6 +237,8 @@ public final class ViewCoinController implements Initializable
     {
         MyLogger.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        Stage currentStage = (Stage) viewCoinAnchorPane.getScene().getWindow();
+        alert.initOwner(currentStage);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(body);
@@ -244,33 +252,96 @@ public final class ViewCoinController implements Initializable
     {
         MyLogger.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Stage currentStage = (Stage) viewCoinAnchorPane.getScene().getWindow();
+        alert.initOwner(currentStage);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(body);
         alert.showAndWait();
     }
 
+    /*
+     * method to show information messages
+     */
+    private boolean showConfermationMessage(String title, String body)
+    {
+        MyLogger.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Stage currentStage = (Stage) viewCoinAnchorPane.getScene().getWindow();
+        alert.initOwner(currentStage);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(body);
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+        ButtonType buttonTypeOK = new ButtonType("OK", ButtonData.OK_DONE);
+        alert.getButtonTypes().setAll(buttonTypeCancel,buttonTypeOK);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonTypeOK)
+        {
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed update coin");
+            return true;
+        }
+        else if (result.isPresent() && result.get() == buttonTypeCancel)
+        {
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User canceled update coin");
+            return false;
+        }
+        return false;
+        
+    }
+
     @FXML
     private void closeWindow()
     {
-        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Closing window");
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Closing View/Edit window");
         Stage currentStage = (Stage) viewCoinAnchorPane.getScene().getWindow();
         currentStage.close();
     }
+
     @FXML
     private void loadUserData()
     {
         if (DBConnect.isDBConnectable())
         {
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME+"Adding data to collectionComboListData");
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Adding data to collectionComboListData");
             collectionComboListData.setAll(DBCollectionConnect.getUserCollections(userUUID));
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME+"Adding data to collectionComboBox");
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Adding data to collectionComboBox");
             collectionComboBox.getItems().setAll(collectionComboListData);
 
         } else //connection not available
         {
-            MyLogger.log(Level.WARNING, LOG_CLASS_NAME+"Connection to DB unavailable. Can't get user collection");
+            MyLogger.log(Level.WARNING, LOG_CLASS_NAME + "Connection to DB unavailable. Can't get user collection");
         }
+    }
+    
+    @FXML
+    private void initiateUpdateCoin()
+    {
+        if (showConfermationMessage(CONFIMATION_COIN_UPDATE_TITLE, CONFIMATION_COIN_UPDATE_BODY))
+        {
+            if (updateCoin())
+            {
+                MyLogger.log(Level.INFO, "Coin update successful");
+                showInfoMessage(INFORMATION_COIN_UPDATE_TITLE,INFORMATION_COIN_UPDATE_OK_BODY);
+            }
+            else 
+            {
+                MyLogger.log(Level.INFO, "Coin failed");
+                showErrorMessage(INFORMATION_COIN_UPDATE_TITLE,ERROR_COIN_UPDATE_FAIL_BODY);
+            }
+        }
+    }
+    
+    /*
+    * method to update the coin with updated user data
+    */
+    private boolean updateCoin()
+    {
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Updating coin");
+        boolean updateCoinSuccess = false;
+        
+        
+        return updateCoinSuccess;
     }
 
 }
