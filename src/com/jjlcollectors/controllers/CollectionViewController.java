@@ -17,9 +17,9 @@
  */
 package com.jjlcollectors.controllers;
 
-import com.jjlcollectors.collectables.coins.CoinCreator;
 import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+import com.jjlcollectors.util.log.MyLogger;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,7 +51,7 @@ import javafx.stage.Stage;
 public final class CollectionViewController implements Initializable
 {
 
-    private static final Logger log = Logger.getLogger(CollectionViewController.class.getName());
+    
     private String userEmail = "";
     private UUID userUUID;
     private UUID collectionUUID;
@@ -83,7 +83,7 @@ public final class CollectionViewController implements Initializable
         ObservableList<CoinProperty> data = tableView.getItems();
         ObservableList<CoinProperty> newData = FXCollections.observableArrayList();
 
-        newData.setAll(CoinCreator.getCoinProperties(userUUID,data));
+        //newData.setAll(CoinCreator.getCoinProperties(userUUID,data));
 
     }
 
@@ -126,16 +126,16 @@ public final class CollectionViewController implements Initializable
     private void checkLoginStatus(String userEmail, String userPass)
     {
 
-        log.log(Level.INFO, "Verifying login details");
+        MyLogger.log(Level.INFO, "Verifying login details");
         if (isLoginValid(userEmail, userPass))
         {
-            log.log(Level.INFO, "login is valid set user email");
+            MyLogger.log(Level.INFO, "login is valid set user email");
             setUserEmail(userEmail);
             setUserUUID();
 
         } else
         {
-            log.log(Level.INFO, "login is not valid");
+            MyLogger.log(Level.INFO, "login is not valid");
         }
     }
 
@@ -149,12 +149,12 @@ public final class CollectionViewController implements Initializable
         //verify user with this email exists
         if (!(DBUsersConnect.findUserByEmail(userEmail)))
         {
-            log.log(Level.INFO, "User doesn't exist");
+            MyLogger.log(Level.INFO, "User doesn't exist");
             loginValid = false;
         } //verify password with this email is valid
         else if (!(isPasswordValid(userEmail, userPass)))
         {
-            log.log(Level.INFO, "User password incorrect");
+            MyLogger.log(Level.INFO, "User password incorrect");
 
             loginValid = false;
         }
@@ -172,12 +172,12 @@ public final class CollectionViewController implements Initializable
         //verify password not empty
         if ((userPass == null) || (userPass.trim().isEmpty()))
         {
-            log.log(Level.INFO, "User password Empty or null");
+            MyLogger.log(Level.INFO, "User password Empty or null");
             passwordValid = false;
         } //Check password is NOT valid with this email and update boolean var
         else if (!(DBUsersConnect.isUserPasswordValid(userEmail, userPass.toCharArray())))
         {
-            log.log(Level.INFO, "User password Invalid!");
+            MyLogger.log(Level.INFO, "User password Invalid!");
             passwordValid = false;
         }
         return passwordValid;
@@ -197,7 +197,7 @@ public final class CollectionViewController implements Initializable
             userUUID = DBUsersConnect.getUserUUID(userEmail);
         } else
         {
-            log.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
+            MyLogger.log(Level.SEVERE, "user UUID not found for Email {0}", userEmail);
         }
     }
     /**

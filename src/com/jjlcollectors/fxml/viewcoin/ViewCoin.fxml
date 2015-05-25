@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" fx:id="viewCoinAnchorPane" prefHeight="649.0" prefWidth="603.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.ViewCoinController">
+    <stylesheets>
+        <URL value="@viewcoin.css" />
+    </stylesheets>
+   <children>
+      <Button fx:id="removeCoinImageBtn2" layoutX="39.0" layoutY="590.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Remove" />
+      <Button fx:id="removeCoinImageBtn1" layoutX="39.0" layoutY="437.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Remove" />
+      <Button fx:id="addCoinImageBtn2" layoutX="39.0" layoutY="562.0" mnemonicParsing="false" text="Add image" />
+      <ImageView fx:id="coinImageView2" fitHeight="121.0" fitWidth="136.0" layoutX="128.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="coinImageView1" fitHeight="121.0" fitWidth="136.0" layoutX="128.0" layoutY="378.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="addCoinImageBtn1" layoutX="39.0" layoutY="410.0" mnemonicParsing="false" text="Add image" />
+      <Label layoutX="251.0" layoutY="24.0" text="View/Edit coin">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="318.0" layoutY="224.0" text="More Info:" />
+      <Label layoutX="318.0" layoutY="156.0" text="Collection:" />
+      <Label layoutX="318.0" layoutY="121.0" text="Buy Price:" />
+      <Label layoutX="318.0" layoutY="85.0" text="Mint Mark" />
+      <Label layoutX="43.0" layoutY="316.0" text="Value:" />
+      <Label layoutX="43.0" layoutY="277.0" text="Buy Date:" />
+      <Label layoutX="43.0" layoutY="236.0" text="Mint Year:" />
+      <Label layoutX="43.0" layoutY="190.0" text="Grade:" />
+      <Label layoutX="43.0" layoutY="156.0" text="Face Value:" />
+      <Label layoutX="43.0" layoutY="121.0" text="Currency:" />
+      <Label layoutX="43.0" layoutY="85.0" text="Name:" />
+      <TextArea fx:id="coinAddStatus" editable="false" layoutX="387.0" layoutY="296.0" prefHeight="107.0" prefWidth="150.0" wrapText="true" />
+      <HBox layoutX="293.0" layoutY="590.0" spacing="2.0">
+         <children>
+            <Button fx:id="cancelEditCoinBtn" layoutX="293.0" layoutY="590.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="25.0" prefWidth="81.0" text="Close" />
+            <Button fx:id="deleteCoinBtn" layoutX="374.0" layoutY="590.0" mnemonicParsing="false" onAction="#initiateDeleteCoin" prefHeight="25.0" prefWidth="81.0" text="Delete Coin" />
+            <Button fx:id="modifyCoinBtn" layoutX="454.0" layoutY="590.0" mnemonicParsing="false" onAction="#initiateUpdateCoin" text="Modify Coin" />
+         </children>
+      </HBox>
+      <TextField fx:id="coinNoteTxtField" layoutX="386.0" layoutY="192.0" prefHeight="81.0" prefWidth="149.0" promptText="More info" />
+      <TextField fx:id="coinBuyPriceTextField" layoutX="386.0" layoutY="117.0" promptText="Buy Price" />
+      <TextField fx:id="coinMintMarkTextField" layoutX="386.0" layoutY="81.0" promptText="Mint mark" />
+      <TextField fx:id="coinValueTextField" layoutX="114.0" layoutY="312.0" promptText="Estimated Value" />
+      <DatePicker fx:id="coinBuyDatePicker" layoutX="115.0" layoutY="273.0" prefHeight="25.0" prefWidth="149.0" promptText="Buy date" />
+      <TextField fx:id="coinMintYearTextField" layoutX="114.0" layoutY="232.0" promptText="Mint year" />
+      <ComboBox fx:id="coinGradeComboBox" layoutX="114.0" layoutY="186.0" prefWidth="150.0" promptText="Grade" />
+      <TextField fx:id="coinFaceValueTextField" layoutX="114.0" layoutY="152.0" promptText="Face Value" />
+      <ComboBox fx:id="coinCurrencyComboBox" layoutX="114.0" layoutY="117.0" prefWidth="150.0" promptText="Currency" />
+      <TextField fx:id="coinNameTextField" layoutX="114.0" layoutY="81.0" promptText="Name" />
+      <ComboBox fx:id="collectionComboBox" layoutX="386.0" layoutY="152.0" onMouseClicked="#loadUserData" prefWidth="150.0" promptText="Collection" />
+   </children>
+</AnchorPane>

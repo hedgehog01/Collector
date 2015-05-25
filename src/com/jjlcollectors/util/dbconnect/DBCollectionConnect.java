@@ -78,7 +78,7 @@ public final class DBCollectionConnect extends DBConnect
                 log.log(Level.INFO, "Add collection update count is: {0}", updateCount);
             }
             DBConnect.closeDBConnection();
-            shutDownDBConnection();
+            //shutDownDBConnection();
 
             if (updateCount == 1)
             {
@@ -130,7 +130,7 @@ public final class DBCollectionConnect extends DBConnect
         }
 
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
         return collectionUUID;
 
     }
@@ -158,7 +158,7 @@ public final class DBCollectionConnect extends DBConnect
         }
 
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
         return collectionName;
 
     }
@@ -190,11 +190,42 @@ public final class DBCollectionConnect extends DBConnect
         }
 
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
 
         return userCollectionData;
     }
     
+    public static CollectionProperty getCollectionProperty (UUID collectionUUID)
+    {
+        log.log(Level.INFO, "Attempting to get collection by collectionUUID");
+        CollectionProperty collectionProperty = null;
+        DBConnect.createDBConnection();
+        try (PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " WHERE COLLECTION_UUID = ?"))
+        {
+            prepStmt.setString(1, collectionUUID.toString());
+            ResultSet rs = prepStmt.executeQuery();
+
+            while (rs.next())
+            {
+                String collectionName = rs.getString("COLLECTION_NAME");
+                String collectionType = rs.getString("COLLECTION_TYPE");
+                String collectionNote = rs.getString("COLLECTION_NOTE");
+                //String userUUID = rs.getString("USER_UUID");
+                
+                collectionProperty = new CollectionProperty(collectionName, collectionType, collectionNote, collectionUUID.toString());
+                
+            }
+            rs.close();
+        } catch (SQLException ex)
+        {
+            log.log(Level.SEVERE, "Couldn't get collections by user ", ex);
+        }
+
+        DBConnect.closeDBConnection();
+        //shutDownDBConnection();
+
+        return collectionProperty;
+    }
 
 
 

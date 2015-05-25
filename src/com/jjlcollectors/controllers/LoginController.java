@@ -20,6 +20,7 @@ package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.util.dbconnect.DBConnect;
 import com.jjlcollectors.util.dbconnect.DBUsersConnect;
+import com.jjlcollectors.util.prefrences.PrefrencesHandler;
 import java.io.IOException;
 
 import java.net.URL;
@@ -90,7 +91,12 @@ public final class LoginController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        log.log(Level.INFO, "If user email exists in preferences - load it");
+        if (PrefrencesHandler.getLastUsedUserEmail() !=null)
+        {
+            userEmailTextField.setText(PrefrencesHandler.getLastUsedUserEmail());
+        }
+        
     }
 
     /**
@@ -108,13 +114,17 @@ public final class LoginController implements Initializable
         log.log(Level.INFO, "Login button pressed");
         if (!(checkDBConnect()))
         {
-            log.log(Level.INFO, "Connection appears to be problem");
-            
-        } 
-        else if (isLoginValid())
+            log.log(Level.INFO, "It appears Connection issue with DB");
+
+        } else if (isLoginValid())
         {
+            if (PrefrencesHandler.getLastUsedUserEmail() == null || !(PrefrencesHandler.getLastUsedUserEmail().equals(userEmailTextField.getText().toLowerCase())))
+            {
+                log.log(Level.INFO, "Saving user email in preferences");
+                PrefrencesHandler.setLastUsedUserEmail(userEmailTextField.getText().toLowerCase());
+            }
             log.log(Level.INFO, "login is valid moving to next scene");
-            loadHomePageScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText(), event);
+            loadHomePageScene(userEmailTextField.getText().toLowerCase(), userPasswordField.getText().toCharArray(), event);
 
         } else
         {
@@ -129,8 +139,7 @@ public final class LoginController implements Initializable
         {
             log.log(Level.INFO, "Connection can't be established");
             loginStatusLabel.setText(CONNECTION_NOT_ESTABLISHED);
-        }
-        else
+        } else
         {
             log.log(Level.INFO, "Connection established");
             connect = true;
@@ -188,7 +197,7 @@ public final class LoginController implements Initializable
     /*
      * method to load next scene after user login was validated.
      */
-    private boolean loadHomePageScene(String userEmail, String userAttemptedPassword, ActionEvent event)
+    private boolean loadHomePageScene(String userEmail, char[] userAttemptedPassword, ActionEvent event)
     {
         boolean loadScreen = false;
         try

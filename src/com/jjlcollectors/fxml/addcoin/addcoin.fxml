@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="490.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.AddCoinController">
+<AnchorPane id="AnchorPane" fx:id="addCoinAnchorPane" prefHeight="670.0" prefWidth="564.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.AddCoinController">
     <stylesheets>
         <URL value="@addcoin.css" />
     </stylesheets>
@@ -24,8 +25,8 @@
       <TextField fx:id="coinBuyPriceTxtField" layoutX="376.0" layoutY="107.0" promptText="Buy Price" />
       <ComboBox fx:id="collectionComboBox" layoutX="376.0" layoutY="142.0" onMouseClicked="#loadUserData" prefWidth="150.0" promptText="Collection" />
       <TextField fx:id="coinNoteTxtField" layoutX="376.0" layoutY="182.0" prefHeight="81.0" prefWidth="149.0" promptText="More info" />
-      <Button fx:id="addCoinBtn" layoutX="432.0" layoutY="426.0" mnemonicParsing="false" onAction="#addNewCoin" text="Add" />
-      <Button fx:id="cancelBtn" layoutX="153.0" layoutY="426.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
+      <Button fx:id="addCoinBtn" layoutX="484.0" layoutY="616.0" mnemonicParsing="false" onAction="#addNewCoin" text="Add Coin" />
+      <Button fx:id="cancelBtn" layoutX="422.0" layoutY="616.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
       <Label fx:id="addCoinStatus" layoutX="377.0" layoutY="269.0" prefHeight="107.0" prefWidth="149.0" />
       <TextArea fx:id="coinAddStatus" editable="false" layoutX="377.0" layoutY="286.0" prefHeight="107.0" prefWidth="150.0" wrapText="true" />
       <Label layoutX="33.0" layoutY="75.0" text="Name:" />
@@ -44,5 +45,11 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
+      <Button fx:id="addCoinImageBtn1" layoutX="29.0" layoutY="400.0" mnemonicParsing="false" text="Add image" />
+      <ImageView fx:id="coinImageView1" fitHeight="121.0" fitWidth="136.0" layoutX="118.0" layoutY="368.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="coinImageView2" fitHeight="121.0" fitWidth="136.0" layoutX="118.0" layoutY="504.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="addCoinImageBtn2" layoutX="29.0" layoutY="552.0" mnemonicParsing="false" text="Add image" />
+      <Button fx:id="removeCoinImageBtn1" layoutX="29.0" layoutY="427.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Remove" />
+      <Button fx:id="removeCoinImageBtn2" layoutX="29.0" layoutY="580.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Remove" />
    </children>
 </AnchorPane>

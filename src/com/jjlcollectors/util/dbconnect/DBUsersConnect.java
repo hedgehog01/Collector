@@ -67,7 +67,7 @@ public final class DBUsersConnect extends DBConnect
         }
 
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
         return userExists;
     }
 
@@ -125,7 +125,7 @@ public final class DBUsersConnect extends DBConnect
                 log.log(Level.INFO, "Add user update count is: {0}", updateCount);
             }
             DBConnect.closeDBConnection();
-            shutDownDBConnection();
+            //shutDownDBConnection();
 
             if (updateCount == 1)
             {
@@ -175,7 +175,7 @@ public final class DBUsersConnect extends DBConnect
         }
     
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
         return userUuid;
     }
 
@@ -206,7 +206,7 @@ public final class DBUsersConnect extends DBConnect
             });
         } //in any case close connection and return state.
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
         return userExists;
     }
 
@@ -423,7 +423,7 @@ public final class DBUsersConnect extends DBConnect
             log.log(Level.SEVERE, "Printing of user DB failed, exception error: {0}", e.getMessage());
         }
         DBConnect.closeDBConnection();
-        shutDownDBConnection();
+        //shutDownDBConnection();
     }
 
 }
