@@ -362,6 +362,7 @@ public final class ViewCoinController implements Initializable
             {
                 MyLogger.log(Level.INFO, "Coin: {0} deleted successful",coinNameTextField.getText());
                 showInfoMessage(CONFIMATION_COIN_DELETE_TITLE,INFORMATION_COIN_DELETE_OK_BODY);
+                closeWindow();
             }
             else 
             {
