@@ -69,7 +69,7 @@ public class FileHandleClass
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User Dir: {0}", userDir);
             String filePath = userDir + "/" + IMAGE_DIRECTORY + "/" + userUUID.toString() + "/" + collectionUUID.toString();
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Full path to save the image: {0}", userDir);
-            String imageName = itemUUID.toString() + imageNum + "." + IMAGE_OUTPUT_EXTENSION;
+            String imageName = itemUUID.toString() + "-" + imageNum + "." + IMAGE_OUTPUT_EXTENSION; //image num should be with something before it it like "-"?
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Image name: {0}", imageName);
 
             File outPutFilePath = new File(filePath);
@@ -102,9 +102,6 @@ public class FileHandleClass
         return imageSaved;
     }
    
-    /*
-     * method to handle loading of coin image including save of last folder preference
-     */
    /**
     * method to handle loading of buffered image from File and save of last folder preference
     * @param coinImageFile the file to load the buffered image from
@@ -114,7 +111,7 @@ public class FileHandleClass
     {
         //save folder path to prefrences
         BufferedImage bufferedImage = null;
-        MyLogger.log(Level.INFO, LOG_CLASS_NAME+"Attempting to get buffered image");
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME+" Attempting to get buffered image");
         try
         {
             bufferedImage = ImageIO.read(coinImageFile);
@@ -145,6 +142,7 @@ public class FileHandleClass
         String filePath = userDir + "/" + IMAGE_DIRECTORY + "/" + userUUID.toString() + "/" + collectionUUID.toString();
         MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Full path to save the image: {0}", userDir);
         
+        //To DO - add logic for 
         return fileList;
     }
 }
