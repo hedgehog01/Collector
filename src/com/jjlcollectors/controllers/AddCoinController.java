@@ -93,7 +93,7 @@ public final class AddCoinController implements Initializable
     private final String ERROR_IMAGE_CANT_BE_LOADED_TITLE = "Error - Image info can't be loaded";
     private final String ERROR_IMAGE_CANT_BE_LOADED_BODY = "An Error has prevented Image from being loaded.\nPlease try again.";
 
-    private final String FOLDER_CHOOSER_TITLE = "Add Coin Image";
+    private final String FOLDER_CHOOSER_TITLE = "Select item Image";
 
     private UUID userUUID;
     private UUID collectionUUID;

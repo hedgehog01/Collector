@@ -24,15 +24,23 @@ import com.jjlcollectors.collectables.coins.CoinProperty;
 import com.jjlcollectors.util.dbconnect.DBCoinConnect;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
 import com.jjlcollectors.util.dbconnect.DBConnect;
+import com.jjlcollectors.util.filehandling.FileHandleClass;
 import com.jjlcollectors.util.log.MyLogger;
+import com.jjlcollectors.util.prefrences.PrefrencesHandler;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -44,8 +52,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -62,7 +72,12 @@ public final class ViewCoinController implements Initializable
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private UUID userUUID;
     private UUID collectionUUID;
+    private UUID selectedItemCollectionUUID;
+    private UUID coinUUID;
+    private BufferedImage bufferedImage1;
+    private BufferedImage bufferedImage2;
 
+    //Messages strings
     private final String ERROR_COIN_CANT_BE_LOADED_TITLE = "Error - Coin info can't be loaded";
     private final String ERROR_COIN_CANT_BE_LOADED_BODY = "An Error has prevented coin info from being loaded.\nPlease try again.";
     private final String CONFIMATION_COIN_UPDATE_TITLE = "Update coin";
@@ -76,6 +91,9 @@ public final class ViewCoinController implements Initializable
     private final String CONFIMATION_COIN_DELETE_BODY = "Are you sure you would like to delete the coin?";
     private final String ERROR_COIN_DELETE_FAIL_TITLE = "Error - Delete coin failed";
     private final String ERROR_COIN_DELETE_FAIL_BODY = "Coin delete was unsuccessful!\nPlease try again later.";
+    private final String FOLDER_CHOOSER_TITLE = "Select item Image";
+    private final String ERROR_IMAGE_CANT_BE_LOADED_TITLE = "Error - Image info can't be loaded";
+    private final String ERROR_IMAGE_CANT_BE_LOADED_BODY = "An Error has prevented Image from being loaded.\nPlease try again.";
 
     @FXML
     private AnchorPane viewCoinAnchorPane;
@@ -133,7 +151,7 @@ public final class ViewCoinController implements Initializable
 
     @FXML
     private Button removeCoinImageBtn2;
-    
+
     @FXML
     private Button deleteCoinBtn;
 
@@ -195,6 +213,40 @@ public final class ViewCoinController implements Initializable
             };
         });
 
+        //setup add image button listeners
+        addCoinImageBtn1.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                loadImageButtonAction(1);
+            }
+        });
+        addCoinImageBtn2.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                loadImageButtonAction(2);
+            }
+        });
+        removeCoinImageBtn1.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                removeImageButtonAction(1);
+            }
+        });
+        removeCoinImageBtn2.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent e)
+            {
+                removeImageButtonAction(2);
+            }
+        });
+
     }
 
     protected void setCoinData(CoinProperty coinProperty, UUID userUUID)
@@ -205,6 +257,7 @@ public final class ViewCoinController implements Initializable
         if (coinProperty != null)
         {
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Setting info of coin property to window elements");
+            coinUUID = UUID.fromString(coinProperty.getCoinUUID());
             coinNameTextField.setText(coinProperty.getCoinName());
             coinCurrencyComboBox.setValue(CoinCurrency.valueOf(coinProperty.getCoinCurrency()));
             coinGradeComboBox.setValue(CoinGrade.valueOf(coinProperty.getCoinGrade()));
@@ -215,13 +268,14 @@ public final class ViewCoinController implements Initializable
             coinMintMarkTextField.setText(coinProperty.getCoinMintMark());
             coinNoteTxtField.setText(coinProperty.getCoinNote());
             coinBuyDatePicker.setValue(LocalDate.parse(coinProperty.getCoinBuyDate()));
-
+            
             //setup collection ComboBox
             String coinCollectionUUID = coinProperty.getCoinCollectionUUID();
-
+            selectedItemCollectionUUID = UUID.fromString(coinCollectionUUID);
             CollectionProperty collection = DBCollectionConnect.getCollectionProperty(UUID.fromString(coinCollectionUUID));
             collectionComboBox.setValue(collection);
 
+            //load coin images
         } else if (coinProperty == null)
         {
             MyLogger.log(Level.SEVERE, LOG_CLASS_NAME + "CoinProperty object is null, can't load info");
@@ -236,6 +290,131 @@ public final class ViewCoinController implements Initializable
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
+
+        //load coin images if they exists
+        ArrayList<File> itemImages = FileHandleClass.getItemImages(userUUID, selectedItemCollectionUUID, coinUUID);
+        for (int i = 0; i < itemImages.size(); i++)
+        {
+            File itemFile = itemImages.get(i);
+            String filePath = itemFile.getPath();
+            if (filePath.endsWith("-1.jpg"))
+            {
+                MyLogger.log(Level.INFO, "Found image 1 for item" );
+                handleImageLoading(itemFile, 1);
+            } else if (filePath.endsWith("-2.jpg"))
+            {
+                MyLogger.log(Level.INFO, "Found image 2 for item" );
+                handleImageLoading(itemFile, 2);
+            }
+        }
+
+    }
+
+    /*
+     * method to get the user selected folder
+     */
+    private void loadImageButtonAction(int buttonPressed)
+    {
+        Stage currentStage = (Stage) viewCoinAnchorPane.getScene().getWindow();
+        FileChooser fileChoose = new FileChooser();
+        fileChoose.getExtensionFilters().addAll(
+                //new FileChooser.ExtensionFilter("All Images", "*.*"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+                new FileChooser.ExtensionFilter("GIF", "*.gif"),
+                //new FileChooser.ExtensionFilter("BMP", "*.bmp"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+        //attempt to get saved folder location from prefrences
+        File lastFolderSelected = PrefrencesHandler.getFolderPath();
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Saved file path retrieved: {0}", lastFolderSelected);
+
+        if (lastFolderSelected != null)
+        {
+            final File initialDir = new File(lastFolderSelected.getPath());
+            fileChoose.setInitialDirectory(initialDir);
+        }
+
+        fileChoose.setTitle(FOLDER_CHOOSER_TITLE);
+
+        //open Dialog
+        File coinImageFile = fileChoose.showOpenDialog(currentStage);
+
+        if (coinImageFile != null)
+        {
+            handleImageLoading(coinImageFile, buttonPressed);
+        }
+    }
+
+    @SuppressWarnings("fallthrough")
+    private void removeImageButtonAction(int imgNum)
+    {
+        switch (imgNum)
+        {
+            case 1:
+            {
+                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
+                bufferedImage1 = null;
+                coinImageView1.setImage(null);
+                break;
+            }
+            case 2:
+            {
+                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
+                bufferedImage2 = null;
+                coinImageView2.setImage(null);
+                break;
+            }
+        }
+
+    }
+
+    private void saveCoinImages()
+    {
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Attempting to save coin images");
+        boolean imagesSaved;
+        if (bufferedImage1 != null)
+        {
+            imagesSaved = FileHandleClass.handleImageSaveing(bufferedImage1, 1, userUUID, collectionUUID, coinUUID);
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Image 1 saved: {0}", imagesSaved);
+
+        }
+        if (bufferedImage2 != null)
+        {
+            imagesSaved = FileHandleClass.handleImageSaveing(bufferedImage2, 2, userUUID, collectionUUID, coinUUID);
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Image 2 saved: {0}", imagesSaved);
+        }
+
+    }
+
+    /*
+     * method to handle loading of coin image including save of last folder preference
+     */
+    private void handleImageLoading(File coinImageFile, int buttonPressed)
+    {
+        //save folder path to prefrences
+        if (coinImageFile != null && coinImageFile.exists())
+        {
+            BufferedImage bufferedImage = FileHandleClass.getBufferedImageFromFile(coinImageFile);
+            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+            switch (buttonPressed)
+            {
+                case 1:
+                {
+                    coinImageView1.setImage(image);
+                    bufferedImage1 = bufferedImage;
+                    break;
+                }
+                case 2:
+                {
+                    coinImageView2.setImage(image);
+                    bufferedImage2 = bufferedImage;
+                    break;
+                }
+            }
+        } else
+        {
+            showErrorMessage(ERROR_IMAGE_CANT_BE_LOADED_TITLE, ERROR_IMAGE_CANT_BE_LOADED_BODY);
+        }
 
     }
 
@@ -283,20 +462,19 @@ public final class ViewCoinController implements Initializable
         alert.setContentText(body);
         ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
         ButtonType buttonTypeOK = new ButtonType("OK", ButtonData.OK_DONE);
-        alert.getButtonTypes().setAll(buttonTypeCancel,buttonTypeOK);
+        alert.getButtonTypes().setAll(buttonTypeCancel, buttonTypeOK);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == buttonTypeOK)
         {
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed coin action");
             return true;
-        }
-        else if (result.isPresent() && result.get() == buttonTypeCancel)
+        } else if (result.isPresent() && result.get() == buttonTypeCancel)
         {
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User canceled coin Action");
             return false;
         }
         return false;
-        
+
     }
 
     @FXML
@@ -322,7 +500,7 @@ public final class ViewCoinController implements Initializable
             MyLogger.log(Level.WARNING, LOG_CLASS_NAME + "Connection to DB unavailable. Can't get user collection");
         }
     }
-    
+
     @FXML
     private void initiateUpdateCoin()
     {
@@ -331,47 +509,44 @@ public final class ViewCoinController implements Initializable
             if (updateCoin())
             {
                 MyLogger.log(Level.INFO, "Coin update successful");
-                showInfoMessage(INFORMATION_COIN_UPDATE_TITLE,INFORMATION_COIN_UPDATE_OK_BODY);
-            }
-            else 
+                showInfoMessage(INFORMATION_COIN_UPDATE_TITLE, INFORMATION_COIN_UPDATE_OK_BODY);
+            } else
             {
                 MyLogger.log(Level.INFO, "Coin update failed");
-                showErrorMessage(INFORMATION_COIN_UPDATE_TITLE,ERROR_COIN_UPDATE_FAIL_BODY);
+                showErrorMessage(INFORMATION_COIN_UPDATE_TITLE, ERROR_COIN_UPDATE_FAIL_BODY);
             }
         }
     }
-    
+
     /*
-    * method to update the coin with updated user data
-    */
+     * method to update the coin with updated user data
+     */
     private boolean updateCoin()
     {
         MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Updating coin");
         boolean updateCoinSuccess = false;
-        
-        
+
         return updateCoinSuccess;
     }
-    
+
     @FXML
     private void initiateDeleteCoin()
     {
-        if (showConfermationMessage(CONFIMATION_COIN_DELETE_TITLE,CONFIMATION_COIN_DELETE_BODY ))
+        if (showConfermationMessage(CONFIMATION_COIN_DELETE_TITLE, CONFIMATION_COIN_DELETE_BODY))
         {
             if (deleteCoin())
             {
-                MyLogger.log(Level.INFO, "Coin: {0} deleted successful",coinNameTextField.getText());
-                showInfoMessage(CONFIMATION_COIN_DELETE_TITLE,INFORMATION_COIN_DELETE_OK_BODY);
+                MyLogger.log(Level.INFO, "Coin: {0} deleted successful", coinNameTextField.getText());
+                showInfoMessage(CONFIMATION_COIN_DELETE_TITLE, INFORMATION_COIN_DELETE_OK_BODY);
                 closeWindow();
-            }
-            else 
+            } else
             {
-                MyLogger.log(Level.INFO, "Coin: {0} delete failed",coinNameTextField.getText());
-                showErrorMessage(ERROR_COIN_DELETE_FAIL_TITLE,ERROR_COIN_DELETE_FAIL_BODY);
+                MyLogger.log(Level.INFO, "Coin: {0} delete failed", coinNameTextField.getText());
+                showErrorMessage(ERROR_COIN_DELETE_FAIL_TITLE, ERROR_COIN_DELETE_FAIL_BODY);
             }
         }
     }
-    
+
     private boolean deleteCoin()
     {
         MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Deleting coin");
@@ -381,16 +556,14 @@ public final class ViewCoinController implements Initializable
             int deleteCoinResult = DBCoinConnect.removeCoinByCoinUUID(UUID.fromString(coinProperty.getCoinUUID()));
             if (deleteCoinResult == 1)
             {
-                MyLogger.log(Level.INFO, "Coin delete successfull, coin UUID: {0}",coinProperty.getCoinUUID());
+                MyLogger.log(Level.INFO, "Coin delete successfull, coin UUID: {0}", coinProperty.getCoinUUID());
                 deleteCoinSuccess = true;
-            }
-            else
+            } else
             {
-                MyLogger.log(Level.SEVERE, "Coin delete NOT successfull, coin UUID: {0}",coinProperty.getCoinUUID());
+                MyLogger.log(Level.SEVERE, "Coin delete NOT successfull, coin UUID: {0}", coinProperty.getCoinUUID());
             }
         }
-        
-        
+
         return deleteCoinSuccess;
     }
 

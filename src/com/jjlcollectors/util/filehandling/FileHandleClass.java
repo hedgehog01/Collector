@@ -45,10 +45,12 @@ public class FileHandleClass
     private static final String IMAGE_DIRECTORY = "images";
     private static final String LOG_CLASS_NAME = "FileHandleClass: ";
     private static final String IMAGE_OUTPUT_EXTENSION = "jpg";
-    
 
     /**
-     * method to handle item image saving
+     * method to handle item image saving. Image is saved to: [App
+     * folder]/[images]/[user UUID folder]/[collection UUID]/[coin UUID + "-"
+     * +image number]
+     *
      * @param buffImage the image to be saved
      * @param imageNum the image number
      * @param userUUID user UUID
@@ -56,7 +58,7 @@ public class FileHandleClass
      * @param itemUUID the item UUID
      * @return true if save was successful
      */
-   public static boolean handleImageSaveing(BufferedImage buffImage, int imageNum, UUID userUUID, UUID collectionUUID, UUID itemUUID)
+    public static boolean handleImageSaveing(BufferedImage buffImage, int imageNum, UUID userUUID, UUID collectionUUID, UUID itemUUID)
     {
         boolean imageSaved = false;
         if (System.getProperty(USER_DIR) == null || userUUID == null || collectionUUID == null || itemUUID == null)
@@ -101,17 +103,19 @@ public class FileHandleClass
         }
         return imageSaved;
     }
-   
-   /**
-    * method to handle loading of buffered image from File and save of last folder preference
-    * @param coinImageFile the file to load the buffered image from
-    * @return the buffered image
-    */
+
+    /**
+     * method to handle loading of buffered image from File and save of last
+     * folder preference
+     *
+     * @param coinImageFile the file to load the buffered image from
+     * @return the buffered image
+     */
     public static BufferedImage getBufferedImageFromFile(File coinImageFile)
     {
         //save folder path to prefrences
         BufferedImage bufferedImage = null;
-        MyLogger.log(Level.INFO, LOG_CLASS_NAME+" Attempting to get buffered image");
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + " Attempting to get buffered image");
         try
         {
             bufferedImage = ImageIO.read(coinImageFile);
@@ -124,25 +128,56 @@ public class FileHandleClass
         String tempPath = coinImageFile.getPath();
         String stringFolderPath = tempPath.substring(0, tempPath.lastIndexOf("\\"));
         File folderPath = new File(stringFolderPath);
-        MyLogger.log(Level.INFO, LOG_CLASS_NAME+"attempting to save folder path to prefrences");
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "attempting to save folder path to prefrences");
         PrefrencesHandler.setFolderPath(folderPath);
 
-        MyLogger.log(Level.INFO, LOG_CLASS_NAME+"Folder path selected is: {0}", folderPath);
-        
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Folder path selected is: {0}", folderPath);
+
         return bufferedImage;
     }
-    
+
+    /**
+     * Method to load item images
+     *
+     * @param userUUID the user UUID
+     * @param collectionUUID the collection UUID
+     * @param itemUUID the item UUID
+     * @return an array of files with all images found (empty if non found
+     */
     public static ArrayList<File> getItemImages(UUID userUUID, UUID collectionUUID, UUID itemUUID)
     {
         ArrayList<File> fileList = new ArrayList<>();
-        MyLogger.log(Level.INFO, LOG_CLASS_NAME+"Attempting to return the list of images");
-        
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Attempting to return the list of images");
+        // set folder location of images
         String userDir = System.getProperty(USER_DIR);
         MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User Dir: {0}", userDir);
         String filePath = userDir + "/" + IMAGE_DIRECTORY + "/" + userUUID.toString() + "/" + collectionUUID.toString();
-        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Full path to save the image: {0}", userDir);
-        
-        //To DO - add logic for 
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Full path to load the images: {0}", userDir);
+        File inputFolderPath = new File(filePath);
+
+        if (inputFolderPath.exists()) //verify saved image folder exists
+        {
+            boolean getImages = true; //flag for getting image loop
+            //get list of files in the folder
+            int i = 1;
+            do
+            {
+                
+                File imageFile = new File(filePath + "/" + itemUUID + "-" + i + ".jpg");
+                if (imageFile.exists())
+                {
+                    fileList.add(imageFile);
+                    MyLogger.log(Level.INFO, "Image File found and added to arraylist: " + imageFile.getPath());
+                    i++;
+                } else
+                {
+                    getImages = false; //no image found exit loop
+                    MyLogger.log(Level.INFO, "Image File NOT found, exiting image search. image path: " + imageFile.getPath());
+                }
+
+            } while (getImages);
+
+        }
         return fileList;
     }
 }
