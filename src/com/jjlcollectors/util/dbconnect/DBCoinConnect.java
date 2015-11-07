@@ -33,10 +33,10 @@ import javafx.util.Callback;
  */
 public final class DBCoinConnect extends DBConnect
 {
-    
+
     //Class variables
     private static final String TABLE_NAME = "COINS_DB";
-    
+
     private static Date sqlDate;
     private static TableView tableView;
 
@@ -61,6 +61,26 @@ public final class DBCoinConnect extends DBConnect
     }
 
     /**
+     * method to update existing coin to coin DB
+     *
+     * @param coin the coin to be updated
+     * @return true if coin updated to the database
+     */
+    public static boolean updateCoin(Coin coin)
+    {
+
+        //insertCoin(uuid, name, grade, faceValue, currency, note);
+        MyLogger.log(Level.INFO, "Call to updateCoin method");
+        boolean coinUpdated = updateCoin(coin.getItemUUID().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(), coin.getItemBuyDate(), coin.getItemCollectionUUID());
+        //createDBConnection();
+        MyLogger.log(Level.INFO, "Select * from coins...");
+        selectAllCoins();
+        closeDBConnection();
+        //shutDownDBConnection();
+        return coinUpdated;
+    }
+
+    /**
      * method to remove coin from coin DB
      *
      * @param coinUUID the coin UUID
@@ -76,7 +96,7 @@ public final class DBCoinConnect extends DBConnect
 
     protected static int removeLastCoin()
     {
-        String coinUUID ="";
+        String coinUUID = "";
         DBConnect.createDBConnection();
         try
         {
@@ -104,21 +124,21 @@ public final class DBCoinConnect extends DBConnect
     /*
      * method to insert a coin into the coin db
      */
-    private static boolean addCoin(String uuid, String name, String grade, String faceValue, String currency, StringBuilder note, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, UUID userUUID,  LocalDate coinBuyDate, UUID collectionUUID)
+    private static boolean addCoin(String itemUUID, String name, String grade, String faceValue, String currency, StringBuilder note, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, UUID userUUID, LocalDate coinBuyDate, UUID collectionUUID)
     {
-        boolean userAdded = false;
+        boolean coinAdded = false;
         DBConnect.createDBConnection();
         int updateCount = 0; //var that count num of updated rows
         MyLogger.log(Level.INFO, "Attemp to add new coin...");
         try
         {
-          //date conversion blog: https://weblogs.java.net/blog/montanajava/archive/2014/06/17/using-java-8-datetime-classes-jpa
-            sqlDate = java.sql.Date.valueOf(coinBuyDate); 
+            //date conversion blog: https://weblogs.java.net/blog/montanajava/archive/2014/06/17/using-java-8-datetime-classes-jpa
+            sqlDate = java.sql.Date.valueOf(coinBuyDate);
             MyLogger.log(Level.INFO, "Coin sql buy date: {0}", sqlDate);
             String sql = ("INSERT INTO " + TABLE_NAME + " (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_USER_UUID,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement prepStmt = conn.prepareStatement(sql);
 
-            prepStmt.setString(1, uuid);
+            prepStmt.setString(1, itemUUID);
             prepStmt.setString(2, name);
             prepStmt.setString(3, grade);
             prepStmt.setString(4, faceValue);
@@ -137,11 +157,11 @@ public final class DBCoinConnect extends DBConnect
             MyLogger.log(Level.INFO, "Add coin update count is: {0}", updateCount);
             if (updateCount == 1)
             {
-                MyLogger.log(Level.INFO, "User added and return value set to true");
-                userAdded = true;
+                MyLogger.log(Level.INFO, "Coin added and return value set to true");
+                coinAdded = true;
             } else if (updateCount == 0)
             {
-                MyLogger.log(Level.SEVERE, "User NOT added and return value remains false");
+                MyLogger.log(Level.SEVERE, "Coin NOT added and return value remains false");
             }
 
             DBConnect.closeDBConnection();
@@ -150,7 +170,60 @@ public final class DBCoinConnect extends DBConnect
         {
             MyLogger.log(Level.SEVERE, "Exception while writing coin to DB. sql exception: {0}", e);
         }
-        return userAdded;
+        return coinAdded;
+    }
+
+    /*
+     * method to update an exisitng coin into the coin db
+     */
+    private static boolean updateCoin(String itemUUID, String name, String grade, String faceValue, String currency, StringBuilder note, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, UUID userUUID, LocalDate coinBuyDate, UUID collectionUUID)
+    {
+        boolean coinUpdated = false;
+        DBConnect.createDBConnection();
+        int updateCount = 0; //var that count num of updated rows
+        MyLogger.log(Level.INFO, "Attemp to update exisint coin: ", itemUUID);
+        try
+        {
+            //date conversion blog: https://weblogs.java.net/blog/montanajava/archive/2014/06/17/using-java-8-datetime-classes-jpa
+            sqlDate = java.sql.Date.valueOf(coinBuyDate);
+            MyLogger.log(Level.INFO, "Coin sql buy date: {0}", sqlDate);
+            //String sql = ("INSERT INTO " + TABLE_NAME + " (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_USER_UUID,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            String sql = ("UPDATE " + TABLE_NAME + "SET (COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_USER_UUID,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)" + " WHERE COIN_UUID = ?");
+            PreparedStatement prepStmt = conn.prepareStatement(sql);
+
+            //prepStmt.setString(1, itemUUID);
+            prepStmt.setString(1, name);
+            prepStmt.setString(2, grade);
+            prepStmt.setString(3, faceValue);
+            prepStmt.setString(4, currency);
+            prepStmt.setString(5, note.toString());
+            prepStmt.setDate(6, sqlDate);
+            prepStmt.setString(7, coinBuyPrice);
+            prepStmt.setString(8, coinValue);
+            prepStmt.setString(9, coinMintMark);
+            prepStmt.setInt(10, coinYear);
+            prepStmt.setString(11, userUUID.toString());
+            prepStmt.setString(12, collectionUUID.toString());
+            prepStmt.setString(13, itemUUID);
+            updateCount = prepStmt.executeUpdate();
+
+            MyLogger.log(Level.INFO, "update coin update count is: {0}", updateCount);
+            if (updateCount == 1)
+            {
+                MyLogger.log(Level.INFO, "Coin updated and return value set to true");
+                coinUpdated = true;
+            } else if (updateCount == 0)
+            {
+                MyLogger.log(Level.SEVERE, "Coin NOT added and return value remains false");
+            }
+
+            DBConnect.closeDBConnection();
+            //shutDownDBConnection();
+        } catch (SQLException e)
+        {
+            MyLogger.log(Level.SEVERE, "Exception while updating coin to DB. sql exception: {0}", e);
+        }
+        return coinUpdated;
     }
 
     /**
@@ -281,7 +354,99 @@ public final class DBCoinConnect extends DBConnect
     }
 
     /**
+     * method to get a specific coin
+     *
+     * @param itemUUID the item UUID
+     * @return an CoinProperty of the user coin
+     */
+    public static CoinProperty getUserCoinByItemUUID(UUID itemUUID)
+    {
+        //ObservableList<CoinProperty> coinList = FXCollections.observableArrayList();
+        CoinProperty coinProperty = null;
+        if (itemUUID != null)
+        {
+
+            try
+            {
+                DBConnect.createDBConnection();
+
+                System.out.println("prepare statement starting");
+                PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " where COIN_UUID = ?");
+                prepStmt.setString(1, itemUUID.toString());
+                System.out.println("prepare statement done");
+                try (ResultSet results = prepStmt.executeQuery())
+                {
+                    ResultSetMetaData rsmd = results.getMetaData();
+                    int numberCols = rsmd.getColumnCount();
+                    MyLogger.log(Level.INFO, "Number of colomns: {0}", numberCols);
+                    /*
+                    for (int i = 1; i <= numberCols; i++)
+                    {
+                        //print Column Names
+                        System.out.print(rsmd.getColumnLabel(i) + "\t");
+                    }
+                     */
+                    System.out.println("\n-------------------------------------------------");
+                    if (!(results.next()))
+                    {
+                        MyLogger.log(Level.INFO, "No items in the DB?");
+                    }
+                    //get all user collections
+
+                    //MyLogger.log(Level.INFO, "Get list of user collections");
+                    //ObservableList<CollectionProperty> userCollectionData;
+                    //userCollectionData = DBCollectionConnect.getUserCollections(userUUID);
+                    /*
+                    if (userCollectionData == null || userCollectionData.isEmpty())
+                    {
+                        MyLogger.log(Level.SEVERE, "list of user collections is null or empty");
+                    } else
+                     */
+                    {
+
+                        while (results.next())
+                        {
+
+                            int id = results.getInt(1);
+                            String coinUUID = results.getString(2);
+                            String name = results.getString(3);
+                            String grade = results.getString(4);
+                            String facevalue = results.getString(5);
+                            String currency = results.getString(6);
+                            String note = results.getString(7);
+                            Date coinBuyDate = results.getDate(8);
+                            String coinBuyPrice = results.getString(9);
+                            String coinValue = results.getString(10);
+                            String coinMintMark = results.getString(11);
+                            int coinYear = results.getInt(12);
+                            String collectionUUID = results.getString("COIN_COLLECTION_UUID");
+                            String userUUID = results.getString("COIN_USER_UUID");
+                            //get collection name
+                            String collectionName = DBCollectionConnect.getCollectionName(UUID.fromString(collectionUUID));
+                            //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
+                            coinProperty = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, userUUID, collectionName, collectionUUID);
+                            //coinList.add(coin);
+                            System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName);
+                        }
+                    }
+                }
+
+            } catch (SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            DBConnect.closeDBConnection();
+            //shutDownDBConnection();
+        }
+        return coinProperty;
+    }
+
+    /**
      * method to get a list of all coins of a specific user
+     *
      * @param userUUID the user UUID
      * @return an ObservableList of the user coins
      */
@@ -341,10 +506,10 @@ public final class DBCoinConnect extends DBConnect
                             String coinMintMark = results.getString(11);
                             int coinYear = results.getInt(12);
                             String collectionUUID = results.getString("COIN_COLLECTION_UUID");
-                        //get collection name
+                            //get collection name
                             String collectionName = DBCollectionConnect.getCollectionName(UUID.fromString(collectionUUID));
                             //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
-                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, collectionName,collectionUUID);
+                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear,userUUID.toString(), collectionName, collectionUUID);
                             coinList.add(coin);
                             System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName);
                         }
@@ -363,16 +528,18 @@ public final class DBCoinConnect extends DBConnect
         }
         return coinList;
     }
-    
+
     /**
-     * method to get a list of all coins of a specific user and a specific collection
+     * method to get a list of all coins of a specific user and a specific
+     * collection
+     *
      * @param userUUID the user UUID
      * @param collectionUUID the collection to search by
      * @return an ObservableList of the user coins from the specific collection
      */
-    public static ObservableList<CoinProperty> getAllUserCoinsByCollection(UUID userUUID,UUID collectionUUID)
+    public static ObservableList<CoinProperty> getAllUserCoinsByCollection(UUID userUUID, UUID collectionUUID)
     {
-        
+
         ObservableList<CoinProperty> coinList = FXCollections.observableArrayList();
         if (userUUID != null && collectionUUID != null)
         {
@@ -380,7 +547,10 @@ public final class DBCoinConnect extends DBConnect
             try
             {
                 DBConnect.createDBConnection();
-                MyLogger.log(Level.INFO, "Starting quesry for user {0} coins by collection {1}", new Object [] {userUUID.toString(),collectionUUID.toString()});
+                MyLogger.log(Level.INFO, "Starting quesry for user {0} coins by collection {1}", new Object[]
+                {
+                    userUUID.toString(), collectionUUID.toString()
+                });
                 PreparedStatement prepStmt = conn.prepareStatement("SELECT * from " + TABLE_NAME + " where COIN_USER_UUID = ? AND COIN_COLLECTION_UUID = ?");
                 prepStmt.setString(1, userUUID.toString());
                 prepStmt.setString(2, collectionUUID.toString());
@@ -427,10 +597,10 @@ public final class DBCoinConnect extends DBConnect
                             String coinMintMark = results.getString(11);
                             int coinYear = results.getInt(12);
                             String collectionUUIDsql = results.getString("COIN_COLLECTION_UUID");
-                        //get collection name
+                            //get collection name
                             String collectionName = DBCollectionConnect.getCollectionName(UUID.fromString(collectionUUIDsql));
                             //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
-                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, collectionName,collectionUUIDsql);
+                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, userUUID.toString(), collectionName, collectionUUIDsql);
                             coinList.add(coin);
                             System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName + "\t" + collectionUUIDsql);
                         }
@@ -449,8 +619,7 @@ public final class DBCoinConnect extends DBConnect
         }
         return coinList;
     }
-    
-    
+
     private static int deleteCoinByUUID(UUID coinUUID)
     {
         int count = -1;

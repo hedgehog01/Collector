@@ -107,6 +107,16 @@ public final class Coin extends CollectableItem {
         setItemValue(coinValue);
         setItemBuyDate(coinBuyDate);
     }
+    
+     /**
+     * Coin Constructor
+     * @param coinProperty the CoinProperty to copy from.
+     */
+    public Coin (CoinProperty coinProperty)
+    {
+        
+        this (UUID.fromString(coinProperty.getUserUUID()),coinProperty.getCoinName(), CoinGrade.valueOf(coinProperty.getCoinGrade()), coinProperty.getCoinFaceValue(), CoinCurrency.valueOf(coinProperty.getCoinCurrency()), new StringBuilder (coinProperty.getCoinNote()),coinProperty.getCoinYear(),coinProperty.getCoinMintMark(),coinProperty.getCoinBuyPrice(),coinProperty.getCoinValue(),LocalDate.parse(coinProperty.getCoinBuyDate()),UUID.fromString(coinProperty.getCoinCollectionUUID()),UUID.fromString(coinProperty.getCoinUUID()));
+    }
 
     /**
      * Copy constructor

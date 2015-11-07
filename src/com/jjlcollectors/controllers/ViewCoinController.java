@@ -328,7 +328,7 @@ public final class ViewCoinController implements Initializable
         File lastFolderSelected = PrefrencesHandler.getFolderPath();
         MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Saved file path retrieved: {0}", lastFolderSelected);
 
-        if (lastFolderSelected != null)
+        if (lastFolderSelected != null && lastFolderSelected.exists())
         {
             final File initialDir = new File(lastFolderSelected.getPath());
             fileChoose.setInitialDirectory(initialDir);
@@ -525,7 +525,10 @@ public final class ViewCoinController implements Initializable
     {
         MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Updating coin");
         boolean updateCoinSuccess = false;
-
+        //TODO
+        
+        
+        
         return updateCoinSuccess;
     }
 

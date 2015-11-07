@@ -33,6 +33,7 @@ public final class CoinProperty
     private static final Logger LOG = Logger.getLogger(CoinProperty.class.getName());
 
     //Property instance variables
+    private final StringProperty userUUID = new SimpleStringProperty("");
     private final SimpleStringProperty coinUUID = new SimpleStringProperty("");
     private final SimpleStringProperty coinName = new SimpleStringProperty("");
     private final StringProperty coinGrade = new SimpleStringProperty("");
@@ -49,10 +50,27 @@ public final class CoinProperty
 
     public CoinProperty()
     {
-        this("", "", "", "", "", "", "", "", "", "", -1, "","");
+        this("", "", "", "", "", "", "", "", "", "", -1, "", "", "");
     }
 
-    public CoinProperty(String coinUUID, String coinName, String coinGrade, String coinFaceValue, String coinCurrency, String coinNote, String coinBuyDate, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, String coinCollectionName,String collectionUUID)
+    /**
+     * Constructor for creating CoinProperty object
+     * @param coinUUID CoinUUID
+     * @param coinName Coin Name
+     * @param coinGrade Coin Grade
+     * @param coinFaceValue Coin Face Value
+     * @param coinCurrency Coin Currency
+     * @param coinNote Coin Note
+     * @param coinBuyDate Coin Buy Date
+     * @param coinBuyPrice Coin Buy Price
+     * @param coinValue Coin Value
+     * @param coinMintMark Coin Mint Mark
+     * @param coinYear Coin Year
+     * @param userUUID User UUID
+     * @param coinCollectionName the name of the collection the coin belongs to
+     * @param collectionUUID the collection UUID
+     */
+    public CoinProperty(String coinUUID, String coinName, String coinGrade, String coinFaceValue, String coinCurrency, String coinNote, String coinBuyDate, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear,String userUUID, String coinCollectionName, String collectionUUID)
     {
         setCoinUUID(coinUUID);
         setCoinName(coinName);
@@ -65,6 +83,7 @@ public final class CoinProperty
         setCoinValue(coinValue);
         setCoinMintMark(coinMintMark);
         setCoinYear(coinYear);
+        setUserUUID(userUUID);
         setCoinCollectionName(coinCollectionName);
         setCoinCollectionUUID(collectionUUID);
     }
@@ -264,6 +283,21 @@ public final class CoinProperty
     public StringProperty coinCollectionUUIDProperty()
     {
         return coinCollectionUUID;
+    }
+
+    public String getUserUUID()
+    {
+        return userUUID.get();
+    }
+
+    public void setUserUUID(String value)
+    {
+        userUUID.set(value);
+    }
+
+    public StringProperty userUUIDProperty()
+    {
+        return userUUID;
     }
 
 }
