@@ -73,8 +73,8 @@ public final class DBCoinConnect extends DBConnect
         MyLogger.log(Level.INFO, "Call to updateCoin method");
         boolean coinUpdated = updateCoin(coin.getItemUUID().toString(), coin.getItemName(), coin.getCoinGrade().name(), coin.getCoinFaceValue(), coin.getCoinCurrency().name(), coin.getItemNote(), coin.getBuyPrice(), coin.getItemValue(), coin.getCoinMintMark(), coin.getCoinYear(), coin.getUserUUID(), coin.getItemBuyDate(), coin.getItemCollectionUUID());
         //createDBConnection();
-        MyLogger.log(Level.INFO, "Select * from coins...");
-        selectAllCoins();
+        //MyLogger.log(Level.INFO, "Select * from coins...");
+        //selectAllCoins();
         closeDBConnection();
         //shutDownDBConnection();
         return coinUpdated;
@@ -188,7 +188,9 @@ public final class DBCoinConnect extends DBConnect
             sqlDate = java.sql.Date.valueOf(coinBuyDate);
             MyLogger.log(Level.INFO, "Coin sql buy date: {0}", sqlDate);
             //String sql = ("INSERT INTO " + TABLE_NAME + " (COIN_UUID,COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_USER_UUID,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            String sql = ("UPDATE " + TABLE_NAME + "SET (COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_USER_UUID,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)" + " WHERE COIN_UUID = ?");
+            //String sql = ("UPDATE " + TABLE_NAME + " SET (COIN_NAME,COIN_GRADE,COIN_FACEVALUE,COIN_CURRENCY,COIN_NOTE,COIN_BUYDATE,COIN_BUYPRICE,COIN_VALUE,COIN_MINT_MARK,COIN_MINT_YEAR,COIN_COLLECTION_UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)" + " WHERE (COIN_UUID) VALUES (?)");
+            String sql = ("UPDATE " + TABLE_NAME + " SET COIN_NAME=?,COIN_GRADE=?,COIN_FACEVALUE=?,COIN_CURRENCY=?,COIN_NOTE=?,COIN_BUYDATE=?,COIN_BUYPRICE=?,COIN_VALUE=?,COIN_MINT_MARK=?,COIN_MINT_YEAR=?,COIN_COLLECTION_UUID=? WHERE COIN_UUID=? AND COIN_USER_UUID=?");
+            System.out.println ("SQL String before prepare statement:\n" + sql);
             PreparedStatement prepStmt = conn.prepareStatement(sql);
 
             //prepStmt.setString(1, itemUUID);
@@ -202,9 +204,11 @@ public final class DBCoinConnect extends DBConnect
             prepStmt.setString(8, coinValue);
             prepStmt.setString(9, coinMintMark);
             prepStmt.setInt(10, coinYear);
-            prepStmt.setString(11, userUUID.toString());
-            prepStmt.setString(12, collectionUUID.toString());
-            prepStmt.setString(13, itemUUID);
+            //prepStmt.setString(11, userUUID.toString());
+            prepStmt.setString(11, collectionUUID.toString());
+            prepStmt.setString(12, itemUUID);
+            prepStmt.setString(13, userUUID.toString());
+            System.out.println ("SQL statement: \n" + prepStmt.toString());
             updateCount = prepStmt.executeUpdate();
 
             MyLogger.log(Level.INFO, "update coin update count is: {0}", updateCount);
@@ -222,6 +226,9 @@ public final class DBCoinConnect extends DBConnect
         } catch (SQLException e)
         {
             MyLogger.log(Level.SEVERE, "Exception while updating coin to DB. sql exception: {0}", e);
+            e.printStackTrace(System.err);
+            System.err.println("SQLState: " +
+            e.getSQLState());
         }
         return coinUpdated;
     }

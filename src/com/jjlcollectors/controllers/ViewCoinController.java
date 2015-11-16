@@ -18,6 +18,7 @@
 package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.collectables.CollectionProperty;
+import com.jjlcollectors.collectables.coins.Coin;
 import com.jjlcollectors.collectables.coins.CoinCurrency;
 import com.jjlcollectors.collectables.coins.CoinGrade;
 import com.jjlcollectors.collectables.coins.CoinProperty;
@@ -55,6 +56,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -76,6 +78,7 @@ public final class ViewCoinController implements Initializable
     private UUID coinUUID;
     private BufferedImage bufferedImage1;
     private BufferedImage bufferedImage2;
+    private StringBuilder updateCoinStatusSB;
 
     //Messages strings
     private final String ERROR_COIN_CANT_BE_LOADED_TITLE = "Error - Coin info can't be loaded";
@@ -95,11 +98,31 @@ public final class ViewCoinController implements Initializable
     private final String ERROR_IMAGE_CANT_BE_LOADED_TITLE = "Error - Image info can't be loaded";
     private final String ERROR_IMAGE_CANT_BE_LOADED_BODY = "An Error has prevented Image from being loaded.\nPlease try again.";
 
+    //coin validation messages
+    private final String COIN_NAME_EMPTY = "Enter coin name.\n";
+    private final String COLLECTION_TYPE_NOT_SELECTED = "Collection must be selected.\n";
+    private final String CURRENCY_TYPE_NOT_SELECTED = "Currency must be selected.\n";
+    private final String GRADE_NOT_SELECTED = "Coin Grade must be selected.\n";
+    private final String COLLECTION_NAME_EMPTY = "Enter colletion name.\n";
+    private final String FACEVALUE_EMPTY = "Enter Face Value.\n";
+    private final String FACEVALUE_NONNUMERIC = "Face Value must be numeric.\n";
+    private final String Mint_YEAR_EMPTY = "Enter Mint Year.\n";
+    private final String Mint_YEAR_NONNUMERIC = "Mint Year must be numeric.\n";
+    private final String COLLECTION_NAME_EXISTS = "Name already exists.\n";
+    private final String COIN_NOT_ADDED = "Coin was not added.\nPlease try again later\n.";
+    private final String BUY_PRICE_EMPTY = "Enter a buy price.\n";
+    private final String BUY_PRICE_NON_NUMERIC = "Buy price must be numeric\n";
+    private final String MINT_YEARS_INVALID = "Coin mint year must be between:\n-2700 and 2700\n";
+    private final String BUY_DATE_EMPTY = "Coin buy date must be selected";
+    public final String USER_DIR = "user.dir";
+    public final String IMAGE_DIRECTORY = "images";
+    public final String IMAGE_OUTPUT_EXTENSION = "jpg";
+
     @FXML
     private AnchorPane viewCoinAnchorPane;
 
     @FXML
-    private TextField coinNameTextField;
+    private TextField coinNameTxtField;
 
     @FXML
     private ComboBox<CoinCurrency> coinCurrencyComboBox;
@@ -111,25 +134,25 @@ public final class ViewCoinController implements Initializable
     private ComboBox<CollectionProperty> collectionComboBox;
 
     @FXML
-    private TextField coinFaceValueTextField;
+    private TextField coinFaceValueTxtField;
 
     @FXML
-    private TextField coinMintYearTextField;
+    private TextField coinMintYearTxtField;
 
     @FXML
-    private TextField coinValueTextField;
+    private TextField coinValueTxtField;
 
     @FXML
-    private TextField coinMintMarkTextField;
+    private TextField coinMintMarkTxtField;
 
     @FXML
-    private TextField coinBuyPriceTextField;
+    private TextField coinBuyPriceTxtField;
 
     @FXML
     private TextField coinNoteTxtField;
 
     @FXML
-    private TextArea coinAddStatus;
+    private TextArea coinUpdateStatus;
 
     @FXML
     private DatePicker coinBuyDatePicker;
@@ -167,6 +190,10 @@ public final class ViewCoinController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        //setup update status string builder and status area
+        updateCoinStatusSB = new StringBuilder();
+        coinUpdateStatus.setVisible(false);
+
         //setup combo boxes
         coinCurrencyComboBox.getItems().addAll(CoinCurrency.values());
         coinGradeComboBox.getItems().addAll(CoinGrade.values());
@@ -193,24 +220,25 @@ public final class ViewCoinController implements Initializable
             }
         });
         // Define rendering of the list of values in ComboBox drop down. 
-        collectionComboBox.setCellFactory((comboBox) ->
-        {
-            return new ListCell<CollectionProperty>()
-            {
-                @Override
-                protected void updateItem(CollectionProperty item, boolean empty)
+        collectionComboBox.setCellFactory((comboBox)
+                -> 
                 {
-                    super.updateItem(item, empty);
+                    return new ListCell<CollectionProperty>()
+                    {
+                        @Override
+                        protected void updateItem(CollectionProperty item, boolean empty)
+                        {
+                            super.updateItem(item, empty);
 
-                    if (item == null || empty)
-                    {
-                        setText(null);
-                    } else
-                    {
-                        setText(item.getCollectionName());
-                    }
-                }
-            };
+                            if (item == null || empty)
+                            {
+                                setText(null);
+                            } else
+                            {
+                                setText(item.getCollectionName());
+                            }
+                        }
+                    };
         });
 
         //setup add image button listeners
@@ -258,22 +286,26 @@ public final class ViewCoinController implements Initializable
         {
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Setting info of coin property to window elements");
             coinUUID = UUID.fromString(coinProperty.getCoinUUID());
-            coinNameTextField.setText(coinProperty.getCoinName());
+            coinNameTxtField.setText(coinProperty.getCoinName());
             coinCurrencyComboBox.setValue(CoinCurrency.valueOf(coinProperty.getCoinCurrency()));
             coinGradeComboBox.setValue(CoinGrade.valueOf(coinProperty.getCoinGrade()));
-            coinFaceValueTextField.setText(coinProperty.getCoinFaceValue());
-            coinMintYearTextField.setText(Integer.toString(coinProperty.getCoinYear()));
-            coinValueTextField.setText(coinProperty.getCoinValue());
-            coinBuyPriceTextField.setText(coinProperty.getCoinBuyPrice());
-            coinMintMarkTextField.setText(coinProperty.getCoinMintMark());
+            coinFaceValueTxtField.setText(coinProperty.getCoinFaceValue());
+            coinMintYearTxtField.setText(Integer.toString(coinProperty.getCoinYear()));
+            coinValueTxtField.setText(coinProperty.getCoinValue());
+            coinBuyPriceTxtField.setText(coinProperty.getCoinBuyPrice());
+            coinMintMarkTxtField.setText(coinProperty.getCoinMintMark());
             coinNoteTxtField.setText(coinProperty.getCoinNote());
             coinBuyDatePicker.setValue(LocalDate.parse(coinProperty.getCoinBuyDate()));
-            
+
             //setup collection ComboBox
             String coinCollectionUUID = coinProperty.getCoinCollectionUUID();
             selectedItemCollectionUUID = UUID.fromString(coinCollectionUUID);
             CollectionProperty collection = DBCollectionConnect.getCollectionProperty(UUID.fromString(coinCollectionUUID));
             collectionComboBox.setValue(collection);
+            CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+            collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+            
 
             //load coin images
         } else if (coinProperty == null)
@@ -284,11 +316,12 @@ public final class ViewCoinController implements Initializable
         }
 
         // Handle ComboBox event.
-        collectionComboBox.setOnAction((event) ->
-        {
-            CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
-            collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
+        collectionComboBox.setOnAction((event)
+                -> 
+                {
+                    CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
+                    collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
 
         //load coin images if they exists
@@ -299,11 +332,11 @@ public final class ViewCoinController implements Initializable
             String filePath = itemFile.getPath();
             if (filePath.endsWith("-1.jpg"))
             {
-                MyLogger.log(Level.INFO, "Found image 1 for item" );
+                MyLogger.log(Level.INFO, "Found image 1 for item");
                 handleImageLoading(itemFile, 1);
             } else if (filePath.endsWith("-2.jpg"))
             {
-                MyLogger.log(Level.INFO, "Found image 2 for item" );
+                MyLogger.log(Level.INFO, "Found image 2 for item");
                 handleImageLoading(itemFile, 2);
             }
         }
@@ -519,16 +552,40 @@ public final class ViewCoinController implements Initializable
     }
 
     /*
-     * method to update the coin with updated user data
+     * method to update the coin with updated coin data
      */
     private boolean updateCoin()
     {
+
         MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Updating coin");
+        coinUpdateStatus.setText("");
+        coinUpdateStatus.setVisible(false);
         boolean updateCoinSuccess = false;
-        //TODO
-        
-        
-        
+
+        if (isCoinValid())
+        {
+            //TODO
+            StringBuilder coinNote = new StringBuilder(coinNoteTxtField.getText());
+            int coinYear = Integer.parseInt(coinMintYearTxtField.getText());
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collectionComboBox.getValue(): {0}", collectionComboBox.getValue());
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection uuid is: {0}", collectionUUID);
+            coinUUID = UUID.fromString(coinProperty.getCoinUUID());
+            Coin newCoin = new Coin(userUUID, coinNameTxtField.getText(), coinGradeComboBox.getValue(), coinFaceValueTxtField.getText(), coinCurrencyComboBox.getValue(), coinNote, coinYear, coinMintMarkTxtField.getText(), coinBuyPriceTxtField.getText(), coinValueTxtField.getText(), coinBuyDatePicker.getValue(), collectionUUID, coinUUID);
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin object with updated info created, coin uuid is {0}", newCoin.getItemUUID().toString());
+
+            if (DBCoinConnect.updateCoin(newCoin))
+            {
+                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin updated in DB, user uuid is {0}", userUUID.toString());
+                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin updated in DB, collection uuid is {0}", collectionUUID.toString());
+                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin updated in DB, coin uuid is {0}", newCoin.getItemUUID().toString());
+                updateCoinSuccess = true;
+            } else
+            {
+                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin NOT updated in DB, user uuid is {0}", userUUID.toString());
+                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin NOT updated in DB, coin uuid is {0}", newCoin.getItemUUID().toString());
+                updateCoinSuccess = false;
+            }
+        }
         return updateCoinSuccess;
     }
 
@@ -539,12 +596,12 @@ public final class ViewCoinController implements Initializable
         {
             if (deleteCoin())
             {
-                MyLogger.log(Level.INFO, "Coin: {0} deleted successful", coinNameTextField.getText());
+                MyLogger.log(Level.INFO, "Coin: {0} deleted successful", coinNameTxtField.getText());
                 showInfoMessage(CONFIMATION_COIN_DELETE_TITLE, INFORMATION_COIN_DELETE_OK_BODY);
                 closeWindow();
             } else
             {
-                MyLogger.log(Level.INFO, "Coin: {0} delete failed", coinNameTextField.getText());
+                MyLogger.log(Level.INFO, "Coin: {0} delete failed", coinNameTxtField.getText());
                 showErrorMessage(ERROR_COIN_DELETE_FAIL_TITLE, ERROR_COIN_DELETE_FAIL_BODY);
             }
         }
@@ -568,6 +625,143 @@ public final class ViewCoinController implements Initializable
         }
 
         return deleteCoinSuccess;
+    }
+
+    private boolean isCoinValid()
+    {
+        boolean coinValid = true;
+        StringBuilder issues = new StringBuilder("");
+
+        coinUpdateStatus.setVisible(!(coinValid));
+
+        //check name filled
+        if (coinNameTxtField.getText() == null || coinNameTxtField.getText().trim().isEmpty())
+        {
+            issues.append(COIN_NAME_EMPTY);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection name is: {0}", coinNameTxtField.getText());
+        } else if (collectionUUID ==null)//else if (DBCollectionConnect.getCollectionUUID(coinNameTxtField.getText()) != null) //check if collection name already exists
+        {
+            issues.append(COLLECTION_NAME_EXISTS);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection name already exists: {0}", coinNameTxtField.getText());
+        }
+
+        //check currency combo box
+        if (coinCurrencyComboBox.getValue() == null)
+        {
+            issues.append(CURRENCY_TYPE_NOT_SELECTED);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Currency selected is: {0}", coinCurrencyComboBox.getValue());
+        }
+
+        //check facevalue
+        if (coinFaceValueTxtField.getText() == null || coinFaceValueTxtField.getText().trim().isEmpty())
+        {
+            issues.append(FACEVALUE_EMPTY);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Face value is: {0}", coinFaceValueTxtField.getText());
+        } else if (!(isDouble(coinFaceValueTxtField.getText())))
+        {
+            issues.append(FACEVALUE_NONNUMERIC);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Face value is non-numeric: {0}", coinFaceValueTxtField.getText());
+        }
+
+        //check mint year
+        if (coinMintYearTxtField.getText() == null || coinMintYearTxtField.getText().trim().isEmpty())
+        {
+            issues.append(Mint_YEAR_EMPTY);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Face value is: {0}", coinMintYearTxtField.getText());
+        } else if (!(isInteger(coinMintYearTxtField.getText())))
+        {
+            issues.append(Mint_YEAR_NONNUMERIC);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Face value is non-numeric: {0}", coinMintYearTxtField.getText());
+        } else if (!(Integer.parseInt(coinMintYearTxtField.getText()) >= -2700 && Integer.parseInt(coinMintYearTxtField.getText()) <= 2700))
+        {
+            issues.append(MINT_YEARS_INVALID);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin Year not between -2700 and 2077: {0}", coinMintYearTxtField.getText());
+        }
+
+        //check buy price
+        if (coinBuyPriceTxtField.getText() == null || coinBuyPriceTxtField.getText().trim().isEmpty())
+        {
+            issues.append(BUY_PRICE_EMPTY);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "buy price is: {0}", coinBuyPriceTxtField.getText());
+        } else if (!(isDouble(coinBuyPriceTxtField.getText())))
+        {
+            issues.append(BUY_PRICE_NON_NUMERIC);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "coin buy price is non-numeric: {0}", coinBuyPriceTxtField.getText());
+        }
+
+        //check collection combo box
+        if (collectionComboBox.getValue() == null)
+        {
+            issues.append(COLLECTION_TYPE_NOT_SELECTED);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection selected is: {0}", collectionComboBox.getValue());
+        }
+
+        //check grade combo box
+        if (coinGradeComboBox.getValue() == null)
+        {
+            issues.append(GRADE_NOT_SELECTED);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "grade selected is: {0}", coinGradeComboBox.getValue());
+        }
+        if (coinBuyDatePicker.getValue() == null)
+        {
+            issues.append(BUY_DATE_EMPTY);
+            coinValid = false;
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "coin buy date not selected, value is: {0}", coinBuyDatePicker.getValue());
+        }
+        if (!(coinValid))
+        {
+            coinUpdateStatus.setVisible(!(coinValid));
+            coinUpdateStatus.setBorder(Border.EMPTY);
+            coinUpdateStatus.setText(issues.toString());
+
+        }
+        return coinValid;
+    }
+
+    /*
+     * method to check if string contains integer numeric value
+     */
+    private boolean isDouble(String str)
+    {
+        try
+        {
+            double i = Double.parseDouble(str);
+        } catch (NumberFormatException nfe)
+        {
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Non numeric value. Value was: {0}", str);
+            return false;
+        }
+        return true;
+
+    }
+
+    /*
+     * method to check if string contains integer numeric value
+     */
+    private boolean isInteger(String str)
+    {
+        try
+        {
+            int i = Integer.parseInt(str);
+        } catch (NumberFormatException nfe)
+        {
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Non numeric value. Value was: {0}", str);
+            return false;
+        }
+        return true;
+
     }
 
 }

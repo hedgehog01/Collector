@@ -88,8 +88,13 @@ public final class CoinProperty
         setCoinCollectionUUID(collectionUUID);
     }
 
+    /**
+     * Method to create CoinProperty from Coin object
+     * @param coin the Coin object
+     */
     public CoinProperty(Coin coin)
     {
+        setUserUUID(coin.getUserUUID().toString());
         setCoinUUID(coin.getItemUUID().toString());
         setCoinName(coin.getItemName());
         setCoinGrade(coin.getCoinGrade().name());

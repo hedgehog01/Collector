@@ -133,6 +133,7 @@ public class AddCollectionController implements Initializable
             addCollectionStatusLabel.setText (COLLECTION_NAME_EMPTY);
             isValid = false;
         }
+        //To DO - add test for collection name that already exsists for that user / collection type combo
         
                 
         return isValid;    

@@ -71,6 +71,7 @@ import javafx.util.StringConverter;
 public final class AddCoinController implements Initializable
 {
 
+    private final String COIN_NAME_EMPTY = "Enter coin name.\n";
     private final String COLLECTION_TYPE_NOT_SELECTED = "Collection must be selected.\n";
     private final String CURRENCY_TYPE_NOT_SELECTED = "Currency must be selected.\n";
     private final String GRADE_NOT_SELECTED = "Coin Grade must be selected.\n";
@@ -357,9 +358,9 @@ public final class AddCoinController implements Initializable
         //check name filed
         if (coinNameTxtField.getText() == null || coinNameTxtField.getText().trim().isEmpty())
         {
-            issues.append(COLLECTION_NAME_EMPTY);
+            issues.append(COIN_NAME_EMPTY);
             coinValid = false;
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection name is: {0}", coinNameTxtField.getText());
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "coin empty or null, name is: {0}", coinNameTxtField.getText());
         } else if (DBCollectionConnect.getCollectionUUID(coinNameTxtField.getText()) != null) //check if collection name already exists
         {
             issues.append(COLLECTION_NAME_EXISTS);
