@@ -18,8 +18,10 @@
 package com.jjlcollectors.controllers;
 
 import com.jjlcollectors.collectables.Collection;
+import com.jjlcollectors.collectables.CollectionProperty;
 import com.jjlcollectors.collectables.CollectionType;
 import com.jjlcollectors.util.dbconnect.DBCollectionConnect;
+import com.jjlcollectors.util.log.MyLogger;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -43,10 +45,10 @@ import javafx.stage.Stage;
 public class AddCollectionController implements Initializable
 {
 
-    private final String COLLECTION_TYPE_NOT_SELECTED = "Collection type \nmust be selected.";
-    private final String COLLECTION_NAME_EMPTY = "Enter collection name.";
+    private final String COLLECTION_TYPE_NOT_SELECTED = "Collection type must be selected.\n";
+    private final String COLLECTION_NAME_EMPTY = "Enter collection name.\n";
+    private final String COLLECTION_NAME_Exists = "Collection name already exists \nfor this collection type.\n";
     private UUID _userUUID = null;
-    private static final Logger log = Logger.getLogger(AddCollectionController.class.getName());
     private ObservableList<CollectionType> collectionTypeComboList = FXCollections.observableArrayList();
 
     @FXML
@@ -81,7 +83,7 @@ public class AddCollectionController implements Initializable
     @FXML
     private void createNewCollection()
     {
-        log.log(Level.INFO, "Attempting save of new Collection");
+        MyLogger.log(Level.INFO, "Attempting save of new Collection");
         
         if (isCollectionValid())
         {
@@ -93,7 +95,7 @@ public class AddCollectionController implements Initializable
             
             
             Collection collection = new Collection (_userUUID,collectionNameTextField.getText(),collectionTypeComboBox.getValue(),collectionInfo);
-            log.log(Level.INFO, "New Collection item created, attempt to add to DB");
+            MyLogger.log(Level.INFO, "New Collection item created, attempt to add to DB");
             DBCollectionConnect.addCollection(collection);
             
             //addCollectionStatusLabel.setText("Collection added successfully");
@@ -126,17 +128,39 @@ public class AddCollectionController implements Initializable
         if (collectionTypeComboBox.getValue() == null)
         {
             addCollectionStatusLabel.setText (COLLECTION_TYPE_NOT_SELECTED);
+            MyLogger.log(Level.INFO, "Collection type not selected");
             isValid = false;
         }
         else if (collectionNameTextField.getText() == null || collectionNameTextField.getText().trim().isEmpty())
         {
             addCollectionStatusLabel.setText (COLLECTION_NAME_EMPTY);
+            MyLogger.log(Level.INFO, "Collection name empty");
+            isValid = false;
+        }else if (doesCollectionNameExist()){
+            addCollectionStatusLabel.setText (COLLECTION_NAME_Exists);
             isValid = false;
         }
+        
         //To DO - add test for collection name that already exsists for that user / collection type combo
         
                 
         return isValid;    
+    }
+    
+    //Method to check if new collection name already exists for this user and selected type
+    private boolean doesCollectionNameExist()
+    {
+        ObservableList<CollectionProperty> userCollectionData = DBCollectionConnect.getUserCollections(_userUUID);
+        boolean nameExists = false;
+        
+        //loop through user collection and test name
+        for (CollectionProperty existingData :userCollectionData ){
+            if (collectionTypeComboBox.getValue().name().equals(existingData.getCollectionType()) && collectionNameTextField.getText().equals(existingData.getCollectionName())){
+                MyLogger.log(Level.INFO, "Collection name already exists",collectionNameTextField.getText());
+                return true;
+            }
+        }        
+        return nameExists;
     }
 
 }
