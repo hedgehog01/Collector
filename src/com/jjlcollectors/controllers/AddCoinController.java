@@ -75,10 +75,10 @@ public final class AddCoinController implements Initializable
     private final String COLLECTION_TYPE_NOT_SELECTED = "Collection must be selected.\n";
     private final String CURRENCY_TYPE_NOT_SELECTED = "Currency must be selected.\n";
     private final String GRADE_NOT_SELECTED = "Coin Grade must be selected.\n";
-    private final String COLLECTION_NAME_EMPTY = "Enter colletion name.\n";
-    private final String FACEVALUE_EMPTY = "Enter Face Value.\n";
+    private final String COLLECTION_NOT_SELECTED = "Select Collection\n";
+    private final String FACEVALUE_EMPTY = "Enter Face Value\n";
     private final String FACEVALUE_NONNUMERIC = "Face Value must be numeric.\n";
-    private final String Mint_YEAR_EMPTY = "Enter Mint Year.\n";
+    private final String Mint_YEAR_EMPTY = "Enter Mint Year\n";
     private final String Mint_YEAR_NONNUMERIC = "Mint Year must be numeric.\n";
     private final String COLLECTION_NAME_EXISTS = "Name already exists.\n";
     private final String COIN_NOT_ADDED = "Coin was not added.\nPlease try again later\n.";
@@ -101,6 +101,7 @@ public final class AddCoinController implements Initializable
     private UUID coinUUID;
     private BufferedImage bufferedImage1;
     private BufferedImage bufferedImage2;
+    private CollectionProperty selectedCollection;
 
     private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
 
@@ -262,7 +263,7 @@ public final class AddCoinController implements Initializable
         // Handle ComboBox event.
         collectionComboBox.setOnAction((event) ->
         {
-            CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+            selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
@@ -360,10 +361,10 @@ public final class AddCoinController implements Initializable
         {
             issues.append(COIN_NAME_EMPTY);
             coinValid = false;
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "coin empty or null, name is: {0}", coinNameTxtField.getText());
-        } else if (DBCollectionConnect.getCollectionUUID(coinNameTxtField.getText()) != null) //check if collection name already exists
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "coin name empty or null, name is: {0}", coinNameTxtField.getText());
+        } else if (selectedCollection == null) //check if collection selected already exists
         {
-            issues.append(COLLECTION_NAME_EXISTS);
+            issues.append(COLLECTION_NOT_SELECTED);
             coinValid = false;
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection name already exists: {0}", coinNameTxtField.getText());
         }

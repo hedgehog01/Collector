@@ -79,8 +79,10 @@ public final class ViewCoinController implements Initializable
     private BufferedImage bufferedImage1;
     private BufferedImage bufferedImage2;
     private StringBuilder updateCoinStatusSB;
+    private CollectionProperty selectedCollection;
 
     //Messages strings
+    private final String COLLECTION_NOT_SELECTED = "Select Collection\n";
     private final String ERROR_COIN_CANT_BE_LOADED_TITLE = "Error - Coin info can't be loaded";
     private final String ERROR_COIN_CANT_BE_LOADED_BODY = "An Error has prevented coin info from being loaded.\nPlease try again.";
     private final String CONFIMATION_COIN_UPDATE_TITLE = "Update coin";
@@ -319,7 +321,7 @@ public final class ViewCoinController implements Initializable
         collectionComboBox.setOnAction((event)
                 -> 
                 {
-                    CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
+                    selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
                     MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
                     collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
         });
@@ -639,10 +641,10 @@ public final class ViewCoinController implements Initializable
         {
             issues.append(COIN_NAME_EMPTY);
             coinValid = false;
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection name is: {0}", coinNameTxtField.getText());
-        } else if (collectionUUID ==null)//else if (DBCollectionConnect.getCollectionUUID(coinNameTxtField.getText()) != null) //check if collection name already exists
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "coin name is empty or null: {0}", coinNameTxtField.getText());
+        } else if (selectedCollection == null) //check if collection selected already exists
         {
-            issues.append(COLLECTION_NAME_EXISTS);
+            issues.append(COLLECTION_NOT_SELECTED);
             coinValid = false;
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection name already exists: {0}", coinNameTxtField.getText());
         }
@@ -666,6 +668,8 @@ public final class ViewCoinController implements Initializable
             issues.append(FACEVALUE_NONNUMERIC);
             coinValid = false;
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Face value is non-numeric: {0}", coinFaceValueTxtField.getText());
+        }else if (collectionUUID ==null){
+            MyLogger.log(Level.SEVERE, "Collection UUID is NULL!!");
         }
 
         //check mint year
