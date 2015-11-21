@@ -627,7 +627,7 @@ public final class AddCoinController implements Initializable
     /*
      * method to show information messages
      */
-    private boolean showConfermationMessage(String title, String body)
+    private boolean showConfirmationMessage(String title, String body)
     {
         MyLogger.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

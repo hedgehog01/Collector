@@ -94,6 +94,10 @@ public final class ViewCoinController implements Initializable
     private final String CONFIMATION_COIN_DELETE_TITLE = "Delete coin";
     private final String INFORMATION_COIN_DELETE_OK_BODY = "Coin deleted successfully.";
     private final String CONFIMATION_COIN_DELETE_BODY = "Are you sure you would like to delete the coin?";
+    private final String CONFIMATION_COIN_IMAGE_DELETE_TITLE = "Coin image delete";
+    private final String CONFIMATION_COIN_IMAGE_DELETE_BODY = "Are you sure you would like to delete the coin image?";
+    private final String ERROR_COIN_IMAGE_DELETE_TITLE = "Error!";
+    private final String ERROR_COIN_IMAGE_DELETE_BODY = "Coin Image could not be deleted. Make sure application has privilage to do so.";
     private final String ERROR_COIN_DELETE_FAIL_TITLE = "Error - Delete coin failed";
     private final String ERROR_COIN_DELETE_FAIL_BODY = "Coin delete was unsuccessful!\nPlease try again later.";
     private final String FOLDER_CHOOSER_TITLE = "Select item Image";
@@ -307,7 +311,6 @@ public final class ViewCoinController implements Initializable
             CollectionProperty selectedCollection = collectionComboBox.getSelectionModel().getSelectedItem();
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Collection selction ComboBox Action, selected collection: {0}", selectedCollection.toString());
             collectionUUID = UUID.fromString(selectedCollection.getCollectionUUID());
-            
 
             //load coin images
         } else if (coinProperty == null)
@@ -380,7 +383,7 @@ public final class ViewCoinController implements Initializable
         }
     }
 
-    @SuppressWarnings("fallthrough")
+    //@SuppressWarnings("fallthrough")
     private void removeImageButtonAction(int imgNum)
     {
         switch (imgNum)
@@ -388,16 +391,61 @@ public final class ViewCoinController implements Initializable
             case 1:
             {
                 MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
-                bufferedImage1 = null;
-                coinImageView1.setImage(null);
+                if (showConfirmationMessage(CONFIMATION_COIN_IMAGE_DELETE_TITLE, CONFIMATION_COIN_IMAGE_DELETE_BODY))
+                {
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed delete coin: {0}, image num: {1}", new Object[]
+                    {
+                        coinUUID.toString(), imgNum
+                    });
+                    if (FileHandleClass.itemImageDelete(userUUID, collectionUUID, coinUUID, imgNum))
+                    {
+                        bufferedImage1 = null;
+                        coinImageView1.setImage(null);
+                    } else
+                    {
+                        //image couldn't be deleted for some reason
+                        showErrorMessage(ERROR_COIN_IMAGE_DELETE_TITLE, ERROR_COIN_IMAGE_DELETE_BODY);
+                    }
+
+                } else
+                {
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User did NOT confirm delete coin: {0}, image num: {1}", new Object[]
+                    {
+                        coinUUID.toString(), imgNum
+                    });
+                }
                 break;
             }
             case 2:
             {
                 MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
-                bufferedImage2 = null;
-                coinImageView2.setImage(null);
+                if (showConfirmationMessage(CONFIMATION_COIN_IMAGE_DELETE_TITLE, CONFIMATION_COIN_IMAGE_DELETE_BODY))
+                {
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed delete coin: {0}, image num: {1}", new Object[]
+                    {
+                        coinUUID.toString(), imgNum
+                    });
+                    if (FileHandleClass.itemImageDelete(userUUID, collectionUUID, coinUUID, imgNum))
+                    {
+                        bufferedImage2 = null;
+                        coinImageView2.setImage(null);
+                    } else
+                    {
+                        //image couldn't be deleted for some reason
+                        showErrorMessage(ERROR_COIN_IMAGE_DELETE_TITLE, ERROR_COIN_IMAGE_DELETE_BODY);
+                    }
+                } else
+                {
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User did NOT confirm delete coin: {0}, image num: {1}", new Object[]
+                    {
+                        coinUUID.toString(), imgNum
+                    });
+                }
                 break;
+            }
+            default:
+            {
+                MyLogger.log(Level.SEVERE, LOG_CLASS_NAME + "Image to remove was not defined, image {0}", imgNum);
             }
         }
 
@@ -486,7 +534,7 @@ public final class ViewCoinController implements Initializable
     /*
      * method to show information messages
      */
-    private boolean showConfermationMessage(String title, String body)
+    private boolean showConfirmationMessage(String title, String body)
     {
         MyLogger.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -539,12 +587,13 @@ public final class ViewCoinController implements Initializable
     @FXML
     private void initiateUpdateCoin()
     {
-        if (showConfermationMessage(CONFIMATION_COIN_UPDATE_TITLE, CONFIMATION_COIN_UPDATE_BODY))
+        if (showConfirmationMessage(CONFIMATION_COIN_UPDATE_TITLE, CONFIMATION_COIN_UPDATE_BODY))
         {
             if (updateCoin())
             {
                 MyLogger.log(Level.INFO, "Coin update successful");
                 showInfoMessage(INFORMATION_COIN_UPDATE_TITLE, INFORMATION_COIN_UPDATE_OK_BODY);
+                closeWindow();
             } else
             {
                 MyLogger.log(Level.INFO, "Coin update failed");
@@ -581,6 +630,7 @@ public final class ViewCoinController implements Initializable
                 MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin updated in DB, collection uuid is {0}", collectionUUID.toString());
                 MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin updated in DB, coin uuid is {0}", newCoin.getItemUUID().toString());
                 updateCoinSuccess = true;
+                saveCoinImages();
             } else
             {
                 MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Coin NOT updated in DB, user uuid is {0}", userUUID.toString());
@@ -594,7 +644,7 @@ public final class ViewCoinController implements Initializable
     @FXML
     private void initiateDeleteCoin()
     {
-        if (showConfermationMessage(CONFIMATION_COIN_DELETE_TITLE, CONFIMATION_COIN_DELETE_BODY))
+        if (showConfirmationMessage(CONFIMATION_COIN_DELETE_TITLE, CONFIMATION_COIN_DELETE_BODY))
         {
             if (deleteCoin())
             {
@@ -642,13 +692,7 @@ public final class ViewCoinController implements Initializable
             issues.append(COIN_NAME_EMPTY);
             coinValid = false;
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "coin name is empty or null: {0}", coinNameTxtField.getText());
-        } else if (selectedCollection == null) //check if collection selected already exists
-        {
-            issues.append(COLLECTION_NOT_SELECTED);
-            coinValid = false;
-            MyLogger.log(Level.INFO, LOG_CLASS_NAME + "collection name already exists: {0}", coinNameTxtField.getText());
         }
-
         //check currency combo box
         if (coinCurrencyComboBox.getValue() == null)
         {
@@ -668,10 +712,7 @@ public final class ViewCoinController implements Initializable
             issues.append(FACEVALUE_NONNUMERIC);
             coinValid = false;
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Face value is non-numeric: {0}", coinFaceValueTxtField.getText());
-        }else if (collectionUUID ==null){
-            MyLogger.log(Level.SEVERE, "Collection UUID is NULL!!");
         }
-
         //check mint year
         if (coinMintYearTxtField.getText() == null || coinMintYearTxtField.getText().trim().isEmpty())
         {
@@ -718,6 +759,7 @@ public final class ViewCoinController implements Initializable
             coinValid = false;
             MyLogger.log(Level.INFO, LOG_CLASS_NAME + "grade selected is: {0}", coinGradeComboBox.getValue());
         }
+        //check coin buy date
         if (coinBuyDatePicker.getValue() == null)
         {
             issues.append(BUY_DATE_EMPTY);

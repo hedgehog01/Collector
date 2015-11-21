@@ -162,7 +162,7 @@ public class FileHandleClass
             int i = 1;
             do
             {
-                
+
                 File imageFile = new File(filePath + "/" + itemUUID + "-" + i + ".jpg");
                 if (imageFile.exists())
                 {
@@ -179,5 +179,85 @@ public class FileHandleClass
 
         }
         return fileList;
+    }
+
+    /**
+     * Method to check if item has specific image already
+     *
+     * @param userUUID user UUID
+     * @param collectionUUID Collection UUID
+     * @param itemUUID Item UUID
+     * @param imgNum The number of the image to search
+     * @return true if the specific image found for the item
+     */
+    public boolean itemImageExists(UUID userUUID, UUID collectionUUID, UUID itemUUID, int imgNum)
+    {
+        MyLogger.log(Level.INFO, "Checking if item has existing saved images...");
+        boolean imageExists = false;
+        ArrayList<File> fileList = getItemImages(userUUID, collectionUUID, itemUUID);
+        if (fileList.isEmpty())
+        {
+            MyLogger.log(Level.INFO, "item {0} has no saved images", itemUUID.toString());
+            return false;
+        }
+
+        //check if item has specific image
+        for (File file : fileList)
+        {
+            if (file.getPath().endsWith("-" + imgNum + ".jpg"))
+            {
+                MyLogger.log(Level.INFO, "Found item {0} has saved image {1}", new Object[]
+                {
+                    itemUUID.toString(), imgNum
+                });
+                return true;
+            }
+        }
+
+        MyLogger.log(Level.INFO, "Did NOT Find item {0} saved image {1}", new Object[]
+        {
+            itemUUID.toString(), imgNum
+        });
+        return imageExists;
+    }
+
+    /**
+     * Method to check if item has specific image already
+     *
+     * @param userUUID user UUID
+     * @param collectionUUID Collection UUID
+     * @param itemUUID Item UUID
+     * @param imgNum The number of the image to search
+     * @return true if the specific image found for the item
+     */
+    public static boolean itemImageDelete(UUID userUUID, UUID collectionUUID, UUID itemUUID, int imgNum)
+    {
+        MyLogger.log(Level.INFO, "Attemptin to delete image from item {0} image number {1}...", new Object[]
+        {
+            itemUUID, imgNum
+        });
+        boolean imageDeleted = false;
+
+        // set folder location of images
+        String userDir = System.getProperty(USER_DIR);
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + " User Dir: {0}", userDir);
+        String filePath = userDir + "/" + IMAGE_DIRECTORY + "/" + userUUID.toString() + "/" + collectionUUID.toString() + "/" + itemUUID + "-" + imgNum + ".jpg";
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + " Full path to image for delete: {0}", filePath);
+        File fileToDelete = new File(filePath);
+        try
+        {
+            imageDeleted = (fileToDelete.delete());
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + " File delete status is {0}, File path: {1}", new Object[]
+            {
+                imageDeleted, filePath
+            });
+        } catch (SecurityException e)
+        {
+            MyLogger.log(Level.INFO, LOG_CLASS_NAME + " File delete exception thrown {0}, File path: {1}", new Object[]
+            {
+                e, filePath
+            });
+        }
+        return imageDeleted;
     }
 }
