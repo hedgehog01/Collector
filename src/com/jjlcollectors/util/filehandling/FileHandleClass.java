@@ -44,7 +44,8 @@ public class FileHandleClass
     private static final String USER_DIR = "user.dir";
     private static final String IMAGE_DIRECTORY = "images";
     private static final String LOG_CLASS_NAME = "FileHandleClass: ";
-    private static final String IMAGE_OUTPUT_EXTENSION = "jpg";
+    private static final String IMAGE_OUTPUT_EXTENSION = "jpg";   
+    private static final int MAX_ITEM_IMAGES = 2; //max number of images an item can have
 
     /**
      * method to handle item image saving. Image is saved to: [App
@@ -157,26 +158,19 @@ public class FileHandleClass
 
         if (inputFolderPath.exists()) //verify saved image folder exists
         {
-            boolean getImages = true; //flag for getting image loop
-            //get list of files in the folder
-            int i = 1;
-            do
+            //get list of files in the folder - limited by max number of images per item
+            for (int i=1; i<=MAX_ITEM_IMAGES; i++)
             {
-
                 File imageFile = new File(filePath + "/" + itemUUID + "-" + i + ".jpg");
                 if (imageFile.exists())
                 {
                     fileList.add(imageFile);
-                    MyLogger.log(Level.INFO, "Image File found and added to arraylist: " + imageFile.getPath());
-                    i++;
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + " Image File {0} found and added to arraylist: {1}" ,new Object [] {i,imageFile.getPath()});
                 } else
                 {
-                    getImages = false; //no image found exit loop
-                    MyLogger.log(Level.INFO, "Image File NOT found, exiting image search. image path: " + imageFile.getPath());
+                    MyLogger.log(Level.INFO,LOG_CLASS_NAME + " Image File {0} NOT found, . image path: {1}", new Object[] {i, imageFile.getPath()});
                 }
-
-            } while (getImages);
-
+            }
         }
         return fileList;
     }
