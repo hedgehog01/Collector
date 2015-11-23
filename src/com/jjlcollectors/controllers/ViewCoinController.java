@@ -30,6 +30,7 @@ import com.jjlcollectors.util.log.MyLogger;
 import com.jjlcollectors.util.prefrences.PrefrencesHandler;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,13 +38,18 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -593,6 +599,7 @@ public final class ViewCoinController implements Initializable
             {
                 MyLogger.log(Level.INFO, "Coin update successful");
                 showInfoMessage(INFORMATION_COIN_UPDATE_TITLE, INFORMATION_COIN_UPDATE_OK_BODY);
+                //refreshHomePage();
                 closeWindow();
             } else
             {
@@ -776,6 +783,27 @@ public final class ViewCoinController implements Initializable
         return coinValid;
     }
 
+    //Refresh home page after coin updated
+    private void refreshHomePage()
+    {
+        Stage currentStage = (Stage) viewCoinAnchorPane.getScene().getWindow();
+        //currentStage.hide();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        String filePath = "/com/jjlcollectors/fxml/homepage/HomePage.fxml";
+        URL location = HomePageController.class.getResource(filePath);
+        fxmlLoader.setLocation(location);
+        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+        try
+        {
+            Parent root = fxmlLoader.load(location.openStream());
+        } catch (IOException ex)
+        {
+            MyLogger.log(Level.SEVERE,LOG_CLASS_NAME + " couldn't load homepage to refresh coin update!", ex);
+        }
+        HomePageController homePageController = (HomePageController) fxmlLoader.getController();
+        homePageController.refreshCoinList();
+    }
+
     /*
      * method to check if string contains integer numeric value
      */
@@ -790,7 +818,6 @@ public final class ViewCoinController implements Initializable
             return false;
         }
         return true;
-
     }
 
     /*
@@ -807,7 +834,6 @@ public final class ViewCoinController implements Initializable
             return false;
         }
         return true;
-
     }
 
 }

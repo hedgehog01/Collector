@@ -440,6 +440,12 @@ public class HomePageController implements Initializable
         return loadScreen;
 
     }
+    
+    protected void refreshCoinList()
+    {
+        MyLogger.log(Level.INFO, LOG_CLASS_NAME + " Refreshing coin list...");
+        startLoadCoinsThread();
+    }
 
     /*
      * method to start the Thread that runs the load coins Task

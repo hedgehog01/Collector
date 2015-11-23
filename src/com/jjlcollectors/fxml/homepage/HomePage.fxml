@@ -20,7 +20,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="400.0" prefWidth="764.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.HomePageController">
+<VBox prefHeight="614.0" prefWidth="1133.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.HomePageController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -51,9 +51,9 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="391.0" prefWidth="633.0" VBox.vgrow="ALWAYS">
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="589.0" prefWidth="735.0" VBox.vgrow="ALWAYS">
             <children>
-                <SplitPane dividerPositions="0.29797979797979796" layoutX="-3.0" layoutY="-3.0" prefHeight="378.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-3.0">
+                <SplitPane dividerPositions="0.16886543535620052" layoutX="-3.0" layoutY="-3.0" prefHeight="592.0" prefWidth="1139.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-3.0">
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="392.0" prefWidth="138.0">
                             <children>
@@ -63,31 +63,31 @@
                         <Button fx:id="addNewCoinbtn" layoutX="19.0" layoutY="310.0" mnemonicParsing="false" onAction="#addNewCoin" prefHeight="25.0" prefWidth="150.0" text="Add New Coin" />
                             </children>
                         </AnchorPane>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="376.0" prefWidth="576.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="839.0">
                             <children>
-                                <TableView fx:id="coinPreviewTableView" layoutX="3.0" layoutY="32.0" prefHeight="344.0" prefWidth="547.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                                <TableView fx:id="coinPreviewTableView" layoutX="3.0" layoutY="32.0" prefHeight="558.0" prefWidth="942.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
                                     <columns>
-                                        <TableColumn editable="false" prefWidth="107.0" resizable="false" text="Name">
+                                        <TableColumn editable="false" prefWidth="356.0" text="Name">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinName" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" prefWidth="102.0" resizable="false" text="Face Value">
+                                        <TableColumn editable="false" minWidth="0.0" prefWidth="128.0" text="Face Value">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinFaceValue" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" prefWidth="97.0" resizable="false" text="Currency">
+                                        <TableColumn editable="false" prefWidth="126.0" text="Currency">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinCurrency" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" prefWidth="95.0" resizable="false" text="Mint Year">
+                                        <TableColumn editable="false" prefWidth="123.0" text="Mint Year">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinYear" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" prefWidth="145.0" resizable="false" text="Collection">
+                                        <TableColumn editable="false" prefWidth="207.0" text="Collection">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinCollectionName" />
                                             </cellValueFactory>
