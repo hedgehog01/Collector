@@ -205,11 +205,15 @@ public final class ViewCoinController implements Initializable
         //setup update status string builder and status area
         updateCoinStatusSB = new StringBuilder();
         coinUpdateStatus.setVisible(false);
+        
+        //set image remove buttons to be disabled (enabled later if image exists
+        removeCoinImageBtn1.setVisible(false);
+        removeCoinImageBtn2.setVisible(false);
 
         //setup combo boxes
         coinCurrencyComboBox.getItems().addAll(CoinCurrency.values());
         coinGradeComboBox.getItems().addAll(CoinGrade.values());
-
+        
         // Define rendering of selected value shown in ComboBox.
         collectionComboBox.setConverter(new StringConverter<CollectionProperty>()
         {
@@ -351,7 +355,8 @@ public final class ViewCoinController implements Initializable
                 handleImageLoading(itemFile, 2);
             }
         }
-
+        
+        
     }
 
     /*
@@ -396,56 +401,63 @@ public final class ViewCoinController implements Initializable
         {
             case 1:
             {
-                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
-                if (showConfirmationMessage(CONFIMATION_COIN_IMAGE_DELETE_TITLE, CONFIMATION_COIN_IMAGE_DELETE_BODY))
+                if (bufferedImage1 != null)
                 {
-                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed delete coin: {0}, image num: {1}", new Object[]
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
+                    if (showConfirmationMessage(CONFIMATION_COIN_IMAGE_DELETE_TITLE, CONFIMATION_COIN_IMAGE_DELETE_BODY))
                     {
-                        coinUUID.toString(), imgNum
-                    });
-                    if (FileHandleClass.itemImageDelete(userUUID, collectionUUID, coinUUID, imgNum))
-                    {
-                        bufferedImage1 = null;
-                        coinImageView1.setImage(null);
+                        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed delete coin: {0}, image num: {1}", new Object[]
+                        {
+                            coinUUID.toString(), imgNum
+                        });
+                        if (FileHandleClass.itemImageDelete(userUUID, collectionUUID, coinUUID, imgNum))
+                        {
+                            bufferedImage1 = null;
+                            coinImageView1.setImage(null);
+                            removeCoinImageBtn1.setVisible(false);
+                        } else
+                        {
+                            //image couldn't be deleted for some reason
+                            showErrorMessage(ERROR_COIN_IMAGE_DELETE_TITLE, ERROR_COIN_IMAGE_DELETE_BODY);
+                        }
                     } else
                     {
-                        //image couldn't be deleted for some reason
-                        showErrorMessage(ERROR_COIN_IMAGE_DELETE_TITLE, ERROR_COIN_IMAGE_DELETE_BODY);
+                        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User did NOT confirm delete coin: {0}, image num: {1}", new Object[]
+                        {
+                            coinUUID.toString(), imgNum
+                        });
                     }
-
-                } else
-                {
-                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User did NOT confirm delete coin: {0}, image num: {1}", new Object[]
-                    {
-                        coinUUID.toString(), imgNum
-                    });
                 }
                 break;
             }
             case 2:
             {
-                MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
-                if (showConfirmationMessage(CONFIMATION_COIN_IMAGE_DELETE_TITLE, CONFIMATION_COIN_IMAGE_DELETE_BODY))
+                if (bufferedImage2 != null)
                 {
-                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed delete coin: {0}, image num: {1}", new Object[]
+                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "Removing image {0}", imgNum);
+                    if (showConfirmationMessage(CONFIMATION_COIN_IMAGE_DELETE_TITLE, CONFIMATION_COIN_IMAGE_DELETE_BODY))
                     {
-                        coinUUID.toString(), imgNum
-                    });
-                    if (FileHandleClass.itemImageDelete(userUUID, collectionUUID, coinUUID, imgNum))
-                    {
-                        bufferedImage2 = null;
-                        coinImageView2.setImage(null);
+                        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User confirmed delete coin: {0}, image num: {1}", new Object[]
+                        {
+                            coinUUID.toString(), imgNum
+                        });
+                        if (FileHandleClass.itemImageDelete(userUUID, collectionUUID, coinUUID, imgNum))
+                        {
+                            bufferedImage2 = null;
+                            coinImageView2.setImage(null);
+                            removeCoinImageBtn2.setVisible(false);
+                        } else
+                        {
+                            //image couldn't be deleted for some reason
+                            showErrorMessage(ERROR_COIN_IMAGE_DELETE_TITLE, ERROR_COIN_IMAGE_DELETE_BODY);
+                        }
                     } else
                     {
-                        //image couldn't be deleted for some reason
-                        showErrorMessage(ERROR_COIN_IMAGE_DELETE_TITLE, ERROR_COIN_IMAGE_DELETE_BODY);
+                        MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User did NOT confirm delete coin: {0}, image num: {1}", new Object[]
+                        {
+                            coinUUID.toString(), imgNum
+                        });
                     }
-                } else
-                {
-                    MyLogger.log(Level.INFO, LOG_CLASS_NAME + "User did NOT confirm delete coin: {0}, image num: {1}", new Object[]
-                    {
-                        coinUUID.toString(), imgNum
-                    });
                 }
                 break;
             }
@@ -491,13 +503,19 @@ public final class ViewCoinController implements Initializable
                 {
                     coinImageView1.setImage(image);
                     bufferedImage1 = bufferedImage;
+                    removeCoinImageBtn1.setVisible(true);
                     break;
                 }
                 case 2:
                 {
                     coinImageView2.setImage(image);
                     bufferedImage2 = bufferedImage;
+                    removeCoinImageBtn2.setVisible(true);
                     break;
+                }
+                default:
+                {
+                    MyLogger.log(Level.SEVERE,LOG_CLASS_NAME+ " Something went wrong in image loading, requested image was {0}",buttonPressed);
                 }
             }
         } else
@@ -798,7 +816,7 @@ public final class ViewCoinController implements Initializable
             Parent root = fxmlLoader.load(location.openStream());
         } catch (IOException ex)
         {
-            MyLogger.log(Level.SEVERE,LOG_CLASS_NAME + " couldn't load homepage to refresh coin update!", ex);
+            MyLogger.log(Level.SEVERE, LOG_CLASS_NAME + " couldn't load homepage to refresh coin update!", ex);
         }
         HomePageController homePageController = (HomePageController) fxmlLoader.getController();
         homePageController.refreshCoinList();
