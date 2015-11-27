@@ -39,7 +39,7 @@
       <TextArea fx:id="coinUpdateStatus" editable="false" layoutX="387.0" layoutY="296.0" prefHeight="107.0" prefWidth="150.0" wrapText="true" />
       <HBox layoutX="293.0" layoutY="590.0" spacing="2.0">
          <children>
-            <Button fx:id="cancelEditCoinBtn" layoutX="293.0" layoutY="590.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="25.0" prefWidth="81.0" text="Close" />
+            <Button fx:id="cancelEditCoinBtn" layoutX="293.0" layoutY="590.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="25.0" prefWidth="81.0" text="Cancel" />
             <Button fx:id="deleteCoinBtn" layoutX="374.0" layoutY="590.0" mnemonicParsing="false" onAction="#initiateDeleteCoin" prefHeight="25.0" prefWidth="81.0" text="Delete Coin" />
             <Button fx:id="modifyCoinBtn" layoutX="454.0" layoutY="590.0" mnemonicParsing="false" onAction="#initiateUpdateCoin" text="Modify Coin" />
          </children>
