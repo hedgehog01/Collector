@@ -57,10 +57,22 @@
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="392.0" prefWidth="138.0">
                             <children>
-                                <ComboBox fx:id="collectionComboBox" layoutX="19.0" layoutY="91.0" prefWidth="150.0" promptText="Select Collection" AnchorPane.leftAnchor="19.0" />
-                                <Button fx:id="openCollectionBtn" layoutX="19.0" layoutY="243.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="View Collection" />
-                                <Button fx:id="createNewCollectionBtn" layoutX="19.0" layoutY="276.0" mnemonicParsing="false" onAction="#startNewCollection" prefHeight="25.0" prefWidth="150.0" text="New Collection" />
-                        <Button fx:id="addNewCoinbtn" layoutX="19.0" layoutY="310.0" mnemonicParsing="false" onAction="#addNewCoin" prefHeight="25.0" prefWidth="150.0" text="New Coin" />
+                                <ComboBox fx:id="collectionComboBox" layoutX="19.0" layoutY="91.0" prefWidth="150.0" promptText="Select Collection" AnchorPane.leftAnchor="19.0">
+                           <tooltip>
+                              <Tooltip fx:id="selectCollectionTT" text="Empty Tooltip" />
+                           </tooltip></ComboBox>
+                                <Button fx:id="openCollectionBtn" layoutX="19.0" layoutY="243.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="View Collection">
+                           <tooltip>
+                              <Tooltip fx:id="viewCollectionTT" text="Empty Tooltip" />
+                           </tooltip></Button>
+                                <Button fx:id="createNewCollectionBtn" layoutX="19.0" layoutY="276.0" mnemonicParsing="false" onAction="#startNewCollection" prefHeight="25.0" prefWidth="150.0" text="New Collection">
+                           <tooltip>
+                              <Tooltip fx:id="newCollectionTT" text="Empty Tooltip" />
+                           </tooltip></Button>
+                        <Button fx:id="addNewCoinbtn" layoutX="19.0" layoutY="310.0" mnemonicParsing="false" onAction="#addNewCoin" prefHeight="25.0" prefWidth="150.0" text="New Coin">
+                           <tooltip>
+                              <Tooltip fx:id="newCoinTT" text="Empty Tooltip" />
+                           </tooltip></Button>
                             </children>
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="839.0">

@@ -52,6 +52,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -71,13 +72,22 @@ public class HomePageController implements Initializable
     private final boolean SET_RESIZABLE = false;
     private final String LOGIN_FXML_PATH = "/com/jjlcollectors/fxml/login/Login.fxml";
     private final String COLLECTIONVIEW_FXML_PATH = "/com/jjlcollectors/fxml/collectionview/CollectionView.fxml";
+    private static final Logger LOG = Logger.getLogger(HomePageController.class.getName());
+    private final String LOG_CLASS_NAME = "HomePageController: ";
+    
+    //MSG Strings
     private final String ADD_COIN_STAGE_TITLE = "Collector - Add new Coin";
     private final String VIEW_COIN_STAGE_TITLE = "Collector - View/Edit Coin";
     private final String LOGIN_STAGE_TITLE = "Collector - Login";
     private final String INFO_MESSAGE_NO_COIN_SELECTED_TITLE = "No Coin Selected";
     private final String INFO_MESSAGE_NO_COIN_SELECTED_BODY = "No Coin Selected.\nPlease select a coin and try again.";
-    private final String LOG_CLASS_NAME = "HomePageController: ";
-    private static final Logger LOG = Logger.getLogger(HomePageController.class.getName());
+    
+    //Tooltip texts
+    private final String TOOLTIP_NEW_COIN = "Add a new coin";
+    private final String TOOLTIP_NEW_COLLECTION = "Add new collection";
+    private final String TOOLTIP_VIEW_COLLECTION = "View a collection";
+    private final String TOOLTIP_SELECT_COLLECTION = "Select a collection";
+    
     private boolean isLoginValid = true;
     private Task loadCoinsWorker;
 
@@ -107,7 +117,20 @@ public class HomePageController implements Initializable
 
     @FXML
     private TextField filteredCoinTableTextFiled;
-
+    
+    //tooltips
+    @FXML
+    private Tooltip newCoinTT;
+    
+    @FXML
+    private Tooltip newCollectionTT;
+    
+    @FXML
+    private Tooltip viewCollectionTT;
+    
+    @FXML
+    private Tooltip selectCollectionTT;
+    
     private ObservableList<CollectionProperty> collectionComboListData = FXCollections.observableArrayList();
     private ObservableList<CoinProperty> coinTableData = FXCollections.observableArrayList();
 
@@ -117,6 +140,18 @@ public class HomePageController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        
+        //setup Tooltips
+        newCoinTT.setText(TOOLTIP_NEW_COIN);
+        newCollectionTT.setText(TOOLTIP_NEW_COLLECTION);
+        viewCollectionTT.setText(TOOLTIP_VIEW_COLLECTION);
+        selectCollectionTT.setText(TOOLTIP_SELECT_COLLECTION);
+        
+        
+        
+        
+        
+        //setup collection combobox
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
             if (!(newValue.collectionUUIDProperty().get() == null))
