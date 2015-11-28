@@ -221,9 +221,22 @@ public abstract class CollectableItem
         return _collectionUUID;
     }
     
+    /**
+     * method to return collection type
+     * @return the collection type
+     */
     public String getItemCollectionName()
     {
         return DBCollectionConnect.getCollectionName(_collectionUUID);
+    }
+    
+    /**
+     * method to return collection type
+     * @return the collection type
+     */
+    public String getItemCollectionType()
+    {
+        return DBCollectionConnect.getCollectionType(_collectionUUID);
     }
     
     /**

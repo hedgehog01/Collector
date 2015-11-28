@@ -47,14 +47,16 @@ public final class CoinProperty
     private final IntegerProperty coinYear = new SimpleIntegerProperty(-1);
     private final StringProperty coinCollectionName = new SimpleStringProperty("");
     private final StringProperty coinCollectionUUID = new SimpleStringProperty("");
+    private final StringProperty coinCollectionType = new SimpleStringProperty("");
 
     public CoinProperty()
     {
-        this("", "", "", "", "", "", "", "", "", "", -1, "", "", "");
+        this("", "", "", "", "", "", "", "", "", "", -1, "", "", "","");
     }
 
     /**
      * Constructor for creating CoinProperty object
+     *
      * @param coinUUID CoinUUID
      * @param coinName Coin Name
      * @param coinGrade Coin Grade
@@ -69,8 +71,9 @@ public final class CoinProperty
      * @param userUUID User UUID
      * @param coinCollectionName the name of the collection the coin belongs to
      * @param collectionUUID the collection UUID
+     * @param collectionType the collection Type
      */
-    public CoinProperty(String coinUUID, String coinName, String coinGrade, String coinFaceValue, String coinCurrency, String coinNote, String coinBuyDate, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear,String userUUID, String coinCollectionName, String collectionUUID)
+    public CoinProperty(String coinUUID, String coinName, String coinGrade, String coinFaceValue, String coinCurrency, String coinNote, String coinBuyDate, String coinBuyPrice, String coinValue, String coinMintMark, int coinYear, String userUUID, String coinCollectionName, String collectionUUID, String collectionType)
     {
         setCoinUUID(coinUUID);
         setCoinName(coinName);
@@ -86,10 +89,12 @@ public final class CoinProperty
         setUserUUID(userUUID);
         setCoinCollectionName(coinCollectionName);
         setCoinCollectionUUID(collectionUUID);
+        setCoinCollectionType(collectionType);
     }
 
     /**
      * Method to create CoinProperty from Coin object
+     *
      * @param coin the Coin object
      */
     public CoinProperty(Coin coin)
@@ -303,6 +308,21 @@ public final class CoinProperty
     public StringProperty userUUIDProperty()
     {
         return userUUID;
+    }
+
+    public String getCoinCollectionType()
+    {
+        return coinCollectionType.get();
+    }
+
+    public void setCoinCollectionType(String value)
+    {
+        coinCollectionType.set(value);
+    }
+
+    public StringProperty coinCollectionTypeProperty()
+    {
+        return coinCollectionType;
     }
 
 }

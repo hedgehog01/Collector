@@ -20,7 +20,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="614.0" prefWidth="1133.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.HomePageController">
+<VBox prefHeight="616.0" prefWidth="1285.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jjlcollectors.controllers.HomePageController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -53,61 +53,70 @@
         </MenuBar>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="589.0" prefWidth="735.0" VBox.vgrow="ALWAYS">
             <children>
-                <SplitPane dividerPositions="0.16886543535620052" layoutX="-3.0" layoutY="-3.0" prefHeight="592.0" prefWidth="1139.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-3.0">
+                <SplitPane dividerPositions="0.16886543535620052" layoutX="-3.0" layoutY="-3.0" prefHeight="594.0" prefWidth="1293.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-3.0">
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="392.0" prefWidth="138.0">
                             <children>
                                 <ComboBox fx:id="collectionComboBox" layoutX="19.0" layoutY="91.0" prefWidth="150.0" promptText="Select Collection" AnchorPane.leftAnchor="19.0">
-                           <tooltip>
-                              <Tooltip fx:id="selectCollectionTT" text="Empty Tooltip" />
-                           </tooltip></ComboBox>
+                                    <tooltip>
+                                        <Tooltip fx:id="selectCollectionTT" text="Empty Tooltip" />
+                                    </tooltip>
+                                </ComboBox>
                                 <Button fx:id="openCollectionBtn" layoutX="19.0" layoutY="243.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="View Collection">
-                           <tooltip>
-                              <Tooltip fx:id="viewCollectionTT" text="Empty Tooltip" />
-                           </tooltip></Button>
+                                    <tooltip>
+                                        <Tooltip fx:id="viewCollectionTT" text="Empty Tooltip" />
+                                    </tooltip>
+                                </Button>
                                 <Button fx:id="createNewCollectionBtn" layoutX="19.0" layoutY="276.0" mnemonicParsing="false" onAction="#startNewCollection" prefHeight="25.0" prefWidth="150.0" text="New Collection">
-                           <tooltip>
-                              <Tooltip fx:id="newCollectionTT" text="Empty Tooltip" />
-                           </tooltip></Button>
-                        <Button fx:id="addNewCoinbtn" layoutX="19.0" layoutY="310.0" mnemonicParsing="false" onAction="#addNewCoin" prefHeight="25.0" prefWidth="150.0" text="New Coin">
-                           <tooltip>
-                              <Tooltip fx:id="newCoinTT" text="Empty Tooltip" />
-                           </tooltip></Button>
+                                    <tooltip>
+                                        <Tooltip fx:id="newCollectionTT" text="Empty Tooltip" />
+                                    </tooltip>
+                                </Button>
+                                <Button fx:id="addNewCoinbtn" layoutX="19.0" layoutY="310.0" mnemonicParsing="false" onAction="#addNewCoin" prefHeight="25.0" prefWidth="150.0" text="New Coin">
+                                    <tooltip>
+                                        <Tooltip fx:id="newCoinTT" text="Empty Tooltip" />
+                                    </tooltip>
+                                </Button>
                             </children>
                         </AnchorPane>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="839.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="592.0" prefWidth="1087.0">
                             <children>
-                                <TableView fx:id="coinPreviewTableView" layoutX="3.0" layoutY="32.0" prefHeight="558.0" prefWidth="942.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                                <TableView fx:id="coinPreviewTableView" layoutY="32.0" prefHeight="560.0" prefWidth="1070.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
                                     <columns>
-                                        <TableColumn editable="false" prefWidth="356.0" text="Name">
+                                        <TableColumn editable="false" prefWidth="294.0" text="Name">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinName" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" minWidth="0.0" prefWidth="128.0" text="Face Value">
+                                        <TableColumn editable="false" minWidth="0.0" prefWidth="175.0" text="Face Value">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinFaceValue" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" prefWidth="126.0" text="Currency">
+                                        <TableColumn editable="false" prefWidth="141.0" text="Currency">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinCurrency" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" prefWidth="123.0" text="Mint Year">
+                                        <TableColumn editable="false" prefWidth="154.0" text="Mint Year">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinYear" />
                                             </cellValueFactory>
                                         </TableColumn>
-                                        <TableColumn editable="false" prefWidth="207.0" text="Collection">
+                                        <TableColumn editable="false" prefWidth="157.0" text="Collection Name">
                                             <cellValueFactory>
                                                 <PropertyValueFactory property="coinCollectionName" />
                                             </cellValueFactory>
                                         </TableColumn>
+                                        <TableColumn editable="false" prefWidth="157.0" text="Collection Type">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="coinCollectionType" />
+                                            </cellValueFactory>
+                                        </TableColumn>
                                     </columns>
                                 </TableView>
-                        <Label layoutX="14.0" layoutY="6.0" text="Search:" />
-                        <TextField fx:id="filteredCoinTableTextFiled" layoutX="90.0" layoutY="3.0" prefHeight="25.0" prefWidth="449.0" />
+                                <Label layoutX="14.0" layoutY="6.0" text="Search:" />
+                                <TextField fx:id="filteredCoinTableTextFiled" layoutX="90.0" layoutY="3.0" prefHeight="25.0" prefWidth="449.0" />
                             </children>
                         </AnchorPane>
                     </items>

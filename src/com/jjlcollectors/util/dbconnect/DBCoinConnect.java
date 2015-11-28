@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -430,10 +429,11 @@ public final class DBCoinConnect extends DBConnect
                             String userUUID = results.getString("COIN_USER_UUID");
                             //get collection name
                             String collectionName = DBCollectionConnect.getCollectionName(UUID.fromString(collectionUUID));
+                            String collectionType = DBCollectionConnect.getCollectionType(UUID.fromString(collectionUUID));
                             //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
-                            coinProperty = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, userUUID, collectionName, collectionUUID);
+                            coinProperty = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, userUUID, collectionName, collectionUUID,collectionType);
                             //coinList.add(coin);
-                            System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName);
+                            System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName + "\t" + collectionUUID + "\t" + collectionType);
                         }
                     }
                 }
@@ -513,12 +513,12 @@ public final class DBCoinConnect extends DBConnect
                             String coinMintMark = results.getString(11);
                             int coinYear = results.getInt(12);
                             String collectionUUID = results.getString("COIN_COLLECTION_UUID");
-                            //get collection name
                             String collectionName = DBCollectionConnect.getCollectionName(UUID.fromString(collectionUUID));
+                            String collectionType = DBCollectionConnect.getCollectionType(UUID.fromString(collectionUUID));
                             //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
-                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear,userUUID.toString(), collectionName, collectionUUID);
+                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear,userUUID.toString(), collectionName, collectionUUID,collectionType);
                             coinList.add(coin);
-                            System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName);
+                            System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName + "\t" + collectionUUID + "\t" + collectionType);
                         }
                     }
                 }
@@ -604,12 +604,12 @@ public final class DBCoinConnect extends DBConnect
                             String coinMintMark = results.getString(11);
                             int coinYear = results.getInt(12);
                             String collectionUUIDsql = results.getString("COIN_COLLECTION_UUID");
-                            //get collection name
                             String collectionName = DBCollectionConnect.getCollectionName(UUID.fromString(collectionUUIDsql));
+                            String collectionType = DBCollectionConnect.getCollectionType(UUID.fromString(collectionUUIDsql));
                             //(String coinValue,String coinMintMark,int coinYear,String coinCollectionName)
-                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, userUUID.toString(), collectionName, collectionUUIDsql);
+                            CoinProperty coin = new CoinProperty(coinUUID, name, grade, facevalue, currency, note, coinBuyDate.toLocalDate().toString(), coinBuyPrice, coinValue, coinMintMark, coinYear, userUUID.toString(), collectionName, collectionUUIDsql,collectionType);
                             coinList.add(coin);
-                            System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName + "\t" + collectionUUIDsql);
+                            System.out.println(id + "\t" + coinUUID + "\t" + name + "\t" + grade + "\t" + facevalue + "\t" + currency + "\t" + note + "\t" + coinBuyDate + "\t" + coinBuyPrice + "\t" + coinValue + "\t" + coinMintMark + "\t" + coinYear + "\t" + collectionName + "\t" + collectionUUIDsql + "\t" + collectionType);
                         }
                     }
                 }

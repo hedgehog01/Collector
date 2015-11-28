@@ -146,11 +146,7 @@ public class HomePageController implements Initializable
         newCollectionTT.setText(TOOLTIP_NEW_COLLECTION);
         viewCollectionTT.setText(TOOLTIP_VIEW_COLLECTION);
         selectCollectionTT.setText(TOOLTIP_SELECT_COLLECTION);
-        
-        
-        
-        
-        
+
         //setup collection combobox
         collectionComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CollectionProperty> observable, CollectionProperty oldValue, CollectionProperty newValue) ->
         {
@@ -240,7 +236,7 @@ public class HomePageController implements Initializable
                     MyLogger.log(Level.INFO, "Coin {0} double clicked", coinPreviewTableView.getSelectionModel().getSelectedItem().getCoinName());
                     CoinProperty coinProperty = coinPreviewTableView.getSelectionModel().getSelectedItem();
                     MyLogger.log(Level.INFO, "Selected coin Name: {0}", coinProperty.getCoinName());
-                    MyLogger.log(Level.INFO, "Selected coin vollection UUID: {0}", coinProperty.getCoinCollectionUUID());
+                    MyLogger.log(Level.INFO, "Selected coin collection UUID: {0}", coinProperty.getCoinCollectionUUID());
                     loadEditCoinWindow (coinProperty);
                 }
             }

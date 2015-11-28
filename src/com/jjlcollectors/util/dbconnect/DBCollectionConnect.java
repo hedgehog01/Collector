@@ -135,6 +135,11 @@ public final class DBCollectionConnect extends DBConnect
 
     }
     
+    /**
+     * Method to get a collection name
+     * @param collectionUUID the collection UUID used in order to get collection name
+     * @return the collection name if found or empty if none found
+     */
     public static String getCollectionName(UUID collectionUUID)
     {
 
@@ -149,12 +154,12 @@ public final class DBCollectionConnect extends DBConnect
             if (rs.next())
             {
                 collectionName = rs.getString("COLLECTION_NAME");
-                log.log(Level.INFO, "Got collection name");
+                log.log(Level.INFO, "Got collection name: ",collectionName);
             }
             rs.close();
         } catch (SQLException ex)
         {
-            Logger.getLogger(DBUsersConnect.class.getName()).log(Level.SEVERE, "Couldn't get collectionUUUID by collection Name\n ", ex);
+            Logger.getLogger(DBUsersConnect.class.getName()).log(Level.SEVERE, "Couldn't get collection Name by collectionUUID, exception:\n ", ex);
         }
 
         DBConnect.closeDBConnection();
@@ -162,6 +167,39 @@ public final class DBCollectionConnect extends DBConnect
         return collectionName;
 
     }
+    
+    /**
+     * Method to get a collection type
+     * @param collectionUUID the collection UUID used in order to get collection type
+     * @return the collection type if found or empty if none found
+     */
+    public static String getCollectionType(UUID collectionUUID)
+    {
+
+        String collectionType = "";
+        log.log(Level.INFO, "Attemp to get collection type");
+        DBConnect.createDBConnection();
+        try (PreparedStatement prepStmt = conn.prepareStatement("SELECT COLLECTION_TYPE from " + TABLE_NAME + " WHERE COLLECTION_UUID = ?"))
+        {
+            prepStmt.setString(1, collectionUUID.toString());
+            ResultSet rs = prepStmt.executeQuery();
+
+            if (rs.next())
+            {
+                collectionType = rs.getString("COLLECTION_TYPE");
+                log.log(Level.INFO, "Got collection type: ",collectionType);
+            }
+            rs.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBUsersConnect.class.getName()).log(Level.SEVERE, "Couldn't get collection Type by collectionUUID, exception:\n ", ex);
+        }
+
+        DBConnect.closeDBConnection();
+        //shutDownDBConnection();
+        return collectionType;
+    }
+    
     
     public static ObservableList<CollectionProperty> getUserCollections (UUID userUUID)
     {
